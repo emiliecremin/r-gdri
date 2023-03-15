@@ -19,10 +19,10 @@ cyclones_roi <- mask(x = cyclones_extent, mask = locations) ### delimitation to 
 plot(cyclones_roi)
 
 ### zonal statistics using "raster"
-locations$cnt <- extract(cyclones_roi, locations, fun = sum, na.rm=TRUE) %>% na_replace()
+locations$cnt <- extract(cyclones_roi, locations, fun = sum, na.rm = TRUE) %>% na_replace()
 locations$freq <- locations$cnt * locations$pop
 locations$norm <- normalize_minmax(locations$freq, na.rm = TRUE)
-st_write(locations, "output/S_EXP_CYC_cyclones.gpkg", append = FALSE)
+st_write(locations, "output/exposure/S_EXP_CYC_cyclones.gpkg", append = FALSE)
 
 # Other dataset
 # https://risk.preventionweb.net/download/Cyclonic%20wind_RT100years_g152.zip
