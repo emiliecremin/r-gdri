@@ -1,16 +1,44 @@
 library(dplyr)
+library(glue)
 library(sf)
+library(terra)
 
 source("common/helpers.R")
 
-# https://www.wri.org/research/aqueduct-30-updated-decision-relevant-global-water-risk-indicators
-# https://github.com/wri/aqueduct30_data_download/blob/master/metadata.md
-locations <- st_read("data/ADMIN/admin.shp")
-locations <- st_transform(locations, 4326)
-aqueduct <- st_read("data/Water/Y2019M07D12_Aqueduct30_V01/baseline/annual/y2019m07d11_aqueduct30_annual_v01.gpkg")
-aqueduct <- dplyr::filter(aqueduct, name_0 == "Vietnam")  %>% st_make_valid()
-aqueduct_points <- st_centroid(locations) %>% st_join(aqueduct)
-join_df <- st_drop_geometry(aqueduct_points[,c("GEOLEVEL2","udw_score", "udw_cat", "udw_label")])
-eutrophication <- joinOnColumn(join_df, locations, "GEOLEVEL2")
-eutrophication$norm <- normalize_minmax(eutrophication$cep_score, na.rm = TRUE)
-st_write(eutrophication, "output/ecosystem_robustness/S_INF2_611.gpkg", append = FALSE)
+locations <- st_read("data/ADMIN/admin.shp") %>% st_make_valid()
+adm <- terra::vect(locations)
+# https://www.protectedplanet.net/en
+# https://www.protectedplanet.net/country/VNM
+get_vector <- function(i) {
+    folder <- glue::glue("data/Conservation/WDPA_WDOECM_Feb2023_Public_VNM_shp/WDPA_WDOECM_Feb2023_Public_VNM_shp_{i}") # nolint
+    filename <- glue::glue("{folder}/WDPA_WDOECM_Feb2023_Public_VNM_shp-polygons.shp") # nolint
+    return(terra::vect(filename))
+}
+v <- rbind(get_vector(0), get_vector(1), get_vector(2))
+plot(v)
+plot(adm)
+conservation <- terra::crop(adm, v)
+# XXX Bug in Terra -> terra::area(conservation)
+#  unable to find an inherited method for function ‘area’ for signature ‘"SpatVector"’ # nolint
+# using sf instead -> sf::st_as_sf(conservation)
+sf_use_s2(FALSE)
+conservation$conservation_area <-
+    units::set_units(st_area(sf::st_as_sf(conservation)), km^2)
+st_write(sf::st_as_sf(conservation),
+    "output/ecosystem_robustness/conservation.gpkg",
+    append = FALSE
+)
+plot(conservation)
+df <- sf::st_as_sf(conservation) %>% st_drop_geometry()
+locations <-
+    right_join(df[c("GEOLEVEL2", "conservation_area")], locations) %>%
+    st_as_sf()
+locations$conservation_area[is.na(locations$conservation_area)] <- 0
+locations$norm <-
+    as.numeric(locations$conservation_area) / as.numeric(locations$area)
+
+plot(locations$norm)
+st_write(locations,
+    "output/ecosystem_robustness/ER_CON_1512_conservation_areas.gpkg",
+    append = FALSE
+)
