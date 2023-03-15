@@ -22,8 +22,8 @@ storm_surge_ecosystems <- mask(storm_surge_roi, ecosystems)
 plot(storm_surge_ecosystems)
 
 ### zonal statistics using "raster"
-sum_storm_surge <- extract(storm_surge_ecosystems, locations, fun = sum, na.rm=TRUE) %>% na_replace()
-locations$cnt <- sum_storm_surge[,2]
+sum_storm_surge <- extract(storm_surge_ecosystems, locations, fun = sum, na.rm = TRUE) %>% na_replace()
+locations$cnt <- sum_storm_surge[, 2]
 locations$freq <- locations$cnt / as.numeric(locations$area)
 locations$norm <- normalize_minmax(locations$freq, na.rm = TRUE)
-st_write(locations, "output/E_EXP_COF_storm_surge.gpkg", append = FALSE)
+st_write(locations, "output/exposure/E_EXP_COF_storm_surge.gpkg", append = FALSE)
