@@ -12,5 +12,6 @@ aqueduct <- dplyr::filter(aqueduct, name_0 == "Vietnam")  %>% st_make_valid()
 aqueduct_points <- st_centroid(locations) %>% st_join(aqueduct)
 join_df <- st_drop_geometry(aqueduct_points[,c("GEOLEVEL2","bws_score", "bws_cat", "bws_label")])
 waterstress <- joinOnColumn(join_df, locations, "GEOLEVEL2")
-waterstress$norm <- normalize_minmax(waterstress$bws_score, na.rm = TRUE)
+names(waterstress)[names(waterstress) == "bws_score"] <- "val"
+waterstress$norm <- normalize_minmax(waterstress$val, na.rm = TRUE)
 st_write(waterstress, "output/ecosystem_sensitivity/ES_DEG4_waterstress.gpkg", append = FALSE)

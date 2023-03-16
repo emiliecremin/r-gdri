@@ -11,8 +11,8 @@ locations <- st_transform(locations, 4326)
 landcover_roi <- rast("data/ESA_Landcover/VNM_roi.tif")
 plot(landcover_roi)
 # data source: UNEP GRID
-# https://datacore.unepgrid.ch/geoserver/wesr_risk/wcs?service=WCS&Version=2.0.1&request=GetCoverage&coverageId=cy_frequency&outputCRS=EPSG:4326&format=GEOTIFF&compression=DEFLATE
-cyclones <- raster("data/Hazards/Cyclones/cy_frequency.tif")
+# https://datacore.unepgrid.ch/geoserver/wesr_risk/wcs?service=WCS&Version=2.0.1&request=GetCoverage&coverageId=cy_valuency&outputCRS=EPSG:4326&format=GEOTIFF&compression=DEFLATE
+cyclones <- raster("data/Hazards/Cyclones/cy_valuency.tif")
 cyclones_roi <- mask(x = cyclones, mask = locations)
 cyclones_roi <- project(cyclones_roi, landcover_roi)
 plot(cyclones_roi)
@@ -25,6 +25,6 @@ plot(cyclones_ecosystems)
 ### zonal statistics using "raster"
 sum_cyclones <- extract(cyclones_ecosystems, locations, fun = sum, na.rm = TRUE) %>% na_replace()
 locations$cnt <- sum_cyclones[, 2]
-locations$freq <- locations$cnt / as.numeric(locations$area)
-locations$norm <- normalize_minmax(locations$freq, na.rm = TRUE)
+locations$val <- locations$cnt / as.numeric(locations$area)
+locations$norm <- normalize_minmax(locations$val, na.rm = TRUE)
 st_write(locations, "output/exposure/E_EXP_CYC_cyclones.gpkg", append = FALSE)

@@ -79,6 +79,6 @@ for (i in 1:nrow(locations)) {
     locations$cnt[i] <- locations$cnt[i] + cnt
 }
 
-locations$freq <- locations$cnt / locations$pop * 1000
-locations$norm <- normalize_minmax(locations$freq, na.rm = TRUE)
+locations$val <- locations$cnt / locations$pop * 1000
+locations$norm <- normalize_minmax(locations$val, na.rm = TRUE)
 st_write(locations, "output/C_TRA1_roads_waterways.shp", layer_options = "ENCODING=UTF-8", append = FALSE)

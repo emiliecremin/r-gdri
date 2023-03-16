@@ -26,6 +26,6 @@ plot(floods_ecosystems)
 ### zonal statistics using "raster"
 sum_floods <- extract(floods_ecosystems, locations, fun = sum, na.rm = TRUE) %>% na_replace()
 locations$cnt <- sum_floods[, 2]
-locations$freq <- locations$cnt / as.numeric(locations$area)
-locations$norm <- normalize_minmax(locations$freq, na.rm = TRUE)
+locations$val <- locations$cnt / as.numeric(locations$area)
+locations$norm <- normalize_minmax(locations$val, na.rm = TRUE)
 st_write(locations, "output/exposure/E_EXP_FLO_floods.gpkg", append = FALSE)

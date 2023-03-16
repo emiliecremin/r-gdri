@@ -12,5 +12,6 @@ aqueduct <- dplyr::filter(aqueduct, name_0 == "Vietnam")  %>% st_make_valid()
 aqueduct_points <- st_centroid(locations) %>% st_join(aqueduct)
 join_df <- st_drop_geometry(aqueduct_points[,c("GEOLEVEL2","gtd_score", "gtd_cat", "gtd_label")])
 ground_watertable_decline <- joinOnColumn(join_df, locations, "GEOLEVEL2")
+names(ground_watertable_decline)[names(ground_watertable_decline) == "gtd_score"] <- "val"
 ground_watertable_decline$norm <- normalize_minmax(ground_watertable_decline$gtd_score, na.rm = TRUE)
 st_write(ground_watertable_decline, "output/ecosystem_sensitivity/ES_DEG_GTD.gpkg", append = FALSE)
