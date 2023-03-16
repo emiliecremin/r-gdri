@@ -1,4 +1,5 @@
 library(dplyr)
+library(leaflet)
 library(ggplot2)
 library(sf)
 library(stringr)
@@ -14,6 +15,13 @@ mkdirs <- function(fp) {
 # https://medium.com/swlh/data-normalisation-with-r-6ef1d1947970#:~:text=Min%2DMax%20Normalization%20transforms%20x,been%20between%20%2D1%20and%201.
 normalize_minmax <- function(x, ...) {
   return((x - min(x, ...)) /(max(x, ...) - min(x, ...)))
+}
+
+updateGdriShp <- function(df, shp, indicator_code) {
+  df <- df %>% st_drop_geometry()
+  indicator <- subset(df, select = c (GEOLEV2, val, norm))
+  indicator <- indicator %>% rename_with( ~ paste0(str_glue("{indicator_code}_"), .x), !matches("GEOLEV2"))
+  return(joinOnColumn(indicator, shp, "GEOLEV2"))
 }
 
 iso_country <- c("VN", "BD", "IN")
@@ -59,6 +67,7 @@ my_map <- function(data, col_label, col_value, title, pal_colors) {
   
   data$label <- paste0(data[[col_label]], ": ", round(data[[col_value]], digits = 2))
   
+  # TODO: replace NA in char columns with empty string
   data[is.na(data)] <- 0
   
   leaflet() %>%
