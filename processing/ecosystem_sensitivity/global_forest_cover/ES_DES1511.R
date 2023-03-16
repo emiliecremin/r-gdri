@@ -18,10 +18,10 @@ library(exactextractr)
 
 forests <- raster("data/ESA_Landcover/VNM_forests.tif")
 aoi$cnt <- exact_extract(forests, admin_shp, "sum")
-aoi$freq <- aoi$cnt / aoi$area
-aoi$norm <- normalize_minmax(aoi$freq, na.rm = TRUE)
+aoi$val <- aoi$cnt / aoi$area
+aoi$norm <- normalize_minmax(aoi$val, na.rm = TRUE)
 st_write(
     aoi,
-    "output/ecosystem_sensitivity/ER_DES1511_forest_area.gpkg",
+    "output/ecosystem_sensitivity/ES_DES1511_forest_area.gpkg",
     append = FALSE
 )

@@ -17,6 +17,6 @@ plot(floods_roi)
 
 ### zonal statistics using "raster"
 locations$cnt <- extract(floods_roi, locations, fun = mean, na.rm = TRUE) %>% na_replace()
-locations$freq <- locations$cnt * locations$pop
-locations$norm <- normalize_minmax(locations$freq, na.rm = TRUE)
+locations$val <- locations$cnt * locations$pop
+locations$norm <- normalize_minmax(locations$val, na.rm = TRUE)
 st_write(locations, "output/exposure/S_EXP_FLO_floods.gpkg", append = FALSE)
