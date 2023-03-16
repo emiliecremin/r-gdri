@@ -21,6 +21,6 @@ drought <- dplyr::filter(drought, name_0 == "Vietnam") %>% st_make_valid()
 drought_points <- st_centroid(locations) %>% st_join(drought)
 join_df <- st_drop_geometry(drought_points[, c("GEOLEVEL2", "drr_score", "drr_cat", "drr_label")])
 drought_shp <- joinOnColumn(join_df, locations, "GEOLEVEL2")
-drought_shp$freq <- drought_shp$drr_score * drought_shp$pop
-drought_shp$norm <- normalize_minmax(drought_shp$freq, na.rm = TRUE)
+drought_shp$val <- drought_shp$drr_score * drought_shp$pop
+drought_shp$norm <- normalize_minmax(drought_shp$val, na.rm = TRUE)
 st_write(drought_shp, "output/exposure/S_EXP_DRO_drought_risk.gpkg", append = FALSE)

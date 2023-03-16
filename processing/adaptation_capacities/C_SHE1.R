@@ -39,6 +39,6 @@ for (i in 1:nrow(locations)) {
     }
     locations$cnt[i] <- cnt
 }
-locations$freq <- locations$cnt / as.numeric(locations$area) / locations$pop * 1000
-locations$norm <- normalize_minmax(locations$freq, na.rm = TRUE)
+locations$val <- locations$cnt / as.numeric(locations$area) / locations$pop * 1000
+locations$norm <- normalize_minmax(locations$val, na.rm = TRUE)
 st_write(locations, "output/C_SHE1_schools.shp", layer_options = "ENCODING=UTF-8", append = FALSE)

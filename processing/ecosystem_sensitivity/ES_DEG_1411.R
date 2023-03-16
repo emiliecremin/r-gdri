@@ -11,6 +11,7 @@ aqueduct <- st_read("data/Water/Y2019M07D12_Aqueduct30_V01/baseline/annual/y2019
 aqueduct <- dplyr::filter(aqueduct, name_0 == "Vietnam")  %>% st_make_valid()
 aqueduct_points <- st_centroid(locations) %>% st_join(aqueduct)
 join_df <- st_drop_geometry(aqueduct_points[,c("GEOLEVEL2","cep_score", "cep_cat", "cep_label")])
-eutrophication_shp <- joinOnColumn(join_df, locations, "GEOLEVEL2")
-eutrophication_shp$norm <- normalize_minmax(eutrophication_shp$cep_score, na.rm = TRUE)
-st_write(eutrophication_shp, "output/ecosystem_sensitivity/ES_DEG_1411_eutrophication_risk.gpkg", append = FALSE)
+eutrophication <- joinOnColumn(join_df, locations, "GEOLEVEL2")
+names(eutrophication)[names(eutrophication) == "cep_score"] <- "val"
+eutrophication$norm <- normalize_minmax(eutrophication$val, na.rm = TRUE)
+st_write(eutrophication, "output/ecosystem_sensitivity/ES_DEG_1411_eutrophication_risk.gpkg", append = FALSE)

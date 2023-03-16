@@ -37,6 +37,6 @@ for (i in 1:nrow(locations)) {
     }
     locations$cnt[i] <- cnt
 }
-locations$freq <- locations$cnt / locations$pop * 1000
-locations$norm <- normalize_minmax(locations$freq, na.rm = TRUE)
-st_write(locations, "output/C_GOV2_emergencies.shp", layer_options = "ENCODING=UTF-8", append = FALSE)
+locations$val <- locations$cnt / locations$pop * 1000
+locations$norm <- normalize_minmax(locations$val, na.rm = TRUE)
+st_write(locations, "output/adaptation_capacities/C_GOV2_emergencies.gpkg", append = FALSE)

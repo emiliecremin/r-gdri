@@ -9,8 +9,8 @@ source("common/helpers.R")
 source("common/GFC.R")
 
 aoi$cnt <- exact_extract(gfc_thresholded[["gain"]], admin_shp, "sum")
-aoi$freq <- aoi$cnt / aoi$area
-aoi$norm <- normalize_minmax(aoi$freq, na.rm = TRUE)
+aoi$val <- aoi$cnt / aoi$area
+aoi$norm <- normalize_minmax(aoi$val, na.rm = TRUE)
 st_write(
   aoi,
   "output/ecosystem_robustness/ER_RES2_forest_gain.gpkg",
