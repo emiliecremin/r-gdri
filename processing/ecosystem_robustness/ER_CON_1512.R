@@ -6,6 +6,7 @@ library(terra)
 source("common/helpers.R")
 
 locations <- st_read("data/ADMIN/admin.shp") %>% st_make_valid()
+# https://github.com/rspatial/terra/issues/38
 adm <- terra::vect(locations)
 # https://www.protectedplanet.net/en
 # https://www.protectedplanet.net/country/VNM
@@ -17,6 +18,7 @@ get_vector <- function(i) {
 v <- rbind(get_vector(0), get_vector(1), get_vector(2))
 plot(v)
 plot(adm)
+# https://gis.stackexchange.com/questions/445620/how-to-efficiently-get-the-intersection-between-vector-and-raster-in-r
 conservation <- terra::crop(adm, v)
 # XXX Bug in Terra -> terra::area(conservation)
 #  unable to find an inherited method for function ‘area’ for signature ‘"SpatVector"’ # nolint
