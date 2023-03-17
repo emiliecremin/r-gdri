@@ -1,18 +1,43 @@
 # Administrative boundaries
 
 ## UN OCHA
+
 https://data.humdata.org/dataset/cod-ab-vnm
 It has an ADM2_PCODE matching the GEOLEVEL2 from IPUMS
 Polygons match Geoboundaries
 
 ## IPUMS
+
 https://international.ipums.org/international/geography_variables_list.shtml
 code = 050 010 001
 <country><ADM_1><ADM2> = ADM2_PCODE
 Each level needs padding zeros to be on 3 digits
 
 ## Geoboundaries
+
 https://www.geoboundaries.org/index.html#getdata
+
+# Landcover
+
+ESA 2020 landcover  
+Get the Macro tile from ESA worldcover 2020 https://worldcover2020.esa.int/downloader  
+direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover_10m_2020_v100_60deg_macrotile_S30E060.zip
+
+## All classes
+
+| Value | Color  | Description                | Forests | Ecosystems |
+| ----- | ------ | -------------------------- | ------- | ---------- |
+| 10    | 006400 | Trees                      | ✅      | ✅         |
+| 20    | ffbb22 | Shrubland                  |         | ✅         |
+| 30    | ffff4c | Grassland                  |         | ✅         |
+| 40    | f096ff | Cropland                   |         | ✅         |
+| 50    | fa0000 | Built-up                   |
+| 60    | b4b4b4 | Barren / sparse vegetation |
+| 70    | f0f0f0 | Snow and ice               |
+| 80    | 0064c8 | Open water                 |         | ✅         |
+| 90    | 0096a0 | Herbaceous wetland         |         | ✅         |
+| 95    | 00cf75 | Mangroves                  | ✅      | ✅         |
+| 100   | fae6a0 | Moss and lichen            |         | ✅         |
 
 # GDRI
 
@@ -22,44 +47,49 @@ https://www.geoboundaries.org/index.html#getdata
 
 - Ecosystem exposure: E_EXP
 - Ecosystem susceptibility: E_SUS
-- Ecosystem robustness: ER_
+- Ecosystem robustness: ER\_
 
 ### Social
 
 - Social exposure: S_EXP
-- Social susceptibility: S_
-- Social Lack of coping capacity: CA_
+- Social susceptibility: S\_
+- Social Lack of coping capacity: CA\_
 
 # Status
 
-## EXPOSURE 
-S_EXP_CYC Percentage of population exposed to cyclones (%) - done for vietnam
-S_EXP_DRO Percentage of population exposed to drought (%) - done for vietnam
-S_EXP_FLO Percentage of population exposed to floods (%) - done for vietnam
-S_EXP_SAL Percentage of population exposed to salinity intrusion (%)  - issue with data
-S_EXP_COF Percentage of population exposed to storm surges (%) - done for vietnam
+## EXPOSURE
 
-E_EXP_CYC Percentage of ecosystem exposed to cyclones (%)- done for vietnam
-E_EXP_DRO Percentage of ecosystem  exposed to drought (%)- done for vietnam
-E_EXP_FLO Percentage of ecosystem  exposed to floods (%)- done for vietnam
-E_EXP_SAL Percentage of ecosystem  exposed to salinity intrusion (%) - issue with data
-E_EXP_COF Percentage of ecosystem  exposed to storm surges (%)- done for vietnam
+### Social Exposure
 
-Additional 
-S_EXP_CYC Subsidence 
-E_EXP_CYC Subsidence 
+| indicator | description                 | Vietnam      | Bangladesh | India |
+| --------- | --------------------------- | ------------ | ---------- | ----- |
+| S_EXP_COF | pop exposed to storm surges | ✅           | no         | no    |
+| S_EXP_CYC | pop exposed to cyclones     | ✅           | no         | no    |
+| S_EXP_DRO | pop exposed to drought      | ✅           | no         | no    |
+| S_EXP_FLO | pop exposed to floods       | ✅           | no         | no    |
+| S_EXP_SAL | pop exposed to salinity     | 🚫 (no data) | no         | no    |
+
+### Ecosystem Exposure
+
+| indicator | description                       | Vietnam      | Bangladesh | India |
+| --------- | --------------------------------- | ------------ | ---------- | ----- |
+| E_EXP_COF | ecosystem exposed to storm surges | ✅           | no         | no    |
+| E_EXP_CYC | ecosystem exposed to cyclones     | ✅           | no         | no    |
+| E_EXP_DRO | ecosystem exposed to drought      | ✅           | no         | no    |
+| E_EXP_FLO | ecosystem exposed to floods       | ✅           | no         | no    |
+| E_EXP_SAL | ecosystem exposed to salinity     | 🚫 (no data) | no         | no    |
+
+Additional  
+S_EXP_SUB Subsidence  
+E_EXP_SUB Subsidence
 
 Risks from GDIS + EM-DAT
-Ecosystems: ESA 2020 landcover
-- classes ???
-
-- TODO: Need data sources
-- DOING: Deforestation (AidDataGeoQuery)
 
 ## ECOSYSTEM
 
 ### Ecosystem susceptibility
-ES_DES2 Freshwater scarcity https://www.unep-wcmc.org 
+
+ES_DES2 Freshwater scarcity https://www.unep-wcmc.org
 
 ES_DES3 Percentage of deforested area (%) GFC -> done for Vietnam
 
@@ -69,32 +99,30 @@ ES_DEG1 Water quality of freshwater bodies http://www.wri.org
 ES_DEG2 Groundwater quality http://geodata.grid.unep.ch
 
 ES_DEG4 Return Flow Ratio http://www.wri.org
-ES_DEG6 Soil organic matter https://www.soilgrids.org 
+ES_DEG6 Soil organic matter https://www.soilgrids.org
 ES_DEG9 Cation exchange capacity https://www.soilgrids.org
 ES_FRG1 Percentage of area covered by “problem soils” (%) (laocl: raster) http://geodata.grid.unep.ch
 ES_BIO1a Species richness adjusted by intactness https://www.unep-wcmc.org
 
 New
-ES_DEG4    Waterstress http://www.wri.org
+ES_DEG4 Waterstress http://www.wri.org
 ES_DEG_GTD Ground Table Depletion http://www.wri.org
-
 
 ### Ecosystem robustness
 
-ER_CON1 Percentage of forest area protected and designated for the conservation of biodiversity (%) https://www.protectedplanet.net   - done for vietnam
+ER_CON1 Percentage of forest area protected and designated for the conservation of biodiversity (%) https://www.protectedplanet.net - done for vietnam
 ER_RES2 Percentage of forest area restored (%) GFC - done for Vietnam
 
-ER_POL2 Policies supporting biodiversity conservation (National) https://www.cbd.int/ 
+ER_POL2 Policies supporting biodiversity conservation (National) https://www.cbd.int/
 ER_TRE1 Participation in treaties - CBD, CITES, CMS, RAMSAR (National)
 
 ER_BIO2 Mean Species Abundance (MSA) - To do
-ER_ECO1 Ecosystem Functionality Index (EFI) - to do 
+ER_ECO1 Ecosystem Functionality Index (EFI) - to do
 ER_FUN2 Donor aid for adaptation (local) http://aiddata.org/gis - to do
 
 - TODO: Need data sources
 
-
-## SOCIAL - Lack of adaptative capacity 
+## SOCIAL - Lack of adaptative capacity
 
 C_EWS2 Existence of early warning systems (EWS) - todo
 UNISDR - http://www.preventionweb.net
@@ -143,7 +171,7 @@ C_HEA4 Private health expenditure (% of GDP)
 http://data.worldbank.org/
 **source: worldbank**
 
-C_SAV1 Percentage of households without gross savings (%) 
+C_SAV1 Percentage of households without gross savings (%)
 Proxy: Population (age 15+) who has not saved any money in the last year (%)
 http://datatopics.worldbank.org
 
@@ -170,8 +198,6 @@ http://aiddata.org/gis
 A_IIR1 Percentage of GDP spent on innovation and research (%) (National)
 http://data.uis.unesco.org
 
-
-
 ## Social susceptibility
 
 S_SOC3 Percentage female-headed households (%) -> done Vietnam
@@ -193,7 +219,7 @@ S_INF1 / S_INF1_621 Percentage of population without access to (improved) sanita
 S_INF2 / S_INF2_611 Percentage of population without access to clean water (%) -> done Vietnam
 **source: ipums census**
 
-New 
+New
 S_INF1_631 Proportion of domestic and industrial wastewater flows safely treated -> done Vietnam
 
 S_INF3 Percentage of population without access to electricity (%) -> done Vietnam
@@ -215,23 +241,22 @@ The dependency ratio indicates the proportion of economically dependent populati
 The indicator gives an insight into the amount of people in non-working age (children and elderly), compared to the number of those in working age, which is defined by the World Bank as 15 to 64 years.
 **source: ipums census**
 
-S_ECO4  GINI index (national level?)
+S_ECO4 GINI index (national level?)
 United Nations Development Programme (UNDP) - http://hdr.undp.org
 
 S_OCU1 Dependency on agriculture / forestry / fisheries for livelihood (%) (TODO)
 Or PROXY  
 Percentage of contribution of agriculture / forestry / fisheries to GPD (%) per province
 
-S_STA1  Prevalence of population who experience violence (%) (TODO)
+S_STA1 Prevalence of population who experience violence (%) (TODO)
 Or PROXY  
 Homicide rate per 100,000 inhabitants
 http://homicide.igarape.org.br
 http://www.visionofhumanity.org
 
-Additional 
-- Malnutrition ... 
+Additional
 
-
+- Malnutrition ...
 
 ### DONE: 15
 
@@ -268,14 +293,12 @@ Additional
 
 ## Indicators
 
-
 ## Data sources
 
 ### Bangladesh
 
 http://redatam.bbs.gov.bd/redbin/RpWebEngine.exe/Portal
 https://redatam.org/en
-
 
 # Census data analysis
 
@@ -350,5 +373,3 @@ OSM data from 2021
 Population census from 2009
 Ex: hospital per 1000 hab.
 Bias can be mesured by population growth between 2009 and 2021
-
-
