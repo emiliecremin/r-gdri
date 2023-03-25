@@ -10,7 +10,7 @@ source("common/helpers.R")
 # install.packages("usethis")
 # library(usethis)
 # usethis::edit_r_environ()
-# R_MAX_VSIZE=100Gb 
+# R_MAX_VSIZE=100Gb
 # Error: vector memory exhausted (limit reached?)
 # https://stackoverflow.com/questions/51295402/r-on-macos-error-vector-memory-exhausted-limit-reached
 
@@ -19,7 +19,7 @@ locations <- st_read("data/ADMIN/admin.shp")
 # vnm <- ipums_data %>% dplyr::filter(COUNTRY == 704)
 vnm <- read.csv(file = "data/Vietnam/vietnam_2009.csv")
 
-output_dir = "output/social_susceptibility"
+output_dir <- "output/social_susceptibility"
 mkdirs(output_dir)
 
 # https://datacornering.com/calculate-the-percentage-by-a-group-in-r-dplyr/
@@ -72,7 +72,7 @@ st_write(illiterate, "output/social_susceptibility/S_SOC8_illiteracy.gpkg", appe
 # Dependency ratio (%)
 # count(filter(vnm, (AGE < 15 | AGE > 64)))
 dependancy <- vnm %>%
-  mutate(DEP=(AGE < 15 | AGE > 64)) %>%
+  mutate(DEP = (AGE < 15 | AGE > 64)) %>%
   group_by(GEOLEV2, DEP) %>%
   summarise(cnt = n()) %>%
   mutate(val = (cnt / sum(cnt) * 100)) %>%
@@ -144,6 +144,67 @@ no_tv_radio$norm <- normalize_minmax(no_tv_radio$val, na.rm = TRUE)
 no_tv_radio <- joinOnColumn(no_tv_radio, locations, "GEOLEV2")
 mapPlot(no_tv_radio, "norm", "norm min-max", "C_EWS1_tv_radio")
 st_write(no_tv_radio, "output/social_susceptibility/C_EWS1_tv_radio.gpkg", append = FALSE)
+
+gini_index <- locations
+gini_index$S_ECO4_val <- 35.7
+gini_index$S_ECO4_norm <- 0.15 # XXX normalize globally?
+st_write(gini_index, "output/social_susceptibility/S_ECO4_gini_index.gpkg", append = FALSE)
+
+
+agriculture_to_GDP <- locations
+agriculture_to_GDP$S_OCU1_val <- 17.7
+agriculture_to_GDP$S_OCU1_norm <- 1 # XXX normalize globally?
+st_write(agriculture_to_GDP, "output/social_susceptibility/S_OCU1_Agriculture_to_GDP.gpkg", append = FALSE)
+
+Homicide <- locations
+Homicide$S_STA1_val <- 3.3
+Homicide$S_STA1_norm <- 0.18 # XXX normalize globally?
+st_write(Homicide to GDP, "output/social_susceptibility/S_STA1_Homicide.gpkg", append = FALSE)
+
+Bribe <- locations
+Bribe$S_GOV1_val <- 31
+Bribe$S_GOV1_norm <- 0.538 # XXX normalize globally?
+st_write(Bribe, "output/social_susceptibility/S_GOV1_Bribe.gpkg", append = FALSE)
+
+early_warning_system <- locations
+early_warning_system$C_EWS2_val <- 4
+early_warning_system$C_EWS2_norm <- 0 # XXX normalize globally?
+st_write(Early warning system, "output/social_susceptibility/C_EWS2_Early_Warning.gpkg", append = FALSE)
+
+health_coverage <- locations
+health_coverage$C_HEA34_val <- 3.5
+health_coverage$C_HEA34_norm <- 0.236 # XXX normalize globally?
+st_write(Health_coverage, "output/social_susceptibility/C_HEA34_health_coverage.gpkg", append = FALSE)
+
+lending_interest <- locations
+lending_interest$C_SAV3_val <- 7.10
+lending_interest$C_SAV3_norm <- 0 # XXX normalize globally?
+st_write(lending_interest, "output/social_susceptibility/C_SAV3_lending_interest.gpkg", append = FALSE)
+
+Insurance <- locations
+Insurance$C_INS1_val <- 7.10
+Insurance$C_INS1_norm <- 0 # XXX normalize globally?
+st_write(Insurance, "output/social_susceptibility/C_INS1_Insurance.gpkg", append = FALSE)
+
+Foreign_Direct_Investment <- locations
+Foreign_Direct_Investment$A_GOV4_val <- 6.4
+Foreign_Direct_Investment$A_GOV4_norm <- 0 # XXX normalize globally?
+st_write(Insurance, "output/social_susceptibility/A_GOV4_Foreign_Direct_Investment.gpkg", append = FALSE)
+
+Research_and_development <- locations
+Research_and_development$A_IIR1_val <- 0.6
+Research_and_development$A_IIR1_norm <- 0.6 # XXX normalize globally?
+st_write(Insurance, "output/social_susceptibility/CA_IIR1_Research_and_development.gpkg", append = FALSE)
+
+Participation_in_treaties <- locations
+Participation_in_treaties$ER_TRE1_val <- 0.6
+Participation_in_treaties$ER_TRE1_norm <- 0.6 # XXX normalize globally?
+st_write(Insurance, "output/social_susceptibility/ER_TRE1_Participation_in_treaties.gpkg", append = FALSE)
+
+
+
+
+
 
 # Mobile
 # https://www.gsma.com/mobileeconomy/wp-content/uploads/2021/08/GSMA_ME_APAC_2021_Web_Singles.pdf
