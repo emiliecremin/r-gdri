@@ -25,19 +25,19 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 
 ## All classes
 
-| Value | Color  | Description                | Forests | Ecosystems |
-| ----- | ------ | -------------------------- | ------- | ---------- |
-| 10    | 006400 | Trees                      | ✅      | ✅         |
-| 20    | ffbb22 | Shrubland                  |         | ✅         |
-| 30    | ffff4c | Grassland                  |         | ✅         |
-| 40    | f096ff | Cropland                   |         | ✅         |
-| 50    | fa0000 | Built-up                   |
-| 60    | b4b4b4 | Barren / sparse vegetation |
-| 70    | f0f0f0 | Snow and ice               |
-| 80    | 0064c8 | Open water                 |         | ✅         |
-| 90    | 0096a0 | Herbaceous wetland         |         | ✅         |
-| 95    | 00cf75 | Mangroves                  | ✅      | ✅         |
-| 100   | fae6a0 | Moss and lichen            |         | ✅         |
+| Value | Color  | Description                | Forests | Ecosystems | Agrosystem |
+| ----- | ------ | -------------------------- | ------- | ---------- | ---------- |
+| 10    | 006400 | Trees                      | ✅       | ✅          |            |
+| 20    | ffbb22 | Shrubland                  |         | ✅          |            |
+| 30    | ffff4c | Grassland                  |         | ✅          |            |
+| 40    | f096ff | Cropland                   |         |            | ✅          |
+| 50    | fa0000 | Built-up                   |         |            |            |
+| 60    | b4b4b4 | Barren / sparse vegetation |         |            |            |
+| 70    | f0f0f0 | Snow and ice               |         |            |            |
+| 80    | 0064c8 | Open water                 |         | ✅          |            |
+| 90    | 0096a0 | Herbaceous wetland         |         | ✅          |            |
+| 95    | 00cf75 | Mangroves                  | ✅       | ✅          |            |
+| 100   | fae6a0 | Moss and lichen            |         | ✅          |            |
 
 # GDRI
 
@@ -61,8 +61,8 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 
 ### Social Exposure
 
-| indicator | description                 | Vietnam      | Bangladesh | India |
-| --------- | --------------------------- | ------------ | ---------- | ----- |
+| indicator | description                 | Vietnam     | Bangladesh | India |
+| --------- | --------------------------- | ----------- | ---------- | ----- |
 | S_EXP_COF | pop exposed to storm surges | ✅           | no         | no    |
 | S_EXP_CYC | pop exposed to cyclones     | ✅           | no         | no    |
 | S_EXP_DRO | pop exposed to drought      | ✅           | no         | no    |
@@ -71,8 +71,8 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 
 ### Ecosystem Exposure
 
-| indicator | description                       | Vietnam      | Bangladesh | India |
-| --------- | --------------------------------- | ------------ | ---------- | ----- |
+| indicator | description                       | Vietnam     | Bangladesh | India |
+| --------- | --------------------------------- | ----------- | ---------- | ----- |
 | E_EXP_COF | ecosystem exposed to storm surges | ✅           | no         | no    |
 | E_EXP_CYC | ecosystem exposed to cyclones     | ✅           | no         | no    |
 | E_EXP_DRO | ecosystem exposed to drought      | ✅           | no         | no    |
@@ -80,218 +80,103 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 | E_EXP_SAL | ecosystem exposed to salinity     | 🚫 (no data) | no         | no    |
 
 Additional  
-S_EXP_SUB Subsidence  
-E_EXP_SUB Subsidence
+| indicator | description                     | Vietnam | Bangladesh | India |
+| --------- | ------------------------------- | ------- | ---------- | ----- |
+| E_EXP_SUB | ecosystem exposed to subisdence | no      | no         | no    |
+| S_EXP_SUB | pop exposed to subisdence       | no      | no         | no    |
 
-Risks from GDIS + EM-DAT
+Other hazards can be extracted from the results of INVEST model
+Other data can be extracted from GDIS + EM-DAT
 
 ## ECOSYSTEM
 
 ### Ecosystem susceptibility
 
-ES_DES2 Freshwater scarcity https://www.unep-wcmc.org
+| indicator | description                   | Vietnam     | Bangladesh | India | data source                                         |
+| --------- | ----------------------------- | ----------- | ---------- | ----- | --------------------------------------------------- |
+| ES_DES2   | Freshwater scarcity           | ✅           | no         | no    | [unep-wcmc]([unep-wcmc](https://www.unep-wcmc.org)) |
+| E_EXP_CYC | ecosystem exposed to cyclones | ✅           | no         | no    |                                                     |
+| E_EXP_DRO | ecosystem exposed to drought  | ✅           | no         | no    |                                                     |
+| E_EXP_FLO | ecosystem exposed to floods   | ✅           | no         | no    |                                                     |
+| E_EXP_SAL | ecosystem exposed to salinity | 🚫 (no data) | no         | no    |                                                     |
 
-ES_DES3 Percentage of deforested area (%) GFC -> done for Vietnam
+ Freshwater scarcity https://www.unep-wcmc.org
 
-ES_FRA2 River connectivity (River basin scale)
-ES_FRA3 Forest connectivity GFC
-ES_DEG1 Water quality of freshwater bodies http://www.wri.org
-ES_DEG2 Groundwater quality http://geodata.grid.unep.ch
-
-ES_DEG4 Return Flow Ratio http://www.wri.org
-ES_DEG6 Soil organic matter https://www.soilgrids.org
-ES_DEG9 Cation exchange capacity https://www.soilgrids.org
-ES_FRG1 Percentage of area covered by “problem soils” (%) (laocl: raster) http://geodata.grid.unep.ch
-ES_BIO1a Species richness adjusted by intactness https://www.unep-wcmc.org
-
-New
-ES_DEG4 Waterstress http://www.wri.org
-ES_DEG_GTD Ground Table Depletion http://www.wri.org
+| indicator  | description                                       | Vietnam | Bangladesh | India | data source                 |
+| ---------- | ------------------------------------------------- | ------- | ---------- | ----- | --------------------------- |
+| ES_DES3    | deforested area (%) GFC                           | ✅       | no         | no    |                             |
+| ES_FRA2    | River connectivity (River basin scale)            | ✅       | no         | no    |                             |
+| ES_FRA3    | Forest connectivity GFC                           | ✅       | no         | no    |                             |
+| ES_DEG1    | Water quality of freshwater bodies                | ✅       | no         | no    | http://www.wri.org          |
+| ES_DEG2    | Groundwater quality                               | ✅       | no         | no    | http://geodata.grid.unep.ch |
+| ES_DEG4    | Return Flow Ratio                                 | ✅       | no         | no    | http://www.wri.org          |
+| ES_DEG6    | Soil organic matter                               | ✅       | no         | no    | https://www.soilgrids.org   |
+| ES_DEG9    | Cation exchange capacity                          | ✅       | no         | no    | https://www.soilgrids.org   |
+| ES_FRG1    | Percentage of area covered by “problem soils” (%) | ✅       | no         | no    | http://geodata.grid.unep.ch |
+| ES_BIO1a   | Species richness adjusted by intactness           | ✅       | no         | no    | https://www.unep-wcmc.org   |
+| ES_DEG4    | Waterstress                                       | ✅       | no         | no    | http://www.wri.org          |
+| ES_DEG_GTD | Ground Table Depletion                            | ✅       | no         | no    | http://www.wri.org          |
 
 ### Ecosystem robustness
-
-ER_CON1 Percentage of forest area protected and designated for the conservation of biodiversity (%) https://www.protectedplanet.net - done for vietnam
-ER_RES2 Percentage of forest area restored (%) GFC - done for Vietnam
-
-ER_POL2 Policies supporting biodiversity conservation (National) https://www.cbd.int/
-ER_TRE1 Participation in treaties - CBD, CITES, CMS, RAMSAR (National)
-
-ER_BIO2 Mean Species Abundance (MSA) - To do
-ER_ECO1 Ecosystem Functionality Index (EFI) - to do
-ER_FUN2 Donor aid for adaptation (local) http://aiddata.org/gis - to do
+| indicator | description                                                    | Vietnam | Bangladesh | India | data source                                        |
+| --------- | -------------------------------------------------------------- | ------- | ---------- | ----- | -------------------------------------------------- |
+| ER_CON1   | Forest area protected, conservation of biodiversity (%)        | ✅       | no         | no    | http://www.wri.org https://www.protectedplanet.net |
+| ER_RES2   | Percentage of forest area restored (%) GFC                     | ✅       | no         | no    | http://www.wri.org                                 |
+| ER_POL2   | Policies supporting biodiversity conservation (National)       | ✅       | no         | no    | https://www.cbd.int/                               |
+| ER_TRE1   | Participation in treaties - CBD, CITES, CMS, RAMSAR (National) | ✅       | no         | no    |                                                    |
+| ER_BIO2   | Mean Species Abundance (MSA)                                   | ✅       | no         | no    | - To do                                            |
+| ER_ECO1   | Ecosystem Functionality Index (EFI)                            | ✅       | no         | no    | - to do                                            |
+| ER_FUN2   | Donor aid for adaptation (local)                               | ✅       | no         | no    | http://aiddata.org/gis - to do                     |
 
 - TODO: Need data sources
 
-## SOCIAL - Lack of adaptative capacity
+## SOCIAL
 
-C_EWS2 Existence of early warning systems (EWS) - todo
-UNISDR - http://www.preventionweb.net
-Level of progress in EWS according to UNISDR
+### Lack of adaptative capacity
 
-C_SHE1 Access to shelter places (Shelter places per 1,000 people) -> Vietnam - check
-Proxy: Density of schools km2 per 100,000 inhabitants
-http://www.openstreetmap.org
-**source: osm**
+| indicator | description                                                                     | Vietnam | Bangladesh | India | data source                                |
+| --------- | ------------------------------------------------------------------------------- | ------- | ---------- | ----- | ------------------------------------------ |
+| C_EWS2    | Existence of early warning systems (EWS)                                        | ✅       | no         | no    | UNISDR - http://www.preventionweb.net      |
+| C_SHE1    | Access to shelter: Density of schools km2 / 100k inhab.                         | ✅       | no         | no    | http://www.openstreetmap.org               |
+| C_INF1    | Percentage of households without waste/water treatment (%)                      | To do   | no         | no    |                                            |
+| C_GOV2    | Access to emergency services: hospitals, fire brigades, police                  | ✅       | no         | no    | http://www.openstreetmap.org               |
+| C_TRA1    | Access to transportation network: roads, waterways / 100k inhab.                | ✅       | no         | no    | http://www.openstreetmap.org               |
+| C_TRA2    | Percentage of households without individual car or motorcycle (%)               | ✅       | no         | no    |                                            |
+| C_GOV1    | Poor governance (National?): Corruption Perception Index (CPI)                  | To do   | no         | no    | http://www.transparency.org                |
+| C_GOV3    | No national food reserves available (binary) (National?)                        | To do   | no         | no    | projects.worldbank.org / foodgrainsbank.ca |
+| C_HEA1    | Number of hospital beds per 1,000 inhabitants                                   | To do   | no         | no    | bbs.gov.bd / wbhealth.gov.in / gso.gov.vn  |
+| C_HEA3    | Public health expenditure (% of GDP)                                            | To do   | no         | no    | http://data.worldbank.org/                 |
+| C_HEA4    | Private health expenditure (% of GDP)                                           | To do   | no         | no    | http://data.worldbank.org/                 |
+| C_SAV1    | Percentage of households without gross savings (%)                              | To do   | no         | no    | http://datatopics.worldbank.org            |
+| C_SAV2    | Percentage of households without access to bank loans / (micro-) credits (%)    | To do   | no         | no    | http://datatopics.worldbank.org            |
+| C_SAV3    | Lending interest rate (%) (National)                                            | To do   | no         | no    | http://data.worldbank.org                  |
+| C_INS1    | Percentage of households with insurance – excluding health insurance (National) | To do   | no         | no    | http://www.worldmapofmicroinsurance.org    |
+| A_GOV4    | Foreign Direct Investment (FDI) (National)                                      | To do   | no         | no    | http://data.worldbank.org                  |
+| A_GOV6    | Donor aid for adaptation (local)                                                | To do   | no         | no    | http://aiddata.org/gis                     |
+| A_IIR1    | Percentage of GDP spent on innovation and research (%) (National)               | To do   | no         | no    | http://data.uis.unesco.org                 |
 
-C_INF1 Percentage of households without access to waste/water treatment (%) -> todo
-Proxy: Percentage of households without access to sewage drainage system (%)
-
-C_GOV2 Access to emergency services: hospitals, fire brigades, police stations -> Vietnam - check
-Proxy: Density of emergency services: hospitals, fire brigades, police stations per 100,000 inhabitants
-http://www.openstreetmap.org
-**source: osm**
-
-C_TRA1 Access to transportation network -> Vietnam - check
-Proxy: Density of transportation network: roads (highways, trunks, primary / secondary / tertiary), waterways (rivers / canals / streams), ferry stations per 100,000 inhabitants
-http://www.openstreetmap.org
-**source: osm**
-
-C_TRA2 Percentage of households without individual means of transportation: car or motorcycle (%)
-Proxy: Percentage of households without individual means of transportation: car or motorcycle (%)
-
-C_GOV1 Poor governance (National?)
-Corruption Perception Index (CPI)
-http://www.transparency.org
-
-C_GOV3 No national food reserves available (binary) (National?)
-http://projects.worldbank.org/
-http://www.foodgrainsbank.ca
-
-C_HEA1 Number of hospital beds per 1,000 inhabitants
-Proxy: Number of doctors per 1000 inhabitants; access to hospitals (travel time); number of hospitals per 1,000 people
-http://www.bbs.gov.bd
-http://www.wbhealth.gov.in
-https://www.gso.gov.vn
-
-C_HEA3 Public health expenditure (% of GDP)
-http://data.worldbank.org/
-**source: worldbank**
-
-C_HEA4 Private health expenditure (% of GDP)
-http://data.worldbank.org/
-**source: worldbank**
-
-C_SAV1 Percentage of households without gross savings (%)
-Proxy: Population (age 15+) who has not saved any money in the last year (%)
-http://datatopics.worldbank.org
-
-C_SAV2 Percentage of households without access to bank loans / (micro-) credits (%)
-Proxy: Population (age 15+) who has not borrowed any money in the last year (%)
-http://datatopics.worldbank.org
-
-C_SAV3 Lending interest rate (%) (National)
-http://data.worldbank.org
-
-C_INS1 Percentage of households with insurance – excluding health insurance (National)
-Proxy: Microinsurance penetration (%)
-http://www.worldmapofmicroinsurance.org
-
-A_GOV4 Foreign Direct Investment (FDI) (National)
-Proxy: Net inflow in US$ (% of GDP)
-http://data.worldbank.org
-**source: worldbank**
-
-A_GOV6 Donor aid for adaptation (local)
-Proxy: Density of aid projects (governance, DRM) in the past 10 years per km2
-http://aiddata.org/gis
-
-A_IIR1 Percentage of GDP spent on innovation and research (%) (National)
-http://data.uis.unesco.org
-
-## Social susceptibility
-
-S_SOC3 Percentage female-headed households (%) -> done Vietnam
-**source: ipums census**
-
-S_SOC4 Travel time to closest city (mins)
-European Commission Joint Research Centre (JRC) - http://forobs.jrc.ec.europa.eu
-**source: AidDataGeoQuery**
-
-S_SOC5 Percentage of population with disabilities (%)-> done Vietnam
-**source: ipums census**
-
-S_SOC8 Percentage of illiterate population (%) -> done Vietnam
-**source: ipums census**
-
-S_INF1 / S_INF1_621 Percentage of population without access to (improved) sanitation (%)-> done Vietnam
-**source: ipums census**
-
-S_INF2 / S_INF2_611 Percentage of population without access to clean water (%) -> done Vietnam
-**source: ipums census**
-
-New
-S_INF1_631 Proportion of domestic and industrial wastewater flows safely treated -> done Vietnam
-
-S_INF3 Percentage of population without access to electricity (%) -> done Vietnam
-**source: ipums census**
-
-C_EWS1 Percentage of households without access to information (%) -> done Vietnam
-Radio, TV, phone, internet
-Proxy: Percentage of households without access to internet (%)
-(Digital divide)
-**source: ipums census**
-
-S_ECO1 Percentage of population below national poverty line (%) -> to do
-Bangladesh Bureau of Statistics (BD) - http://www.bbs.gov.bd
-Tendulkar Poverty Definition (IN) - http://www.livemint.com
-General Statistics Office of Vietnam (VN) - https://www.gso.gov.vn
-
-S_ECO2 Dependency ratio (%) -> done Vietnam
-The dependency ratio indicates the proportion of economically dependent population to the income generating population.
-The indicator gives an insight into the amount of people in non-working age (children and elderly), compared to the number of those in working age, which is defined by the World Bank as 15 to 64 years.
-**source: ipums census**
-
-S_ECO4 GINI index (national level?)
-United Nations Development Programme (UNDP) - http://hdr.undp.org
-
-S_OCU1 Dependency on agriculture / forestry / fisheries for livelihood (%) (TODO)
-Or PROXY  
-Percentage of contribution of agriculture / forestry / fisheries to GPD (%) per province
-
-S_STA1 Prevalence of population who experience violence (%) (TODO)
-Or PROXY  
-Homicide rate per 100,000 inhabitants
-http://homicide.igarape.org.br
-http://www.visionofhumanity.org
+### Social susceptibility
+| indicator           | description                                                | Vietnam | Bangladesh | India | data source                                              |
+| ------------------- | ---------------------------------------------------------- | ------- | ---------- | ----- | -------------------------------------------------------- |
+| S_SOC3              | Percentage female-headed households (%)                    | ✅       | no         | no    | ipums census                                             |
+| S_SOC4              | Travel time to closest city (mins)                         | ✅       | no         | no    | [JRC](http://forobs.jrc.ec.europa.eu) or AidDataGeoQuery |
+| S_SOC5              | Percentage of population with disabilities (%)             | ✅       | no         | no    | ipums census                                             |
+| S_SOC8              | Percentage of illiterate population (%)                    | ✅       | no         | no    | ipums census                                             |
+| S_INF1 / S_INF1_621 | Population without access to (improved) sanitation (%)     | ✅       | no         | no    | ipums census                                             |
+| S_INF2 / S_INF2_611 | Population without access to clean water (%)               | ✅       | no         | no    | ipums census                                             |
+| S_INF1_631          | Proportion of wastewater flows safely treated              | To do   | no         | no    | WRI AQUEDUCT                                             |
+| S_INF3              | Population without access to electricity (%)               | ✅       | no         | no    | ipums census                                             |
+| C_EWS1              | Percentage of households without access to information (%) | ✅       | no         | no    | ipums census                                             |
+| S_ECO1              | Population below national poverty line (%)                 | To do   | no         | no    |                                                          |
+| S_ECO2              | Dependency ratio (%) below 15 and above 64 years old       | ✅       | no         | no    | ipums census                                             |
+| S_ECO4              | GINI index (national level?)                               | To do   | no         | no    | [UNDP](http://hdr.undp.org)                              |
+| S_OCU1              | Dependency on agriculture / forestry / fisheries (%)       | To do   | no         | no    |                                                          |
+| S_STA1              | Prevalence of violence (%): Homicides per 100k inhab.      | To do   | no         | no    | homicide.igarape.org.br / visionofhumanity.org           |
 
 Additional
 
 - Malnutrition ...
 
-### DONE: 15
-
-- 8 ipums census
-- 4 worldbank
-- 3 OSM
-
-### DOING: 2
-
-2 AidDataGeoQuery
-
-- S_SOC4 Travel time to closest city (mins)
-- A_GOV6 Donor aid for adaptation
-
-### TODO: 15
-
-- S_ECO1 Percentage of population below national poverty line (%)
-- S_ECO4 GINI index (national level?)
-- S_OCU1 Dependency on agriculture / forestry / fisheries for livelihood (%)
-- S_STA1 Prevalence of population who experience violence (%)
-- C_EWS2 Existence of early warning systems (EWS)
-- C_INF1 Percentage of households without access to waste/water treatment (%)
-- C_TRA2 Percentage of households without individual means of transportation: car or motorcycle (%)
-- C_GOV1 (National?) Poor governance - Corruption Perception Index (CPI)
-- C_GOV3 (National?) No national food reserves available (binary)
-- C_HEA1 Number of hospital beds per 1,000 inhabitants
-- C_SAV1 Percentage of households without gross savings (%)
-- C_SAV2 Percentage of households without access to bank loans / (micro-) credits (%)
-- C_SAV3 Lending interest rate (%)
-- C_INS1 Percentage of households with insurance – excluding health insurance
-- A_IIR1 Percentage of GDP spent on innovation and research (%)
-
-- MALNUTRITION ???
-
-## Indicators
 
 ## Data sources
 
