@@ -8,7 +8,6 @@ install.packages("gfcanalysis")
 # Load the gfcanalysis package
 library(gfcanalysis)
 
-source("common/admin.R")
 source("common/helpers.R")
 
 ### zonal statistics using "exactextractr"
@@ -16,8 +15,9 @@ source("common/helpers.R")
 install.packages("exactextractr")
 library(exactextractr)
 
+aoi <- st_read("data/ADMIN/admin_with_buffer.shp") %>% st_transform(4326)
 forests <- raster("data/ESA_Landcover/VNM_forests.tif")
-aoi$cnt <- exact_extract(forests, admin_shp, "sum")
+aoi$cnt <- exact_extract(forests, aoi, "sum")
 aoi$val <- aoi$cnt / aoi$area
 aoi$norm <- normalize_minmax(aoi$val, na.rm = TRUE)
 st_write(
