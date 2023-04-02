@@ -92,42 +92,51 @@ Other data can be extracted from GDIS + EM-DAT
 
 ### Ecosystem susceptibility
 
-| indicator | description                   | Vietnam     | Bangladesh | India | data source                                         |
-| --------- | ----------------------------- | ----------- | ---------- | ----- | --------------------------------------------------- |
-| ES_DES2   | Freshwater scarcity           | ✅           | no         | no    | [unep-wcmc]([unep-wcmc](https://www.unep-wcmc.org)) |
-| E_EXP_CYC | ecosystem exposed to cyclones | ✅           | no         | no    |                                                     |
-| E_EXP_DRO | ecosystem exposed to drought  | ✅           | no         | no    |                                                     |
-| E_EXP_FLO | ecosystem exposed to floods   | ✅           | no         | no    |                                                     |
-| E_EXP_SAL | ecosystem exposed to salinity | 🚫 (no data) | no         | no    |                                                     |
-
- Freshwater scarcity https://www.unep-wcmc.org
-
-| indicator  | description                                       | Vietnam | Bangladesh | India | data source                 |
-| ---------- | ------------------------------------------------- | ------- | ---------- | ----- | --------------------------- |
-| ES_DES3    | deforested area (%) GFC                           | ✅       | no         | no    |                             |
-| ES_FRA2    | River connectivity (River basin scale)            | ✅       | no         | no    |                             |
-| ES_FRA3    | Forest connectivity GFC                           | ✅       | no         | no    |                             |
-| ES_DEG1    | Water quality of freshwater bodies                | ✅       | no         | no    | http://www.wri.org          |
-| ES_DEG2    | Groundwater quality                               | ✅       | no         | no    | http://geodata.grid.unep.ch |
-| ES_DEG4    | Return Flow Ratio                                 | ✅       | no         | no    | http://www.wri.org          |
-| ES_DEG6    | Soil organic matter                               | ✅       | no         | no    | https://www.soilgrids.org   |
-| ES_DEG9    | Cation exchange capacity                          | ✅       | no         | no    | https://www.soilgrids.org   |
-| ES_FRG1    | Percentage of area covered by “problem soils” (%) | ✅       | no         | no    | http://geodata.grid.unep.ch |
-| ES_BIO1a   | Species richness adjusted by intactness           | ✅       | no         | no    | https://www.unep-wcmc.org   |
-| ES_DEG4    | Waterstress                                       | ✅       | no         | no    | http://www.wri.org          |
-| ES_DEG_GTD | Ground Table Depletion                            | ✅       | no         | no    | http://www.wri.org          |
+| indicator     | description                                                            | Vietnam  | Bangladesh | India | data source                                                                             |
+| ------------- | ---------------------------------------------------------------------- | -------- | ---------- | ----- | --------------------------------------------------------------------------------------- |
+| ES_BIO1a_1551 | Species richness adjusted by intactness                                | no       | no         | no    | [https://www.unep-wcmc.org  ](http://biodiversitymapping.org/wordpress/index.php/home/) |
+| ES_BIO_1571   | Proportion of traded wildlife that was poached or illicitly trafficked | no       | no         | no    | https://www.unep-wcmc.org                                                               |
+| ES_BIO2       | Mean Species Abundance (MSA)                                           | no       | no         | no    | http://www.globio.info                                                                  |
+| ES_DEG_1411   | Coastal eutrophication and floating plastic                            | ✅        | no         | no    | http://www.wri.org                                                                      |
+| ES_DEG_1431   | marine acidity (pH)                                                    | no       | no         | no    | http://www.wri.org                                                                      |
+| ES_DEG_1531   | land degraded over total land area                                     | no       | no         | no    | http://www.wri.org                                                                      |
+| ES_DEG1       | Water quality of freshwater bodies                                     | ✅        | no         | no    | http://www.wri.org                                                                      |
+| ES_DEG2       | Ground water quality / arsenic in ground water                         | ✅        | no         | no    | http://www.wri.org                                                                      |
+| ES_DEG4       | Return Flow Ratio                                                      | ✅        | no         | no    | http://www.wri.org                                                                      |
+| ES_DEG4_642   | Waterstress                                                            | ✅        | no         | no    | http://www.wri.org                                                                      |
+| ES_DEG6       | Soil organic matter                                                    | no       | no         | no    | https://www.soilgrids.org                                                               |
+| ES_DEG9       | Cation exchange capacity                                               | no       | no         | no    | https://www.soilgrids.org                                                               |  |
+| ES_DEG_GTD    | Ground Table Depletion                                                 | ✅        | no         | no    | http://www.wri.org                                                                      |
+| ES_DES1_1511  | Forest area / total land                                               | ✅        | no         | no    |                                                                                         |
+| ES_DES2       | Freshwater scarcity                                                    | on going | no         | no    | [unep-wcmc]([unep-wcmc](https://www.unep-wcmc.org))                                     |
+| ES_DES3       | deforested area (%) GFC                                                | ✅        | no         | no    |                                                                                         |
+| ES_FRA1       | Wetland connectivity                                                   | ✅        | no         | no    |                                                                                         |
+| ES_FRA2       | River connectivity (River basin scale)                                 | ✅        | no         | no    |                                                                                         |
+| ES_FRA3       | Forest connectivity GFC                                                | ✅        | no         | no    |                                                                                         |
+| ES_FRA4       | Wetland drained                                                        | ✅        | no         | no    |                                                                                         |
+| ES_FRG1       | Percentage of area covered by “problem soils” (%)                      | no       | no         | no    | http://geodata.grid.unep.ch                                                             |
+| ES_FRG3       | area covered by critical stes for conservation                         | no       | no         | no    | http://geodata.grid.unep.ch                                                             |
 
 ### Ecosystem robustness
-| indicator | description                                                    | Vietnam | Bangladesh | India | data source                                        |
-| --------- | -------------------------------------------------------------- | ------- | ---------- | ----- | -------------------------------------------------- |
-| ER_CON1   | Forest area protected, conservation of biodiversity (%)        | ✅       | no         | no    | http://www.wri.org https://www.protectedplanet.net |
-| ER_RES2   | Percentage of forest area restored (%) GFC                     | ✅       | no         | no    | http://www.wri.org                                 |
-| ER_POL2   | Policies supporting biodiversity conservation (National)       | ✅       | no         | no    | https://www.cbd.int/                               |
-| ER_TRE1   | Participation in treaties - CBD, CITES, CMS, RAMSAR (National) | ✅       | no         | no    |                                                    |
-| ER_BIO2   | Mean Species Abundance (MSA)                                   | ✅       | no         | no    | - To do                                            |
-| ER_ECO1   | Ecosystem Functionality Index (EFI)                            | ✅       | no         | no    | - to do                                            |
-| ER_FUN2   | Donor aid for adaptation (local)                               | ✅       | no         | no    | http://aiddata.org/gis - to do                     |
-
+| indicator    | description                                                                | Vietnam | Bangladesh | India | data source                                        |
+| ------------ | -------------------------------------------------------------------------- | ------- | ---------- | ----- | -------------------------------------------------- |
+| ER_CON1_1512 | Forest area protected, conservation of biodiversity (%)                    | ✅       | no         | no    | http://www.wri.org https://www.protectedplanet.net |
+| ER_CON2_15a1 | Developement assistance                                                    | check   | no         | no    | http://www.wri.org https://www.protectedplanet.net |
+| ER_POL1_1591 | Progress towards national targets Aichi Biodiversity Target 2              | check   | no         | no    | https://www.cbd.int/                               |
+| ER_POL2      | Policies supporting biodiversity conservation (National)                   | check   | no         | no    | https://www.cbd.int/                               |
+| ER_POL3_1581 | Prevention or control of invasive alien species                            | check   | no         | no    | https://www.cbd.int/                               |
+| ER_POL4_1541 | Coverage by protected areas of important sites for coastal biodiversity    | check   | no         | no    | https://www.cbd.int/                               |
+| ER_POL_1421  | National exclusive economic zones managed using ecosystem-based approaches | check   | no         | no    | https://www.cbd.int/                               |
+| ER_POL_1521  | Progress towards sustainable forest management                             | check   | no         | no    | https://www.cbd.int/                               |
+| ER_TRE1      | Participation in treaties - CBD, CITES, CMS, RAMSAR (National)             | check   | no         | no    |                                                    |
+| ER_BIO2      | Mean Species Abundance (MSA)                                               | to do   | no         | no    | - To do                                            |
+| ER_ECO1      | Ecosystem Functionality Index (EFI)                                        | to do   | no         | no    | - to do                                            |
+| ER_FUN2      | Donor aid for adaptation (local)                                           | check   | no         | no    | http://aiddata.org/gis - to do                     |
+| ER_RES1      | wetland restored (%) GFC                                                   | check   | no         | no    | http://www.wri.org                                 |
+| ER_RES2      | forest / Mangrove area restored (%) GFC                                    | check   | no         | no    | http://www.wri.org                                 |
+| ER_WAT1_632  | Proportion of bodies of water with good ambient water quality              | check   | no         | no    | http://www.wri.org                                 |
+| ER_WAT2_641  | Change in water use efficiency over time                                   | check   | no         | no    | http://www.wri.org                                 |
+| ER_TRE       | Participation in treaties - CBD, CITES, CMS, RAMSAR                        | check   | no         | no    | http://www.wri.org                                 |
 - TODO: Need data sources
 
 ## SOCIAL
@@ -156,22 +165,22 @@ Other data can be extracted from GDIS + EM-DAT
 | A_IIR1    | Percentage of GDP spent on innovation and research (%) (National)               | To do   | no         | no    | http://data.uis.unesco.org                 |
 
 ### Social susceptibility
-| indicator           | description                                                | Vietnam | Bangladesh | India | data source                                              |
-| ------------------- | ---------------------------------------------------------- | ------- | ---------- | ----- | -------------------------------------------------------- |
-| S_SOC3              | Percentage female-headed households (%)                    | ✅       | no         | no    | ipums census                                             |
-| S_SOC4              | Travel time to closest city (mins)                         | ✅       | no         | no    | [JRC](http://forobs.jrc.ec.europa.eu) or AidDataGeoQuery |
-| S_SOC5              | Percentage of population with disabilities (%)             | ✅       | no         | no    | ipums census                                             |
-| S_SOC8              | Percentage of illiterate population (%)                    | ✅       | no         | no    | ipums census                                             |
-| S_INF1 / S_INF1_621 | Population without access to (improved) sanitation (%)     | ✅       | no         | no    | ipums census                                             |
-| S_INF2 / S_INF2_611 | Population without access to clean water (%)               | ✅       | no         | no    | ipums census                                             |
-| S_INF1_631          | Proportion of wastewater flows safely treated              | To do   | no         | no    | WRI AQUEDUCT                                             |
-| S_INF3              | Population without access to electricity (%)               | ✅       | no         | no    | ipums census                                             |
-| C_EWS1              | Percentage of households without access to information (%) | ✅       | no         | no    | ipums census                                             |
-| S_ECO1              | Population below national poverty line (%)                 | To do   | no         | no    |                                                          |
-| S_ECO2              | Dependency ratio (%) below 15 and above 64 years old       | ✅       | no         | no    | ipums census                                             |
-| S_ECO4              | GINI index (national level?)                               | To do   | no         | no    | [UNDP](http://hdr.undp.org)                              |
-| S_OCU1              | Dependency on agriculture / forestry / fisheries (%)       | To do   | no         | no    |                                                          |
-| S_STA1              | Prevalence of violence (%): Homicides per 100k inhab.      | To do   | no         | no    | homicide.igarape.org.br / visionofhumanity.org           |
+| indicator           | description                                            | Vietnam | Bangladesh | India | data source                                              |
+| ------------------- | ------------------------------------------------------ | ------- | ---------- | ----- | -------------------------------------------------------- |
+| S_SOC3              | Percentage female-headed households (%)                | ✅       | no         | no    | ipums census                                             |
+| S_SOC4              | Travel time to closest city (mins)                     | ✅       | no         | no    | [JRC](http://forobs.jrc.ec.europa.eu) or AidDataGeoQuery |
+| S_SOC5              | population with disabilities (%)                       | ✅       | no         | no    | ipums census                                             |
+| S_SOC8              | illiterate population (%)                              | ✅       | no         | no    | ipums census                                             |
+| S_INF1 / S_INF1_621 | Population without access to (improved) sanitation (%) | ✅       | no         | no    | ipums census                                             |
+| S_INF2 / S_INF2_611 | Population without access to clean water (%)           | ✅       | no         | no    | ipums census                                             |
+| S_INF1_631          | Proportion of wastewater flows safely treated          | ✅       | no         | no    | WRI AQUEDUCT                                             |
+| S_INF3              | Population without access to electricity (%)           | ✅       | no         | no    | ipums census                                             |
+| C_EWS1              | households without access to information (%)           | ✅       | no         | no    | ipums census                                             |
+| S_ECO1              | Population below national poverty line (%)             | To do   | no         | no    |                                                          |
+| S_ECO2              | Dependency ratio (%) below 15 and above 64 years old   | ✅       | no         | no    | ipums census                                             |
+| S_ECO4              | GINI index (national level?)                           | ✅       | no         | no    | [UNDP](http://hdr.undp.org)                              |
+| S_OCU1              | Dependency on agriculture / forestry / fisheries (%)   | To do   | no         | no    |                                                          |
+| S_STA1              | Prevalence of violence (%): Homicides per 100k inhab.  | To do   | no         | no    | homicide.igarape.org.br / visionofhumanity.org           |
 
 Additional
 
