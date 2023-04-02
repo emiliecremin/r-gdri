@@ -7,7 +7,7 @@ ipums_shp <- ipums_shp %>% dplyr::filter(CNTRY_NAME %in% c("Vietnam", "India", "
 # install.packages("usethis")
 # library(usethis)
 # usethis::edit_r_environ()
-# R_MAX_VSIZE=100Gb 
+# R_MAX_VSIZE=100Gb
 # Error: vector memory exhausted (limit reached?)
 # https://stackoverflow.com/questions/51295402/r-on-macos-error-vector-memory-exhausted-limit-reached
 
@@ -15,7 +15,7 @@ ipums_data <- read.csv(file = "data/IPUMS/ipumsi_00005.csv")
 unique(ipums_data$COUNTRY)
 unique(ipums_data$COUNTRY)
 
-output_dir = "output/social_susceptibility"
+output_dir <- "output/social_susceptibility"
 mkdirs(output_dir)
 
 vnm <- ipums_data %>% dplyr::filter(COUNTRY == 704)
@@ -56,3 +56,14 @@ unique(india$WATSUP) # XXX
 unique(india$ELECTRIC) # XXX
 unique(india$RADIO) # XXX
 unique(india$TV) # XXX
+
+# C-20: Disabled population by type of disability, age and sex
+# https://censusindia.gov.in/nada/index.php/catalog/43388
+
+# Female headed households / district
+# PCA FH: Primary census abstract for female headed households
+# https://censusindia.gov.in/nada/index.php/catalog/7036
+
+# HL-14: Percentage of households to total households by amenities and assets
+# https://censusindia.gov.in/nada/index.php/catalog/9635
+# https://censusindia.gov.in/nada/index.php/catalog/9641
