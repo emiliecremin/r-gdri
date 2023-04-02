@@ -1,14 +1,13 @@
-
 ### zonal statistics using "exactextractr"
 # Calculate annual statistics on forest loss/gain
 install.packages("exactextractr")
 library(exactextractr)
 
-source("common/admin.R")
 source("common/helpers.R")
 source("common/GFC.R")
 
-aoi$cnt <- exact_extract(gfc_thresholded[["lossyear"]], admin_shp, "sum")
+aoi <- st_read("data/ADMIN/admin_with_buffer.shp") %>% st_transform(4326)
+aoi$cnt <- exact_extract(gfc_thresholded[["lossyear"]], aoi, "sum")
 aoi$val <- aoi$cnt / aoi$area
 aoi$norm <- normalize_minmax(aoi$val, na.rm = TRUE)
 st_write(
@@ -16,4 +15,3 @@ st_write(
     "output/ecosystem_sensitivity/ES_DES3_forest_loss.gpkg",
     append = FALSE
 )
-
