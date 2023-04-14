@@ -1,5 +1,0 @@
-library(dplyr)
-library(landscapemetrics)
-library(landscapetools)
-library(raster)
-library(terra)
