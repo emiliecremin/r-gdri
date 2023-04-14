@@ -143,7 +143,7 @@ no_tv_radio <- tv_radio %>%
 no_tv_radio$norm <- normalize_minmax(no_tv_radio$val, na.rm = TRUE)
 no_tv_radio <- joinOnColumn(no_tv_radio, locations, "GEOLEV2")
 mapPlot(no_tv_radio, "norm", "norm min-max", "C_EWS1_tv_radio")
-st_write(no_tv_radio, "output/social_susceptibility/C_EWS1_tv_radio.gpkg", append = FALSE)
+st_write(no_tv_radio, "output/adaptation_capacities/C_EWS1_tv_radio.gpkg", append = FALSE)
 
 gini_index <- locations
 gini_index$S_ECO4_val <- 35.7
