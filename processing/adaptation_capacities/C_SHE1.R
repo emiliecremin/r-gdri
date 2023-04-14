@@ -1,9 +1,10 @@
 library(sf)
 
-source("helpers.R")
-source("osm.R")
+source("common/helpers.R")
+source("common/osm.R")
 
-locations <- readRDS("data/objects/locations")
+sf_use_s2(TRUE)
+locations <- st_read("data/ADMIN/admin.shp") %>% st_transform(4326)
 
 # C_SHE1
 # Access to shelter places
@@ -12,7 +13,7 @@ locations <- readRDS("data/objects/locations")
 # density of primary and secondary schools per km2
 education_services <- c("school", "college", "university")
 
-tmp <- "data/objects/C_SHE1"
+tmp <- "objects/C_SHE1"
 mkdirs(tmp)
 for (i in 1:nrow(locations)) {
     osm_data <- get_osm(
@@ -41,4 +42,4 @@ for (i in 1:nrow(locations)) {
 }
 locations$val <- locations$cnt / as.numeric(locations$area) / locations$pop * 1000
 locations$norm <- normalize_minmax(locations$val, na.rm = TRUE)
-st_write(locations, "output/C_SHE1_schools.shp", layer_options = "ENCODING=UTF-8", append = FALSE)
+st_write(locations, "output/adaptation_capacities/C_SHE1_schools.gpkg", append = FALSE)

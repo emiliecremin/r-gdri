@@ -1,7 +1,10 @@
 library(sf)
 
-source("helpers.R")
-source("osm.R")
+source("common/helpers.R")
+source("common/osm.R")
+
+sf_use_s2(TRUE)
+locations <- st_read("data/ADMIN/admin.shp") %>% st_transform(4326)
 
 # C_TRA1
 # Access to transportation network
@@ -15,12 +18,13 @@ source("osm.R")
 # location_roads <- st_intersection(st_geometry(roads), st_geometry(location))
 # sum(st_length(location_roads))
 
-locations <- readRDS("data/objects/locations")
 
 # highway=trunk, highway=primary, highway=secondary, highway=tertiary, highway=unclassified
-all_road_types <- c("motorway", "trunk", "primary", "secondary", "tertiary", "unclassified")
+all_road_types <- c(
+    "motorway", "trunk", "primary", "secondary", "tertiary", "unclassified"
+)
 
-tmp <- "data/objects/C_TRA1/roads"
+tmp <- "objects/C_TRA1/roads"
 mkdirs(tmp)
 for (i in 1:nrow(locations)) {
     osm_data <- get_osm(
@@ -34,11 +38,17 @@ for (i in 1:nrow(locations)) {
     print(osm_data)
     cnt <- 0
     if (!is.null(osm_data$osm_lines)) {
-        roads <- st_intersection(locations$geometry[i], st_make_valid(osm_data$osm_lines))
+        roads <- st_intersection(
+            locations$geometry[i],
+            st_make_valid(osm_data$osm_lines)
+        )
         cnt <- as.numeric(sum(st_length(roads)))
     }
     if (!is.null(osm_data$osm_multilines)) {
-        roads <- st_intersection(locations$geometry[i], st_make_valid(osm_data$osm_multilines))
+        roads <- st_intersection(
+            locations$geometry[i],
+            st_make_valid(osm_data$osm_multilines)
+        )
         cnt <- as.numeric(sum(st_length(roads)))
     }
     locations$cnt[i] <- cnt
@@ -55,7 +65,7 @@ for (i in 1:nrow(locations)) {
 # Do not use instead of waterway=river or waterway=canal.
 waterways_types <- c("river", "canal", "fairway")
 
-tmp <- "data/objects/C_TRA1/waterways"
+tmp <- "objects/C_TRA1/waterways"
 mkdirs(tmp)
 for (i in 1:nrow(locations)) {
     osm_data <- get_osm(
@@ -69,11 +79,17 @@ for (i in 1:nrow(locations)) {
     print(osm_data)
     cnt <- 0
     if (!is.null(osm_data$osm_lines)) {
-        waterways <- st_intersection(locations$geometry[i], st_make_valid(osm_data$osm_lines))
+        waterways <- st_intersection(
+            locations$geometry[i],
+            st_make_valid(osm_data$osm_lines)
+        )
         cnt <- as.numeric(sum(st_length(waterways)))
     }
     if (!is.null(osm_data$osm_multilines)) {
-        waterways <- st_intersection(locations$geometry[i], st_make_valid(osm_data$osm_multilines))
+        waterways <- st_intersection(
+            locations$geometry[i],
+            st_make_valid(osm_data$osm_multilines)
+        )
         cnt <- as.numeric(sum(st_length(waterways)))
     }
     locations$cnt[i] <- locations$cnt[i] + cnt
@@ -81,4 +97,7 @@ for (i in 1:nrow(locations)) {
 
 locations$val <- locations$cnt / locations$pop * 1000
 locations$norm <- normalize_minmax(locations$val, na.rm = TRUE)
-st_write(locations, "output/C_TRA1_roads_waterways.shp", layer_options = "ENCODING=UTF-8", append = FALSE)
+st_write(
+    locations, "output/adaptation_capacities/C_TRA1_roads_waterways.gpkg",
+    append = FALSE
+)
