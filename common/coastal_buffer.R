@@ -5,7 +5,7 @@ library(dplyr)
 library(sf)
 
 # https://data.apps.fao.org/catalog/organization/fao-region-mapping
-admin_shp <- st_read("../data/ADMIN/admin.shp") %>% st_make_valid()
+admin_shp <- st_read("data/ADMIN/admin.shp") %>% st_make_valid()
 
 st_is_longlat(admin_shp)
 admin_shp <- st_transform(admin_shp, 3857)
@@ -22,7 +22,7 @@ admin_buffer <- regional_seas(
 
 st_write(
   admin_buffer,
-  "../data/ADMIN/admin_buffer.shp",
+  "data/ADMIN/admin_buffer.shp",
   layer_options = "ENCODING=UTF-8",
   append = FALSE
 )
@@ -37,7 +37,7 @@ admin_with_buffer <- admin_with_buffer %>%
 
 st_write(
   admin_with_buffer,
-  "../data/ADMIN/admin_with_buffer.shp",
+  "data/ADMIN/admin_with_buffer.shp",
   layer_options = "ENCODING=UTF-8",
   append = FALSE
 )
