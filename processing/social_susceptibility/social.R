@@ -146,60 +146,60 @@ mapPlot(no_tv_radio, "norm", "norm min-max", "C_EWS1_tv_radio")
 st_write(no_tv_radio, "output/adaptation_capacities/C_EWS1_tv_radio.gpkg", append = FALSE)
 
 gini_index <- locations
-gini_index$S_ECO4_val <- 35.7
-gini_index$S_ECO4_norm <- 0.15 # XXX normalize globally?
+gini_index$val <- 35.7
+gini_index$norm <- 0.15 # XXX normalize globally?
 st_write(gini_index, "output/social_susceptibility/S_ECO4_gini_index.gpkg", append = FALSE)
 
 
 agriculture_to_GDP <- locations
-agriculture_to_GDP$S_OCU1_val <- 17.7
-agriculture_to_GDP$S_OCU1_norm <- 1 # XXX normalize globally?
+agriculture_to_GDP$val <- 17.7
+agriculture_to_GDP$norm <- 1 # XXX normalize globally?
 st_write(agriculture_to_GDP, "output/social_susceptibility/S_OCU1_Agriculture_to_GDP.gpkg", append = FALSE)
 
 Homicide <- locations
-Homicide$S_STA1_val <- 3.3
-Homicide$S_STA1_norm <- 0.18 # XXX normalize globally?
+Homicide$val <- 3.3
+Homicide$norm <- 0.18 # XXX normalize globally?
 st_write(Homicide to GDP, "output/social_susceptibility/S_STA1_Homicide.gpkg", append = FALSE)
 
 Bribe <- locations
-Bribe$S_GOV1_val <- 31
-Bribe$S_GOV1_norm <- 0.538 # XXX normalize globally?
+Bribe$val <- 31
+Bribe$norm <- 0.538 # XXX normalize globally?
 st_write(Bribe, "output/social_susceptibility/S_GOV1_Bribe.gpkg", append = FALSE)
 
 early_warning_system <- locations
-early_warning_system$C_EWS2_val <- 4
-early_warning_system$C_EWS2_norm <- 0 # XXX normalize globally?
-st_write(Early warning system, "output/social_susceptibility/C_EWS2_Early_Warning.gpkg", append = FALSE)
+early_warning_system$val <- 4
+early_warning_system$norm <- 0 # XXX normalize globally?
+st_write(Early warning system, "output/adaptation_capacities/C_EWS2_Early_Warning.gpkg", append = FALSE)
 
 health_coverage <- locations
-health_coverage$C_HEA34_val <- 3.5
-health_coverage$C_HEA34_norm <- 0.236 # XXX normalize globally?
-st_write(Health_coverage, "output/social_susceptibility/C_HEA34_health_coverage.gpkg", append = FALSE)
+health_coverage$val <- 3.5
+health_coverage$norm <- 0.236 # XXX normalize globally?
+st_write(Health_coverage, "output/adaptation_capacities/C_HEA34_health_coverage.gpkg", append = FALSE)
 
 lending_interest <- locations
-lending_interest$C_SAV3_val <- 7.10
-lending_interest$C_SAV3_norm <- 0 # XXX normalize globally?
-st_write(lending_interest, "output/social_susceptibility/C_SAV3_lending_interest.gpkg", append = FALSE)
+lending_interest$val <- 7.10
+lending_interest$norm <- 0 # XXX normalize globally?
+st_write(lending_interest, "output/adaptation_capacities/C_SAV3_lending_interest.gpkg", append = FALSE)
 
 Insurance <- locations
-Insurance$C_INS1_val <- 7.10
-Insurance$C_INS1_norm <- 0 # XXX normalize globally?
-st_write(Insurance, "output/social_susceptibility/C_INS1_Insurance.gpkg", append = FALSE)
+Insurance$val <- 7.10
+Insurance$norm <- 0 # XXX normalize globally?
+st_write(Insurance, "output/adaptation_capacities/C_INS1_Insurance.gpkg", append = FALSE)
 
 Foreign_Direct_Investment <- locations
-Foreign_Direct_Investment$A_GOV4_val <- 6.4
-Foreign_Direct_Investment$A_GOV4_norm <- 0 # XXX normalize globally?
-st_write(Insurance, "output/social_susceptibility/A_GOV4_Foreign_Direct_Investment.gpkg", append = FALSE)
+Foreign_Direct_Investment$val <- 6.4
+Foreign_Direct_Investment$norm <- 0 # XXX normalize globally?
+st_write(Insurance, "output/adaptation_capacities/A_GOV4_Foreign_Direct_Investment.gpkg", append = FALSE)
 
 Research_and_development <- locations
-Research_and_development$A_IIR1_val <- 0.6
-Research_and_development$A_IIR1_norm <- 0.6 # XXX normalize globally?
-st_write(Insurance, "output/social_susceptibility/CA_IIR1_Research_and_development.gpkg", append = FALSE)
+Research_and_development$val <- 0.6
+Research_and_development$norm <- 0.6 # XXX normalize globally?
+st_write(Insurance, "output/adaptation_capacities/CA_IIR1_Research_and_development.gpkg", append = FALSE)
 
 Participation_in_treaties <- locations
-Participation_in_treaties$ER_TRE1_val <- 0.6
-Participation_in_treaties$ER_TRE1_norm <- 0.6 # XXX normalize globally?
-st_write(Insurance, "output/social_susceptibility/ER_TRE1_Participation_in_treaties.gpkg", append = FALSE)
+Participation_in_treaties$val <- 0.6
+Participation_in_treaties$norm <- 0.6 # XXX normalize globally?
+st_write(Insurance, "output/ecosystem_robustness/ER_TRE1_Participation_in_treaties.gpkg", append = FALSE)
 
 
 
