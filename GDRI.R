@@ -19,7 +19,6 @@ gdri <- updateGdriShp(indicator, locations, "S_SOC3")
 indicator <- st_read("output/social_susceptibility/S_SOC5_disabilities.gpkg")
 gdri <- updateGdriShp(indicator, gdri, "S_SOC5")
 
-
 # TODO: S_SOC4 Travel time to closest city (mins) - to do
 # indicator <- st_read("output/social_susceptibility/S_SOC4_     .gpkg")
 # gdri <- updateGdriShp(indicator, gdri, "S_SOC4")
@@ -36,13 +35,13 @@ gdri <- updateGdriShp(indicator, gdri, "S_SOC8")
 indicator <- st_read("output/social_susceptibility/S_ECO2_dependency.gpkg")
 gdri <- updateGdriShp(indicator, gdri, "S_ECO2")
 
-# TODO: S_ECO4 GINI index
-# indicator <- st_read("output/social_susceptibility/S_ECO4_     .gpkg")
-# gdri <- updateGdriShp(indicator, gdri, "S_ECO4")
+# S_ECO4 GINI index
+indicator <- st_read("output/social_susceptibility/S_ECO4_gini_index.gpkg")
+gdri <- updateGdriShp(indicator, gdri, "S_ECO4")
 
-# TODO: S_OCU1 Dependency on agriculture / forestry / fisheries for livelihood (%) - to do
-# indicator <- st_read("output/social_susceptibility/S_OCU1_     .gpkg")
-# gdri <- updateGdriShp(indicator, gdri, "S_OCU1")
+# S_OCU1 Dependency on agriculture / forestry / fisheries for livelihood (%) - to do
+indicator <- st_read("output/social_susceptibility/S_OCU1_Agriculture_to_GDP.gpkg")
+gdri <- updateGdriShp(indicator, gdri, "S_OCU1")
 
 # S_INF1 / S_INF1_631 Percentage of population without access to (improved) sanitation (%)
 indicator <- st_read("output/social_susceptibility/S_INF1_no_toilets.gpkg")
@@ -98,9 +97,26 @@ gdri <- updateGdriShp(indicator, gdri, "C_TRA1")
 
 # TODO: C_GOV1 Poor governance (National?) Corruption Perception Index (CPI)
 
+
 # C_GOV2 Access to emergency services: hospitals, fire brigades, police stations
 indicator <- st_read("output/adaptation_capacities/C_GOV2_emergencies.gpkg")
 gdri <- updateGdriShp(indicator, gdri, "C_GOV2")
+
+# C_INS1 Percentage of households with insurance – excluding health insurance
+indicator <- st_read("output/adaptation_capacities/C_INS1_Insurance.gpkg")
+gdri <- updateGdriShp(indicator, gdri, "C_INS1")
+
+# A_GOV4 Foreign Direct Investment (FDI)
+indicator <- st_read("output/adaptation_capacities/A_GOV4_Foreign_Direct_Investment.gpkg")
+gdri <- updateGdriShp(indicator, gdri, "A_GOV4")
+
+# C_SAV3 Lending interest rate (%)
+indicator <- st_read("output/adaptation_capacities/C_SAV3_lending_interest.gpkg")
+gdri <- updateGdriShp(indicator, gdri, "C_SAV3")
+
+# A_IIR1 Percentage of GDP spent on innovation and research (%)
+indicator <- st_read("output/adaptation_capacities/CA_IIR1_Researc_and_development.gpkg")
+gdri <- updateGdriShp(indicator, gdri, "A_IIR1")
 
 "
 C_GOV3 No national food reserves available (binary) (National?)
@@ -109,11 +125,9 @@ C_HEA3 Public health expenditure (% of GDP)
 C_HEA4 Private health expenditure (% of GDP)
 C_SAV1 Percentage of households without gross savings (%)
 C_SAV2 Percentage of households without access to bank loans / (micro-) credits (%)
-C_SAV3 Lending interest rate (%)
-C_INS1 Percentage of households with insurance – excluding health insurance
-A_GOV4 Foreign Direct Investment (FDI)
 A_GOV6 Donor aid for adaptation (local)
-A_IIR1 Percentage of GDP spent on innovation and research (%)
+
+
 "
 
 # --------------------------------------------------
@@ -142,11 +156,9 @@ ES_DES1511 <- st_read(
 )
 gdri <- updateGdriShp(ES_DES1511, gdri, "ES_DES1511")
 
+# TODO: ES_DES3 Percentage of deforested area
+# "output/ecosystem_sensitivity/ES_DES3_forest_loss.gpkg"
 "
-# ES_DES3 Percentage of deforested area - to be completed
-ES_DES3 Percentage of deforested area (%)
-
-
 ES_FRA2 River connectivity (River basin scale)
 
 ES_FRA3 Forest connectivity
@@ -180,15 +192,18 @@ gdri <- updateGdriShp(ES_DES1511, gdri, "ER_CON_1512")
 ES_RES2 <- st_read("output/ecosystem_sensitivity/ER_RES2_forestgain.gpkg")
 gdri <- updateGdriShp(ES_DES1511, gdri, "ER_RES2")
 
+# ER_TRE1457 Participation in Treaties
+ER_TRE1457 <- st_read("output/ecosystem_sensitivity/ER_TRE1_Participation_in_treaties.gpkg")
+gdri <- updateGdriShp(ES_DES1511, gdri, "ER_TRE1457")
+
 "
-ER_POL2
-ER_FUN2
-ER_TRE1457
-ER_TRE4
-ER_TRES
-ER_TER7
-ER_ECO1
-ER_BIO2
+ER_POL2 Policies supporting biodiversity conservation
+ER_FUN2 Donor aid for adaptation
+ER_TRE4  Participation in Treaties - Convention on International Trade in Endangered Species of Wild Fauna and Flora (CITES) (yes/no)
+ER_TRE5 Participation in Treaties - Convention on the Conservation of Migratory Species of Wild Animals (CMS)  (yes/no)
+ER_TRE7 Participation in Treaties - Ramsar Convention on Wetlands  (yes/no)
+ER_ECO1 Functionality Index
+ER_BIO2 Mean Species Abundance (MSA)
 "
 
 st_write(gdri, "gdri.gpkg", append = FALSE)
