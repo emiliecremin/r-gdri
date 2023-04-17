@@ -1,30 +1,22 @@
 library(cleaner)
 library(dplyr)
+library(exactextractr)
 library(raster)
 library(sf)
 library(terra)
 
 source("common/helpers.R")
 
-locations <- st_read("data/ADMIN/admin_with_buffer.shp")
-locations <- st_transform(locations, 4326)
-landcover_roi <- rast("data/ESA_Landcover/VNM_roi.tif")
-plot(landcover_roi)
+locations <- st_read("data/ADMIN/admin_with_buffer.shp") %>% st_transform(4326)
 # data source: UNEP GRID
 # https://datacore.unepgrid.ch/geoserver/wesr_risk/wcs?service=WCS&Version=2.0.1&request=GetCoverage&coverageId=cy_valuency&outputCRS=EPSG:4326&format=GEOTIFF&compression=DEFLATE
-cyclones <- raster("data/Hazards/Cyclones/cy_valuency.tif")
-cyclones_roi <- mask(x = cyclones, mask = locations)
-cyclones_roi <- project(cyclones_roi, landcover_roi)
-plot(cyclones_roi)
-
+cyclones <- rast("data/Hazards/Cyclones/cy_frequency.tif")
 ecosystems <- rast("data/ESA_Landcover/VNM_ecosystems.tif")
-plot(ecosystems)
-cyclones_ecosystems <- mask(cyclones_roi, ecosystems)
-plot(cyclones_ecosystems)
 
-### zonal statistics using "raster"
-sum_cyclones <- extract(cyclones_ecosystems, locations, fun = sum, na.rm = TRUE) %>% na_replace()
-locations$cnt <- sum_cyclones[, 2]
+cyclones_cropped <- crop(cyclones, ecosystems)
+plot(cyclones_cropped)
+### zonal statistics using "exactextractr"
+locations$cnt <- exact_extract(cyclones_cropped, locations, "sum")
 locations$val <- locations$cnt / as.numeric(locations$area)
 locations$norm <- normalize_minmax(locations$val, na.rm = TRUE)
 st_write(locations, "output/exposure/E_EXP_CYC_cyclones.gpkg", append = FALSE)
