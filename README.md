@@ -111,14 +111,14 @@ Other data can be extracted from GDIS + EM-DAT
 | ES_DEG2    | Groundwater quality                               | ✅      | to do         | to do   | http://geodata.grid.unep.ch                           |
 | ES_DEG4    | Waterstress                                       | ✅      | to do         | to do   | http://www.wri.org                                    |
 | ES_DEG4    | Return Flow Ratio                                 | to do    | to do         | to do   | http://www.wri.org                                    |
-| ES_DEG6    | Soil organic matter                               | to do     | to do         | to do   | https://www.soilgrids.org                             |
+| ES_DEG6    | Soil organic carbon (matter)                               | to do     | to do         | to do   | https://www.soilgrids.org or FAO GSP and ITPS, 2019. Global Soil Organic Carbon Map (GSOC map) http://54.229.242.119/GSOCmap/                    |
 | ES_DEG9    | Cation exchange capacity                          | to do   | to do          | to do   | https://www.soilgrids.org                             |
 | ES_DEG_GTD | Ground Table Depletion                            | ✅      | to do         | to do   | http://www.wri.org                                    |
 | ES_DES2    | Freshwater scarcity                               | ✅      | to do         | to do   | [unep-wcmc](<[unep-wcmc](https://www.unep-wcmc.org)>) |
 | ES_DES3    | deforested area (%) GFC                           | ✅      | to do         | to do   |                                                       |
 | ES_FRA2    | River connectivity (River basin scale)            | to do   | to do        | to do   |                                                       |
 | ES_FRA3    | Forest connectivity GFC                           | to do      | to do        | to do   |                                                       |
-| ES_FRG1    | Percentage of area covered by “problem soils” (%) | to do    | to do        | to do   | http://geodata.grid.unep.ch                           |
+| ES_FRG1    | Percentage of area covered by “problem soils” (%) | to do    | to do        | to do   |                            |
 
 ### Ecosystem robustness
 
@@ -128,7 +128,7 @@ Other data can be extracted from GDIS + EM-DAT
 | ER_RES2   | Percentage of forest area restored (%) GFC  = forest gain       | ✅      | to do        | to do   | http://www.wri.org                                 |
 | ER_POL2   | Policies supporting biodiversity conservation (National)       | ✅      | to do        | to do   | https://www.cbd.int/                               |
 | ER_TRE1   | Participation in treaties - CBD, CITES, CMS, RAMSAR (National) | ✅      | to do        | to do   |                                                    |
-| ER_BIO2   | Mean Species Abundance (MSA)                                   | Coming soon    | to do        | to do   | - To do                                            |
+| ER_BIO2   | Mean Species Abundance (MSA)                                   | ✅     | to do        | to do   | http://www.globio.info                                       |
 | ER_ECO1   | Ecosystem Functionality Index (EFI)                            | to do     | to do        | to do   | - to do                                            |
 | ER_FUN2   | Donor aid for adaptation (local)                               | to do   | to do        | to do   | http://aiddata.org/gis - to do                     |
 
@@ -177,7 +177,7 @@ Other data can be extracted from GDIS + EM-DAT
 | S_INF3              | Population without access to electricity (%)               | ✅      | to do        | to do   | ipums census |
 | C_EWS1              | Percentage of households without access to information (%) | ✅      | to do        | to do   | ipums census | S
 |C_STA1              | Prevalence of violence (%): Homicides per 100k inhab.      | To do   | to do        | to do   | homicide.igarape.org.br / visionofhumanity.org           |
-|S_GOV1 | Bribe      | To do   | ✅        | to do   | homicide.igarape.org.br / visionofhumanity.org           |
+|S_GOV1 | Bribe      | ✅    |  tod| to do   | homicide.igarape.org.br / visionofhumanity.org           |
 Additional
 
 Undernutrition: The undernutrition maps produced by the World Food Program (WFP) are available at the following link: https://www.wfp.org/content/undernutrition-maps-bangladesh-2012
