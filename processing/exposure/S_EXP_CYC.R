@@ -1,25 +1,22 @@
 library(cleaner)
 library(dplyr)
+library(exactextractr)
 library(raster)
 library(sf)
 
 source("common/helpers.R")
 
-locations <- st_read("data/ADMIN/admin.shp")
-locations <- st_transform(locations, 4326)
+locations <- st_read("data/ADMIN/admin_with_buffer.shp") %>% st_transform(4326)
 # https://datacore.unepgrid.ch/geoserver/wesr_risk/wcs?service=WCS&Version=2.0.1&request=GetCoverage&coverageId=cy_physexp&outputCRS=EPSG:4326&format=GEOTIFF&compression=DEFLATE
 # population affected
 # my_raster <- raster("data/Hazards/Cyclones/cy_physexp.tif")
 
 # https://datacore.unepgrid.ch/geoserver/wesr_risk/wcs?service=WCS&Version=2.0.1&request=GetCoverage&coverageId=cy_valuency&outputCRS=EPSG:4326&format=GEOTIFF&compression=DEFLATE
-cyclones <- raster("data/Hazards/Cyclones/cy_valuency.tif")
+cyclones <- rast("data/Hazards/Cyclones/cy_frequency.tif")
 
-cyclones_extent <- crop(cyclones, extent(locations)) ### crop to the extent
-cyclones_roi <- mask(x = cyclones_extent, mask = locations) ### delimitation to the shape geometry
-plot(cyclones_roi)
 
-### zonal statistics using "raster"
-locations$cnt <- extract(cyclones_roi, locations, fun = sum, na.rm = TRUE) %>% na_replace()
+### zonal statistics using "exactextractr"
+locations$cnt <- exact_extract(cyclones, locations, "mean")
 locations$val <- locations$cnt * locations$pop
 locations$norm <- normalize_minmax(locations$val, na.rm = TRUE)
 st_write(locations, "output/exposure/S_EXP_CYC_cyclones.gpkg", append = FALSE)
