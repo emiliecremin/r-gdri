@@ -15,3 +15,4 @@ waterstress <- joinOnColumn(join_df, locations, "GEOLEVEL2")
 names(waterstress)[names(waterstress) == "bws_score"] <- "val"
 waterstress$norm <- normalize_minmax(waterstress$val, na.rm = TRUE)
 st_write(waterstress, "output/ecosystem_sensitivity/ES_DEG4_waterstress.gpkg", append = FALSE)
+my_map(data = locations, "ADM2_EN", "norm", "Ecosystem Sensitivity: ES_DEG4 Waterstress", "Reds")
