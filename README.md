@@ -115,7 +115,7 @@ Other data can be extracted from GDIS + EM-DAT
 | ES_DEG6    | Soil organic carbon (matter)                               | to do     | to do         | to do   | https://www.soilgrids.org or FAO GSP and ITPS, 2019. Global Soil Organic Carbon Map (GSOC map) http://54.229.242.119/GSOCmap/                    |
 | ES_DEG9    | Cation exchange capacity                          | to do   | to do          | to do   | https://www.soilgrids.org                             |
 | ES_DEG_GTD | Ground Table Depletion                            | ✅      | to do         | to do   | http://www.wri.org                                    |
-| ES_DES2    | Freshwater scarcity                               | ✅      | to do         | to do   | [unep-wcmc](<[unep-wcmc](https://www.unep-wcmc.org)>) |
+| ES_DES2    | Freshwater scarcity                               | to do     | to do         | to do   | [unep-wcmc](<[unep-wcmc](https://www.unep-wcmc.org)>) |
 | ES_DES3    | Forest loss (%)                        | ✅      | to do         | to do   | [GFC         ](https://www.globalforestwatch.org/map/)  https://glad.umd.edu/dataset/global-2010-tree-cover-30-m.      |
 | ES_FRA2    | River connectivity (River basin scale)            | to do   | to do        | to do   |                                                       |
 | ES_FRA3    | Forest connectivity GFC | to do      | to do        | to do   | [                 ](https://github.com/VeroL/BioFrag)                                     |
