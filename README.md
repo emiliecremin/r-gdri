@@ -67,6 +67,7 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 | S_EXP_CYC | pop exposed to cyclones     | ✅           | to do        | to do   |
 | S_EXP_DRO | pop exposed to drought      | ✅           | to do        | to do   |
 | S_EXP_FLO | pop exposed to floods       | ✅           | to do        | to do   |
+| S_EXP_SLR | pop exposed to SLR +0.5m      | to do        | to do        | to do   | https://sealevel.climatecentral.org/|
 | S_EXP_SAL | pop exposed to salinity     | 🚫 (nodat a) | to do        | to do   |
 
 ### Ecosystem Exposure
@@ -106,18 +107,18 @@ Other data can be extracted from GDIS + EM-DAT
 
 | indicator  | description                                       | Vietnam | Bangladesh | India | data source                                           |
 | ---------- | ------------------------------------------------- | ------- | ---------- | ----- | ----------------------------------------------------- |
-| ES_BIO1a   | Species richness adjusted by intactness           | to do    | to do        | to do     | https://www.unep-wcmc.org                             |
-| ES_DEG1    | Water quality of freshwater bodies                | ✅      | to do        | to do   | http://www.wri.org                                    |
-| ES_DEG2    | Groundwater quality                               | ✅      | to do         | to do   | http://geodata.grid.unep.ch                           |
-| ES_DEG4    | Waterstress                                       | ✅      | to do         | to do   | http://www.wri.org                                    |
+| ES_BIO1a   | Species richness adjusted by intactness           | to do    | to do        | to do     | https://www.unep-wcmc.org  or http://dx.doi.org/10.5519/0009936. Accessed through www.resourcewatch.org.                          |
+| ES_DEG1    | Water quality of freshwater bodies                | ✅      | to do        | to do   |> update source                                  |
+| ES_DEG2    | Groundwater quality                               | ✅      | to do         | to do   | > update source
+| ES_DEG4    | Waterstress                                       | ✅      | to do         | to do   | https://www.wri.org/publication/aqueduct-30. resourcewatch.org|
 | ES_DEG4    | Return Flow Ratio                                 | to do    | to do         | to do   | http://www.wri.org                                    |
 | ES_DEG6    | Soil organic carbon (matter)                               | to do     | to do         | to do   | https://www.soilgrids.org or FAO GSP and ITPS, 2019. Global Soil Organic Carbon Map (GSOC map) http://54.229.242.119/GSOCmap/                    |
 | ES_DEG9    | Cation exchange capacity                          | to do   | to do          | to do   | https://www.soilgrids.org                             |
 | ES_DEG_GTD | Ground Table Depletion                            | ✅      | to do         | to do   | http://www.wri.org                                    |
 | ES_DES2    | Freshwater scarcity                               | ✅      | to do         | to do   | [unep-wcmc](<[unep-wcmc](https://www.unep-wcmc.org)>) |
-| ES_DES3    | deforested area (%) GFC                           | ✅      | to do         | to do   |                                                       |
+| ES_DES3    | Forest loss (%)                        | ✅      | to do         | to do   | [GFC         ](https://www.globalforestwatch.org/map/)  https://glad.umd.edu/dataset/global-2010-tree-cover-30-m.      |
 | ES_FRA2    | River connectivity (River basin scale)            | to do   | to do        | to do   |                                                       |
-| ES_FRA3    | Forest connectivity GFC                           | to do      | to do        | to do   |                                                       |
+| ES_FRA3    | Forest connectivity GFC | to do      | to do        | to do   | [                 ](https://github.com/VeroL/BioFrag)                                     |
 | ES_FRG1    | Percentage of area covered by “problem soils” (%) | to do    | to do        | to do   |                            |
 
 ### Ecosystem robustness
@@ -125,11 +126,13 @@ Other data can be extracted from GDIS + EM-DAT
 | indicator | description                                                    | Vietnam | Bangladesh | India | data source                                        |
 | --------- | -------------------------------------------------------------- | ------- | ---------- | ----- | -------------------------------------------------- |
 | ER_CON1512   | Forest area protected, conservation of biodiversity (%)      | ✅      | to do        | to do   | http://www.wri.org https://www.protectedplanet.net |
-| ER_RES2   | Percentage of forest area restored (%) GFC  = forest gain       | ✅      | to do        | to do   | http://www.wri.org                                 |
+| ER_RES2   | Percentage of forest area restored (%) GFC  = forest gain       | ✅      | to do        | to do   | [GFC](https://www.globalforestwatch.org/map/), https://glad.umd.edu/, https://doi.org/10.3389/frsen.2022.856903 
 | ER_POL2   | Policies supporting biodiversity conservation (National)       | ✅      | to do        | to do   | https://www.cbd.int/                               |
 | ER_TRE1   | Participation in treaties - CBD, CITES, CMS, RAMSAR (National) | ✅      | to do        | to do   |                                                    |
 | ER_BIO2   | Mean Species Abundance (MSA)                                   | ✅     | to do        | to do   | http://www.globio.info                                       |
-| ER_ECO1   | Ecosystem Functionality Index (EFI)                            | to do     | to do        | to do   | - to do                                            |
+| ER_ECO1   | Ecosystem Functionality Index (EFI)                            | to do     | to do        | to do   |  to do  |
+ER_ECOX2 | Forest landscape Integrity Index | to do     | to do        | to do   |  to do  | https://www.forestlandscapeintegrity.com/
+ER_ECOX1 | Road less area | to do  | to do     | to do   | (http://www.roadless.online/data/) |                                     |
 | ER_FUN2   | Donor aid for adaptation (local)                               | to do   | to do        | to do   | http://aiddata.org/gis - to do                     |
 
 - TODO: Need data sources
@@ -165,7 +168,7 @@ Other data can be extracted from GDIS + EM-DAT
 | ------------------- | ---------------------------------------------------------- | ------- | ---------- | ----- | -------------------------------------------------------- |
 | S_ECO1              | Population below national poverty line (%)                 | To do   | to do        | to do   | For bangladesh: http://www.worldbank.org/en/news/feature/2014/09/30/poverty-maps                                                        |
 | S_ECO2              | Dependency ratio (%) below 15 and above 64 years old       | ✅      | to do        | to do   | ipums census                                             |
-| S_ECO4              | GINI index (national level?)                               | ✅       | to do        | to do   | [UNDP](http://hdr.undp.org) |
+| S_ECO4              | GINI index (national level?)                               | ✅       | to do        | to do   | [UNDP](http://hdr.undp.org) or http://data.worldbank.org/indicator/SI.POV.GINI. |
 | S_OCU1              | Dependency on agriculture / forestry / fisheries (%) Part of agricultural sector in the GDP       | ✅      | to do        | to do   |   National level  |
 | S_SOC3              | Percentage female-headed households (%)                    | ✅      | to do        | to do   | ipums census |
 | S_SOC4              | Travel time to closest city (mins)                         | ✅      | to do        | to do   | OSM or [JRC](https://forobs.jrc.ec.europa.eu/products/gam/) or AidDataGeoQuery |
