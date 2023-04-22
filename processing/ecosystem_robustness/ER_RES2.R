@@ -3,8 +3,8 @@
 install.packages("exactextractr")
 library(exactextractr)
 
-source("common/admin.R")
 source("common/helpers.R")
+source("common/admin.R")
 source("common/GFC.R")
 
 aoi <- st_read("data/ADMIN/admin_with_buffer.shp") %>% st_transform(4326)

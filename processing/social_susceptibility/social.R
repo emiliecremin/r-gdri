@@ -4,8 +4,8 @@ library(magrittr)
 library(sf)
 library(stringr)
 
-source("common/admin.R")
 source("common/helpers.R")
+source("common/admin.R")
 
 # install.packages("usethis")
 # library(usethis)
