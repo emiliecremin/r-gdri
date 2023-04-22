@@ -1,5 +1,5 @@
-source("common/admin.R")
 source("common/helpers.R")
+source("common/admin.R")
 
 locations <- st_read("data/ADMIN/admin.shp")
 gdri <- locations
