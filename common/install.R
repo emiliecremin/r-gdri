@@ -2,4 +2,8 @@ install.packages("dplyr")
 install.packages("landscapemetrics")
 install.packages("landscapetools")
 install.packages("osmdata")
+install.packages("remotes")
+remotes::install_github("statnmap/cartomisc")
 install.packages("terra")
+
+# install.packages("lwgeom")
