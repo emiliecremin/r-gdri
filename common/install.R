@@ -1,4 +1,5 @@
 install.packages("dplyr")
+install.packages("exactextractr")
 install.packages("landscapemetrics")
 install.packages("landscapetools")
 install.packages("osmdata")
