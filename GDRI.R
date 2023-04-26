@@ -186,15 +186,15 @@ ES_BIO1 Species richness adjusted by intactness
 ES_CON1512 <- st_read(
     "output/ecosystem_sensitivity/ER_CON_1512_conservation_areas.gpkg"
 )
-gdri <- updateGdriShp(ES_DES1511, gdri, "ER_CON_1512")
+gdri <- updateGdriShp(ES_CON1512, gdri, "ER_CON_1512")
 
 # ER_RES2 Forest gain
 ES_RES2 <- st_read("output/ecosystem_sensitivity/ER_RES2_forestgain.gpkg")
-gdri <- updateGdriShp(ES_DES1511, gdri, "ER_RES2")
+gdri <- updateGdriShp(ES_RES2, gdri, "ER_RES2")
 
 # ER_TRE1457 Participation in Treaties
 ER_TRE1457 <- st_read("output/ecosystem_sensitivity/ER_TRE1_Participation_in_treaties.gpkg")
-gdri <- updateGdriShp(ES_DES1511, gdri, "ER_TRE1457")
+gdri <- updateGdriShp(ER_TRE1457, gdri, "ER_TRE1457")
 
 "
 ER_POL2 Policies supporting biodiversity conservation
