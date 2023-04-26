@@ -12,8 +12,8 @@ aqueduct <- st_read("data/Water/Y2019M07D12_Aqueduct30_V01/baseline/annual/y2019
 aqueduct <- dplyr::filter(aqueduct, name_0 == "Vietnam") %>% st_make_valid()
 aqueduct_points <- st_centroid(locations) %>% st_join(aqueduct)
 
-join_df <- st_drop_geometry(aqueduct_points[, c("GEOLEVEL2", "usa_score", "usa_cat", "usa_label")])
-sanitation <- joinOnColumn(join_df, locations, "GEOLEVEL2")
+join_df <- st_drop_geometry(aqueduct_points[, c("GEOLEV2", "usa_score", "usa_cat", "usa_label")])
+sanitation <- joinOnColumn(join_df, locations, "GEOLEV2")
 sanitation$val <- sanitation$usa_score
 sanitation$norm <- normalize_minmax(sanitation$usa_score, na.rm = TRUE)
 st_write(sanitation, "output/social_susceptibility/S_INF1_621.gpkg", append = FALSE)
