@@ -12,8 +12,8 @@ aqueduct_points <- st_centroid(locations) %>% st_join(aqueduct)
 
 # All values are the same for all locations: Bangladesh, India, Vietnam = Extremely High (100%)
 
-join_df <- st_drop_geometry(aqueduct_points[, c("GEOLEVEL2", "ucw_score", "ucw_cat", "ucw_label")])
-untreated_wastewater <- joinOnColumn(join_df, locations, "GEOLEVEL2")
+join_df <- st_drop_geometry(aqueduct_points[, c("GEOLEV2", "ucw_score", "ucw_cat", "ucw_label")])
+untreated_wastewater <- joinOnColumn(join_df, locations, "GEOLEV2")
 untreated_wastewater$val <- untreated_wastewater$ucw_score
 untreated_wastewater$norm <- normalize_minmax(untreated_wastewater$ucw_score, na.rm = TRUE)
 st_write(untreated_wastewater, "output/social_susceptibility/S_INF1_631.gpkg", append = FALSE)

@@ -33,25 +33,33 @@ get_osm <- function(location, key, value) {
 }
 
 get_leaflet <- function(location, admin, roads, waterways, emergencies, schools) {
-  m = leaflet() %>%
-        addTiles() %>%
-        addPolygons(data = admin,
-              label = admin$name, weight=1, col = 'green') %>%
-        addPolygons(data = location,
-                label = location$ADMIN_NAME, weight=1, col = 'red')
-  if(length(roads) > 0){
-    m = addPolylines(m, data=roads, color='black', weight=3)
+  m <- leaflet() %>%
+    addTiles() %>%
+    addPolygons(
+      data = admin,
+      label = admin$name, weight = 1, col = "green"
+    ) %>%
+    addPolygons(
+      data = location,
+      label = location$ADMIN_NAME, weight = 1, col = "red"
+    )
+  if (length(roads) > 0) {
+    m <- addPolylines(m, data = roads, color = "black", weight = 3)
   }
-  if(length(waterways) > 0){
-    m = addPolylines(m, data=waterways, color='blue', weight=3)
+  if (length(waterways) > 0) {
+    m <- addPolylines(m, data = waterways, color = "blue", weight = 3)
   }
-  if(length(emergencies) > 0){
-    m = m %>% addPolygons(data = emergencies,
-                          label = emergencies$name)
+  if (length(emergencies) > 0) {
+    m <- m %>% addPolygons(
+      data = emergencies,
+      label = emergencies$name
+    )
   }
-  if(length(schools) > 0){
-    m = m %>% addPolygons(data = schools,
-                          label = schools$name)
+  if (length(schools) > 0) {
+    m <- m %>% addPolygons(
+      data = schools,
+      label = schools$name
+    )
   }
   return(m)
 }
@@ -79,7 +87,7 @@ get_leaflet <- function(location, admin, roads, waterways, emergencies, schools)
 # 8 = Municipal Corporation / Pourashava
 # 9 = Union
 
-location <- get_geolevel2(code=704001001)
+location <- get_GEOLEV2(code = 704001001)
 
 # TESTS
 # main_road_types <- c("motorway", "trunk", "primary")
@@ -94,7 +102,7 @@ location <- get_geolevel2(code=704001001)
 # osm_schools <- get_osm(location$ADMIN_NAME, "amenity", "school")$osm_polygons
 # location_schools <- st_intersection(st_geometry(osm_schools), st_geometry(location))
 # osm_admin <- get_osm(location$ADMIN_NAME, "admin_level", 6)$osm_multipolygons
-# 
+#
 # map <- get_leaflet(location, osm_admin, location_roads, location_waterways, location_emergencies, location_schools)
 
 # C_GOV2
@@ -108,10 +116,10 @@ C_GOV2 <- nrow(osm_emergency) / location$pop * 100000
 
 # C_TRA1
 # Access to transportation network
-# Density of transportation network: 
-# - roads (highways, trunks, primary / secondary / tertiary), 
-# - waterways (rivers / canals / streams), 
-# - ferry stations 
+# Density of transportation network:
+# - roads (highways, trunks, primary / secondary / tertiary),
+# - waterways (rivers / canals / streams),
+# - ferry stations
 # per 100,000 inhabitants
 main_road_types <- c("motorway", "trunk", "primary")
 roads <- get_osm(location$ADMIN_NAME, "highway", all_road_types)$osm_lines
@@ -125,13 +133,13 @@ location_all_roads <- st_intersection(st_geometry(osm_all_roads), st_geometry(lo
 sum(st_length(osm_all_roads))
 
 # https://wiki.openstreetmap.org/wiki/Map_features#Waterway
-# waterway=stream for a naturally-forming waterway that is too narrow to be classed as waterway=river 
-# (the commonly accepted rule for OpenStreetMap is that a stream can be jumped across by an active, able-bodied person). 
-# A stream need not be permanently filled with water. In case of varying size or intermittent waterways 
+# waterway=stream for a naturally-forming waterway that is too narrow to be classed as waterway=river
+# (the commonly accepted rule for OpenStreetMap is that a stream can be jumped across by an active, able-bodied person).
+# A stream need not be permanently filled with water. In case of varying size or intermittent waterways
 # the distinction from larger rivers based on the above criterion should be made with respect to the high water level.
 
-# Use waterway=fairway for a linear way representation of a navigable route in a body of water such as a lake or sea, 
-# in cases where other values such as waterway=river or waterway=canal are not appropriate. 
+# Use waterway=fairway for a linear way representation of a navigable route in a body of water such as a lake or sea,
+# in cases where other values such as waterway=river or waterway=canal are not appropriate.
 # Do not use instead of waterway=river or waterway=canal.
 waterways_types <- c("river", "canal", "fairway")
 osm_waterways <- get_osm(location$ADMIN_NAME, "waterway", waterways_types)$osm_lines

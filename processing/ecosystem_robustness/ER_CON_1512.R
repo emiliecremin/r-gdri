@@ -33,7 +33,7 @@ st_write(sf::st_as_sf(conservation),
 plot(conservation)
 df <- sf::st_as_sf(conservation) %>% st_drop_geometry()
 locations <-
-    right_join(df[c("GEOLEVEL2", "conservation_area")], locations) %>%
+    right_join(df[c("GEOLEV2", "conservation_area")], locations) %>%
     st_as_sf()
 locations$conservation_area[is.na(locations$conservation_area)] <- 0
 locations$norm <-

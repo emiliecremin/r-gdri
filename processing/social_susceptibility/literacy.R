@@ -20,7 +20,7 @@ illiterate_vn_deltas <- literacy_vn_deltas %>%
 # https://stackoverflow.com/a/47051133/6081943
 # https://medium.com/swlh/data-normalisation-with-r-6ef1d1947970#:~:text=Min%2DMax%20Normalization%20transforms%20x,been%20between%20%2D1%20and%201.
 normalize_minmax <- function(x, ...) {
-  return((x - min(x, ...)) /(max(x, ...) - min(x, ...)))
+  return((x - min(x, ...)) / (max(x, ...) - min(x, ...)))
 }
 illiterate_vn_deltas$norm <- normalize_minmax(illiterate_vn_deltas$val, na.rm = TRUE)
 
