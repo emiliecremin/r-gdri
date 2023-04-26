@@ -16,7 +16,7 @@ tmp <- "objects/C_GOV2"
 mkdirs(tmp)
 for (i in 1:nrow(locations)) {
     osm_data <- get_osm(
-        locations$GEOLEVEL2[i],
+        locations$GEOLEV2[i],
         locations$ADM2_VI[i],
         locations$geometry[i],
         "amenity",
