@@ -1,7 +1,4 @@
-library(dplyr)
-library(ggplot2)
-library(sf)
-library(terra)
+source("common/libraries.R")
 
 "
 Value	Color	Description
@@ -32,33 +29,45 @@ raster_files <- list.files(
 )
 
 landcover <- terra::vrt(raster_files,
-    filename = "data/ESA_Landcover/VNM.vrt"
+    filename = "data/ESA_Landcover/Asia.vrt",
+    overwrite = TRUE
 )
-roi <- st_read("data/ADMIN/admin.shp") %>%
-    st_make_valid() %>%
-    summarise()
 
-buffer <- st_buffer(
-    roi,
-    dist = units::set_units(5, km)
-) %>% st_cast()
+extract_classes <- function(landcover, classes) {
+    rclmat <- matrix(classes, ncol = 3, byrow = TRUE)
+    extracted_classes <- terra::classify(landcover, rclmat, others = NA)
+    return(extracted_classes)
+}
 
-roi_with_buffer <- st_union(roi, buffer)
+create_landcover <- function(landcover, roi, region_name) {
+    roi <- roi %>%
+        terra::aggregate()
+    pv <- terra::project(roi, landcover)
+    landcover_roi <- terra::crop(landcover, pv, mask = TRUE)
+    plot(landcover_roi)
+    terra::writeRaster(
+        landcover_roi,
+        filename = str_glue("data/ESA_Landcover/{region_name}_roi.tif")
+    )
+    # 10 = Tree cover / 20 = Shrubland / 30 = Grassland
+    # 80 = Permanent water bodies / 90 = Herbaceous wetland / 95 = Mangroves / 100 = Moss and lichen
+    ecosystems <- extract_classes(landcover_roi, c(9, 31, 1, 79, 101, 1))
+    plot(ecosystems)
+    terra::writeRaster(ecosystems, filename = str_glue("data/ESA_Landcover/{region_name}_ecosystems.tif"))
 
-r <- terra::crop(landcover, roi_with_buffer)
-terra::writeRaster(r, filename = "data/ESA_Landcover/VNM.tif")
-landcover_roi <- mask(x = landcover, mask = roi_with_buffer)
-plot(landcover_roi)
-terra::writeRaster(landcover_roi, filename = "data/ESA_Landcover/VNM_roi.tif")
+    # TODO: rbind(c(10, 1), c(95, 1))
+    forests <- extract_classes(landcover_roi, c(9, 11, 1, 94, 96, 1))
+    plot(forests)
+    terra::writeRaster(forests, filename = str_glue("data/ESA_Landcover/{region_name}_forests.tif"))
 
-# 10 = Tree cover / 20 = Shrubland / 30 = Grassland
-# 80 = Permanent water bodies / 90 = Herbaceous wetland / 95 = Mangroves / 100 = Moss and lichen
-rclmat <- matrix(c(9, 31, 1, 79, 101, 1), ncol = 3, byrow = TRUE)
-ecosystems <- classify(landcover_roi, rclmat, others = NA)
-plot(ecosystems)
-terra::writeRaster(ecosystems, filename = "data/ESA_Landcover/VNM_ecosystems.tif")
+    # TODO: rbind(c(40, 1), c(80, 1))
+    agriculture <- extract_classes(landcover_roi, c(39, 41, 1, 79, 81, 1))
+    plot(agriculture)
+    terra::writeRaster(agriculture, filename = str_glue("data/ESA_Landcover/{region_name}_agriculture.tif"))
+}
 
-rclmat <- matrix(c(9, 11, 1, 94, 96, 1), ncol = 3, byrow = TRUE)
-forests <- classify(landcover_roi, rclmat, others = NA)
-plot(forests)
-terra::writeRaster(forests, filename = "data/ESA_Landcover/VNM_forests.tif")
+roi <- terra::vect("data/ADMIN/admin_vnm_with_buffer.gpkg")
+create_landcover(landcover, roi, "VNM")
+
+roi <- terra::vect("data/ADMIN/admin_ind_with_buffer.gpkg")
+create_landcover(landcover, roi, "IND")
