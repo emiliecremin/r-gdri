@@ -67,7 +67,7 @@ my_map <- function(data, col_label, col_value, title, pal_colors) {
   # TODO: replace NA in char columns with empty string
   data[is.na(data)] <- 0
 
-  leaflet() %>%
+  l <- leaflet() %>%
     addTiles() %>%
     addPolygons(
       data = data, label = data$label,
@@ -79,6 +79,7 @@ my_map <- function(data, col_label, col_value, title, pal_colors) {
       title = title,
       opacity = 1
     )
+  return(l)
 }
 
 mapPlot <- function(shp, columnName, unit, title) {
