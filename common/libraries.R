@@ -1,6 +1,8 @@
 library(cartomisc)
 library(dplyr)
+library(exactextractr)
 library(ggplot2)
+library(htmlwidgets)
 library(landscapemetrics)
 library(landscapetools)
 library(leaflet)
