@@ -11,19 +11,42 @@ admin_vnm$geo_id <- admin_vnm$GEOLEV2
 admin_vnm$area <- units::set_units(st_area(admin_vnm), km^2)
 
 # https://international.ipums.org/international/gis_harmonized_2nd.shtml
-population <- read.csv(
+pop_vnm <- read.csv(
   "data/Population/terra_pop/data_14582_IPUMS_VN_HSLAD_2009.csv"
 )
-population$GEOLEV2 <- as.character(population$GEO2_VN)
-population$pop <- population$TOTPOP_GEO2_VN_VN2009A
-population <- population[, c("GEOLEV2", "pop")]
-admin_vnm <- dplyr::left_join(x = admin_vnm, y = population, by = "GEOLEV2")
+pop_vnm$GEOLEV2 <- as.character(pop_vnm$GEO2_VN)
+pop_vnm$pop <- pop_vnm$TOTPOP_GEO2_VN_VN2009A
+pop_vnm <- pop_vnm[, c("GEOLEV2", "pop")]
+admin_vnm <- dplyr::left_join(x = admin_vnm, y = pop_vnm, by = "GEOLEV2")
 st_write(admin_vnm, "data/ADMIN/admin_vnm.gpkg", append = FALSE)
 
 admin_vnm_with_buffer <- create_buffer(admin_vnm, "geo_id")
 st_write(
   admin_vnm_with_buffer,
   "data/ADMIN/admin_vnm_with_buffer.gpkg",
+  append = FALSE
+)
+
+admin_bgd <- ipums_shp %>%
+  dplyr::filter(CNTRY_NAME == "Bangladesh") %>%
+  st_make_valid()
+admin_bgd$geo_id <- admin_bgd$GEOLEV2
+admin_bgd$area <- units::set_units(st_area(admin_bgd), km^2)
+
+# https://international.ipums.org/international/gis_harmonized_2nd.shtml
+pop_bgd <- read.csv(
+  "data/Population/terra_pop/data_14582_IPUMS_BD_HSLAD_1991_2011.csv"
+)
+pop_bgd$GEOLEV2 <- as.character(pop_bgd$GEO2_BD)
+pop_bgd$pop <- pop_bgd$TOTPOP_GEO2_BD_BD2011A
+pop_bgd <- pop_bgd[, c("GEOLEV2", "pop")]
+admin_bgd <- dplyr::left_join(x = admin_bgd, y = pop_bgd, by = "GEOLEV2")
+st_write(admin_bgd, "data/ADMIN/admin_bgd.gpkg", append = FALSE)
+
+admin_bgd_with_buffer <- create_buffer(admin_bgd, "geo_id")
+st_write(
+  admin_bgd_with_buffer,
+  "data/ADMIN/admin_bgd_with_buffer.gpkg",
   append = FALSE
 )
 
