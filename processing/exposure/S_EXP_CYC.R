@@ -9,7 +9,7 @@ source("common/helpers.R")
 locations <- st_read("data/ADMIN/admin_with_buffer.shp") %>% st_transform(4326)
 # https://datacore.unepgrid.ch/geoserver/wesr_risk/wcs?service=WCS&Version=2.0.1&request=GetCoverage&coverageId=cy_physexp&outputCRS=EPSG:4326&format=GEOTIFF&compression=DEFLATE
 # population affected
-# my_raster <- raster("data/Hazards/Cyclones/cy_physexp.tif")
+# my_raster <- rast("data/Hazards/Cyclones/cy_physexp.tif")
 
 # https://datacore.unepgrid.ch/geoserver/wesr_risk/wcs?service=WCS&Version=2.0.1&request=GetCoverage&coverageId=cy_valuency&outputCRS=EPSG:4326&format=GEOTIFF&compression=DEFLATE
 cyclones <- rast("data/Hazards/Cyclones/cy_frequency.tif")
