@@ -102,3 +102,17 @@ joinOnPostcode <- function(df, shp) {
       st_as_sf()
   )
 }
+
+process_indicator <- function(indicator_name, data, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
+  data <- data %>% arrange(desc(val))
+  if (normalize) {
+    data$norm <- normalize_minmax(data$val, na.rm = TRUE)
+  }
+  if (plot) {
+    mapPlot(data, "norm", "norm min-max", indicator_name)
+  }
+  if (output != "") {
+    st_write(data, str_glue("{output}/{indicator_name}.gpkg"), append)
+  }
+  return(data)
+}
