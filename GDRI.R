@@ -1,13 +1,26 @@
 source("common/helpers.R")
 source("common/admin.R")
 
-locations <- st_read("data/ADMIN/admin.shp")
+# TODO: keep only useful columns in admin.R
+vnm <- st_read("data/ADMIN/admin_vnm.gpkg")
+bgd <- st_read("data/ADMIN/admin_bgd.gpkg")
+# ind <- st_read("data/ADMIN/admin_ind.gpkg")
+
+locations <- bind_rows(vnm, bgd) # , ind)
 gdri <- locations
 
 # --------------------------------------------------
 # SOCIAL SUSCEPTIBILITY
 # --------------------------------------------------
-source("processing/social_susceptibility/social.R")
+
+source("processing/social_susceptibility/social_susceptibility.R")
+
+gdri <- social_susceptibility(gdri, vnm, "Vietnam")
+gdri <- social_susceptibility(gdri, bgd, "Bangladesh")
+# gdri <- social_susceptibility(gdri, ind, "India")
+gdri <- normalize(gdri, soc_susceptibility_indicators)
+# gdri <- social_susceptibility_score(gdri, soc_susceptibility_indicators)
+
 
 # S_SOC3 Percentage female-headed households (%)
 indicator <- st_read(
