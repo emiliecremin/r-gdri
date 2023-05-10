@@ -68,6 +68,7 @@ admin_ind$geo_id <- admin_ind$C_CODE01
 admin_ind$pop <- as.numeric(admin_ind$TOT_P)
 admin_ind$area <- units::set_units(st_area(admin_ind), km^2)
 admin_ind$density <- admin_ind$pop / as.numeric(admin_ind$area)
+
 # TODO: keep only useful columns
 st_write(admin_ind, "data/ADMIN/admin_ind.gpkg", append = FALSE)
 
