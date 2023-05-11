@@ -6,8 +6,7 @@ vnm <- st_read("data/ADMIN/admin_vnm.gpkg")
 bgd <- st_read("data/ADMIN/admin_bgd.gpkg")
 # ind <- st_read("data/ADMIN/admin_ind.gpkg")
 
-locations <- bind_rows(vnm, bgd) # , ind)
-gdri <- locations
+gdri <- bind_rows(vnm, bgd) # ,ind)
 
 # --------------------------------------------------
 # SOCIAL SUSCEPTIBILITY
@@ -15,74 +14,38 @@ gdri <- locations
 
 source("processing/social_susceptibility/social_susceptibility.R")
 
-gdri <- social_susceptibility(gdri, vnm, "Vietnam")
-gdri <- social_susceptibility(gdri, bgd, "Bangladesh")
-# gdri <- social_susceptibility(gdri, ind, "India")
-gdri <- normalize(gdri, soc_susceptibility_indicators)
-# gdri <- social_susceptibility_score(gdri, soc_susceptibility_indicators)
+soc_sus_vnm <- social_susceptibility(vnm, "Vietnam")
+soc_sus_bgd <- social_susceptibility(bgd, "Bangladesh")
+# soc_sus_ind <- social_susceptibility(gdri, ind, "India")
+soc_sus <- rbind(soc_sus_vnm, soc_sus_bgd) # , soc_sus_ind)
 
-
-# S_SOC3 Percentage female-headed households (%)
-indicator <- st_read(
-    "output/social_susceptibility/S_SOC3_female_head_household.gpkg"
-)
-gdri <- updateGdriShp(indicator, locations, "S_SOC3")
-
-# S_SOC5 Percentage of population with disabilities (%)
-indicator <- st_read("output/social_susceptibility/S_SOC5_disabilities.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "S_SOC5")
+soc_sus_norm <- normalize(soc_sus)
+st_write(soc_sus_norm, "output/social_susceptibility/social_susceptibility.gpkg")
 
 # TODO: S_SOC4 Travel time to closest city (mins) - to do
 # indicator <- st_read("output/social_susceptibility/S_SOC4_     .gpkg")
-# gdri <- updateGdriShp(indicator, gdri, "S_SOC4")
-
-# S_SOC8 Percentage of illiterate population (%)
-indicator <- st_read("output/social_susceptibility/S_SOC8_illiteracy.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "S_SOC8")
+# gdri <- update_gdri(indicator, gdri, "S_SOC4")
 
 # TODO: S_ECO1 Percentage of population below national poverty line (%) - to do
 # indicator <- st_read("output/social_susceptibility/S_ECO1_     .gpkg")
-# gdri <- updateGdriShp(indicator, gdri, "S_ECO1")
-
-# S_ECO2 Dependency ratio (%)
-indicator <- st_read("output/social_susceptibility/S_ECO2_dependency.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "S_ECO2")
-
-# S_ECO4 GINI index
-indicator <- st_read("output/social_susceptibility/S_ECO4_gini_index.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "S_ECO4")
-
-# S_OCU1 Dependency on agriculture / forestry / fisheries for livelihood (%) - to do
-indicator <- st_read("output/social_susceptibility/S_OCU1_Agriculture_to_GDP.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "S_OCU1")
-
-# S_INF1 / S_INF1_631 Percentage of population without access to (improved) sanitation (%)
-indicator <- st_read("output/social_susceptibility/S_INF1_no_toilets.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "S_INF1")
+# gdri <- update_gdri(indicator, gdri, "S_ECO1")
 
 # S_INF1 / S_INF1_631 Percentage of population without access to (improved) sanitation (%)
 indicator <- st_read("output/social_susceptibility/S_INF1_631.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "S_INF1_631")
+gdri <- update_gdri(indicator, gdri, "S_INF1_631")
 
-# S_INF2 / S_INF2_611 Percentage of population without access to clean water (%) / 6.1.1 Proportion of population using safely managed drinking water services
-indicator <- st_read("output/social_susceptibility/S_INF2_clean_water.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "S_INF2")
 
 # S_INF2 / S_INF2_611 Percentage of population without access to clean water (%)
 indicator <- st_read("output/social_susceptibility/S_INF2_611.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "S_INF2_611")
+gdri <- update_gdri(indicator, gdri, "S_INF2_611")
 
 # S_INF1_621 Percentage of population without access to (improved) sanitation (%)
 indicator <- st_read("output/social_susceptibility/S_INF1_621.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "S_INF1_621")
+gdri <- update_gdri(indicator, gdri, "S_INF1_621")
 
 # S_INF3 Percentage of population without access to electricity (%)
 indicator <- st_read("output/social_susceptibility/S_INF3_electricity.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "S_INF3")
-
-# S_STA1 Prevalence of population who experience violence (%) to be completed
-indicator <- st_read("output/social_susceptibility/S_STA1.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "S_STA1")
+gdri <- update_gdri(indicator, gdri, "S_INF3")
 
 
 # --------------------------------------------------
@@ -91,19 +54,19 @@ gdri <- updateGdriShp(indicator, gdri, "S_STA1")
 
 # C_EWS1 Percentage of households without access to information (%)
 indicator <- st_read("output/adaptation_capacities/C_EWS1_tv_radio.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "C_EWS1")
+gdri <- update_gdri(indicator, gdri, "C_EWS1")
 
 # TODO: C_EWS2 Existence of early warning systems (EWS) to do
 
 # C_SHE1 Shelters - schools
 indicator <- st_read("output/adaptation_capacities/C_SHE1_schools.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "C_SHE1")
+gdri <- update_gdri(indicator, gdri, "C_SHE1")
 
 # TODO: C_INF1
 
 # C_TRA1 Access to transportation network
 indicator <- st_read("output/adaptation_capacities/C_TRA1_roads_waterways.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "C_TRA1")
+gdri <- update_gdri(indicator, gdri, "C_TRA1")
 
 
 # TODO: C_TRA2 Percentage of households without individual means of transportation: car or motorcycle
@@ -113,23 +76,23 @@ gdri <- updateGdriShp(indicator, gdri, "C_TRA1")
 
 # C_GOV2 Access to emergency services: hospitals, fire brigades, police stations
 indicator <- st_read("output/adaptation_capacities/C_GOV2_emergencies.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "C_GOV2")
+gdri <- update_gdri(indicator, gdri, "C_GOV2")
 
 # C_INS1 Percentage of households with insurance – excluding health insurance
 indicator <- st_read("output/adaptation_capacities/C_INS1_Insurance.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "C_INS1")
+gdri <- update_gdri(indicator, gdri, "C_INS1")
 
 # A_GOV4 Foreign Direct Investment (FDI)
 indicator <- st_read("output/adaptation_capacities/A_GOV4_Foreign_Direct_Investment.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "A_GOV4")
+gdri <- update_gdri(indicator, gdri, "A_GOV4")
 
 # C_SAV3 Lending interest rate (%)
 indicator <- st_read("output/adaptation_capacities/C_SAV3_lending_interest.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "C_SAV3")
+gdri <- update_gdri(indicator, gdri, "C_SAV3")
 
 # A_IIR1 Percentage of GDP spent on innovation and research (%)
 indicator <- st_read("output/adaptation_capacities/CA_IIR1_Researc_and_development.gpkg")
-gdri <- updateGdriShp(indicator, gdri, "A_IIR1")
+gdri <- update_gdri(indicator, gdri, "A_IIR1")
 
 "
 C_GOV3 No national food reserves available (binary) (National?)
@@ -152,14 +115,14 @@ source("processing/ecosystem_sensitivity/ES_DEG_1411.R")
 ES_DEG_1411 <- st_read(
     "output/ecosystem_sensitivity/ES_DEG_1411_eutrophication_risk.gpkg"
 )
-gdri <- updateGdriShp(ES_DEG_1411, gdri, "ES_DEG_1411")
+gdri <- update_gdri(ES_DEG_1411, gdri, "ES_DEG_1411")
 
 # ES_DES_1511 Forest Area
 source("processing/ecosystem_sensitivity/ES_DES1511.R")
 ES_DES1511 <- st_read(
     "output/ecosystem_sensitivity/ES_DES1511_forest_area.gpkg"
 )
-gdri <- updateGdriShp(ES_DES1511, gdri, "ES_DES1511")
+gdri <- update_gdri(ES_DES1511, gdri, "ES_DES1511")
 
 
 # ES_DES2 Freshwater scarcity
@@ -167,7 +130,7 @@ source("processing/ecosystem_sensitivity/ES_DES1511.R")
 ES_DES1511 <- st_read(
     "output/ecosystem_sensitivity/ES_DES1511_forest_area.gpkg"
 )
-gdri <- updateGdriShp(ES_DES1511, gdri, "ES_DES1511")
+gdri <- update_gdri(ES_DES1511, gdri, "ES_DES1511")
 
 # TODO: ES_DES3 Percentage of deforested area
 # "output/ecosystem_sensitivity/ES_DES3_forest_loss.gpkg"
@@ -199,15 +162,15 @@ ES_BIO1 Species richness adjusted by intactness
 ES_CON1512 <- st_read(
     "output/ecosystem_sensitivity/ER_CON_1512_conservation_areas.gpkg"
 )
-gdri <- updateGdriShp(ES_CON1512, gdri, "ER_CON_1512")
+gdri <- update_gdri(ES_CON1512, gdri, "ER_CON_1512")
 
 # ER_RES2 Forest gain
 ES_RES2 <- st_read("output/ecosystem_sensitivity/ER_RES2_forestgain.gpkg")
-gdri <- updateGdriShp(ES_RES2, gdri, "ER_RES2")
+gdri <- update_gdri(ES_RES2, gdri, "ER_RES2")
 
 # ER_TRE1457 Participation in Treaties
 ER_TRE1457 <- st_read("output/ecosystem_sensitivity/ER_TRE1_Participation_in_treaties.gpkg")
-gdri <- updateGdriShp(ER_TRE1457, gdri, "ER_TRE1457")
+gdri <- update_gdri(ER_TRE1457, gdri, "ER_TRE1457")
 
 "
 ER_POL2 Policies supporting biodiversity conservation
