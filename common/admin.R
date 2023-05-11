@@ -4,6 +4,7 @@ source("common/coastal_buffer.R")
 # sf::sf_use_s2(FALSE)
 ipums_shp <- st_read("data/ADMIN/world_geolev2_2019/world_geolev2_2019.shp")
 colnames(ipums_shp)[colnames(ipums_shp) == "GEOLEVEL2"] <- "GEOLEV2"
+
 admin_vnm <- ipums_shp %>%
   dplyr::filter(CNTRY_NAME == "Vietnam") %>%
   st_make_valid()
@@ -31,6 +32,8 @@ st_write(
 admin_bgd <- ipums_shp %>%
   dplyr::filter(CNTRY_NAME == "Bangladesh") %>%
   st_make_valid()
+admin_bgd$GEOLEV2 <- str_remove(admin_bgd$GEOLEV2, "^0+")
+admin_bgd$CNTRY_CODE <- str_remove(admin_bgd$CNTRY_CODE, "^0+")
 admin_bgd$geo_id <- admin_bgd$GEOLEV2
 admin_bgd$area <- units::set_units(st_area(admin_bgd), km^2)
 
