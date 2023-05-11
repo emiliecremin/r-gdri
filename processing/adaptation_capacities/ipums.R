@@ -3,19 +3,13 @@ source("common/helpers.R")
 # C_EWS1
 # Percentage of households without access to information (%)
 # Proxy: Percentage of households without radio or TV (%)
-C_EWS1 <- function(social, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-  tv_radio <- filter(social, RADIO != 9 & RADIO != 0 & TV != 00 & TV != 99) %>%
+C_EWS1 <- function(data) {
+  no_tv_radio <- filter(social, RADIO != 9 & RADIO != 0 & TV != 00 & TV != 99) %>%
     group_by(GEOLEV2, RADIO, TV) %>%
     summarise(cnt = n()) %>%
-    mutate(val = (cnt / sum(cnt) * 100))
-  no_tv_radio <- tv_radio %>%
+    mutate(val = (cnt / sum(cnt) * 100)) %>%
     filter(RADIO == 1 & TV == 10)
-  return(
-    process_indicator(
-      "C_EWS1", no_tv_radio,
-      append, normalize, plot, "output/adaptation_capacities"
-    )
-  )
+  return(no_tv_radio)
 }
 
 # Mobile
