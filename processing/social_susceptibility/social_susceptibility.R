@@ -51,7 +51,8 @@ social_susceptibility <- function(gdri, locations, country_name) {
         source("processing/india_national.R")
         social <- st_read(
             "data/ADMIN/India-village-boundaries/India-village-boundaries-Dselect.shp" # nolint
-        )
+        ) %>% st_drop_geometry
+        geo_id <- "C_CODE01"
         social$geo_id <- social$C_CODE01
     }
 
