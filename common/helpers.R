@@ -10,12 +10,30 @@ mkdirs <- function(fp) {
 # https://stackoverflow.com/a/47051133/6081943
 # https://medium.com/swlh/data-normalisation-with-r-6ef1d1947970#:~:text=Min%2DMax%20Normalization%20transforms%20x,been%20between%20%2D1%20and%201.
 normalize_minmax <- function(x, ...) {
-  return((x - min(x, ...)) / (max(x, ...) - min(x, ...)))
+  res <- 1
+  if(min(x, na.rm=TRUE) < max(x, na.rm=TRUE)){ 
+    res <- (x - min(x, ...)) / (max(x, ...) - min(x, ...))
+  }
+  return(res)
 }
 
-updateGdriShp <- function(df, shp, indicator_code) {
+normalize <- function(data, ...) {
+  tmp <- data[endsWith(colnames(data), "_val")] %>% st_drop_geometry()
+  tmp[colnames(tmp)] <- lapply(
+      tmp[colnames(tmp)], 
+      FUN = function(x) normalize_minmax(x, na.rm=TRUE)
+  )
+  norm <- rename_with(tmp, ~ gsub("_val", "_norm", .x, fixed = TRUE))
+  return(cbind(data, norm))
+}
+
+update_gdri <- function(df, shp, indicator_code) {
   df <- df %>% st_drop_geometry()
-  indicator <- subset(df, select = c("geo_id", "val", "norm"))
+  cols <- c("geo_id", "val")
+  if("morm" %in% colnames(df)) {
+    cols <- append(cols, "nrom")
+  }
+  indicator <- subset(df, select = cols)
   indicator <- indicator %>% rename_with(~ paste0(str_glue("{indicator_code}_"), .x), !matches("geo_id"))
   return(joinOnColumn(indicator, shp, "geo_id"))
 }
@@ -104,15 +122,19 @@ joinOnPostcode <- function(df, shp) {
 }
 
 process_indicator <- function(indicator_name, data, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-  data <- data %>% arrange(desc(val))
+  cat("process_indicator for", indicator_name, "\n")
+  # data <- data %>% arrange(desc(val))
   if (normalize) {
+    cat("normalize", indicator_name, "\n")
     data$norm <- normalize_minmax(data$val, na.rm = TRUE)
   }
   if (plot) {
+    cat("plot", indicator_name, "\n")
     mapPlot(data, "norm", "norm min-max", indicator_name)
   }
   if (output != "") {
-    st_write(data, str_glue("{output}/{indicator_name}.gpkg"), append)
+    cat("write", indicator_name, "\n")
+    st_write(data, str_glue("{output}/{indicator_name}.gpkg"), append = append)
   }
   return(data)
 }
