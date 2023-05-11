@@ -1,22 +1,43 @@
 source("common/helpers.R")
 
+# Census and ipums
 soc_susceptibility_indicators <- c(
-    # ipums
     "S_SOC3",
     "S_SOC5",
     "S_SOC8",
     "S_ECO2",
     "S_INF1",
     "S_INF2",
-    "S_INF3",
-    # National indicators
+    "S_INF3"
+)
+
+# National indicators
+soc_susceptibility_nat_indicators <- c(
     "S_ECO4",
     "S_OCU1",
     "S_STA1",
     "S_GOV1"
 )
 
-social_susceptibility <- function(gdri, locations, country_name) {
+
+# install.packages("usethis")
+# library(usethis)
+# usethis::edit_r_environ()
+# R_MAX_VSIZE=100Gb
+# Error: vector memory exhausted (limit reached?)
+# https://stackoverflow.com/questions/51295402/r-on-macos-error-vector-memory-exhausted-limit-reached
+
+social_susceptibility <- function(locations, country_name) {
+    result <- locations
+    mkdirs(str_glue("output/social_susceptibility/{country_name}"))
+    cat("This can take some time, depending on the size of the dataset.\n")
+    cat(
+        " ------------------------------------------------------------------\n",
+        "If it fails with 'Error: vector memory exhausted (limit reached?)'\n",
+        "Please increase R_MAX_VSIZE more info https://stackoverflow.com/a/52612921 \n", # nolint
+        "-------------------------------------------------------------------\n"
+    )
+    cat("Social data for", country_name, "loading...\n")
     if (country_name == "Vietnam") {
         source("processing/social_susceptibility/ipums.R")
         source("processing/vietnam_national.R")
@@ -55,12 +76,48 @@ social_susceptibility <- function(gdri, locations, country_name) {
         geo_id <- "C_CODE01"
         social$geo_id <- social$C_CODE01
     }
-
+    cat("Census indicators:\n")
+    i <- 1
     for (indicator_code in soc_susceptibility_indicators) {
-        indicator <- do.call(
-            indicator_code,
-            c(social, locations, append = TRUE)
+        cat(
+            "Processing indicator:", indicator_code,
+            "(", i, "/", length(soc_susceptibility_indicators), ")\n"
         )
-        gdri <- updateGdriShp(indicator, gdri, indicator_code)
+        indicator <- do.call(
+            get(indicator_code),
+            list(data = social)
+        )
+        cat("Join social data with geometries...\n")
+        cat(colnames(indicator), "\n")
+        print(head(indicator, 2))
+        indicator <- joinOnColumn(indicator, locations, geo_id)
+        indicator$geo_id <- indicator[[geo_id]]
+        process_indicator(
+            indicator_code, indicator,
+            append=FALSE, normalize=FALSE,
+            plot=FALSE, output=str_glue("output/social_susceptibility/{country_name}")
+        )
+        result <- update_gdri(indicator, result, indicator_code)
+        i <- i + 1
     }
+    cat("National indicators:\n")
+    i <- 1
+    for (indicator_code in soc_susceptibility_nat_indicators) {
+        cat(
+            "Processing indicator:", indicator_code,
+            "(", i, "/", length(soc_susceptibility_nat_indicators), ")\n"
+        )
+        indicator <- do.call(
+            get(indicator_code),
+            list(data = )
+        )
+        process_indicator(
+            indicator_code, indicator,
+            append=FALSE, normalize=FALSE,
+            plot=FALSE, output=str_glue("output/social_susceptibility/{country_name}")
+        )
+        result <- update_gdri(indicator, result, indicator_code)
+        i <- i + 1
+    }
+    return(result)
 }
