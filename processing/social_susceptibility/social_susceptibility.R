@@ -21,17 +21,29 @@ social_susceptibility <- function(gdri, locations, country_name) {
         source("processing/social_susceptibility/ipums.R")
         source("processing/vietnam_national.R")
         # social <- ipums_data %>% dplyr::filter(COUNTRY == 704)
-        social <- read.csv(file = "data/Vietnam/vietnam_2009.csv")
+        f <- "objects/vnm_ipums.rds"
+        if (file.exists(f) == TRUE) {
+            social <- readRDS(f)
+        } else {
+            social <- read.csv(file = "data/Vietnam/vietnam_2009.csv")
+            saveRDS(social, f)
+        }
+        geo_id <- "GEOLEV2"
         social$geo_id <- social$GEOLEV2
-        social <- joinOnColumn(social, locations, "geo_id")
     }
 
     if (country_name == "Bangladesh") {
         source("processing/social_susceptibility/ipums.R")
         source("processing/bangladesh_national.R")
-        social <- read.csv(file = "data/Bangladesh/bangladesh_2011.csv")
+        f <- "objects/bgd_ipums.rds"
+        if (file.exists(f) == TRUE) {
+            social <- readRDS(f)
+        } else {
+            social <- read.csv(file = "data/Bangladesh/bangladesh_2011.csv")
+            saveRDS(social, f)
+        }
+        geo_id <- "GEOLEV2"
         social$geo_id <- social$GEOLEV2
-        social <- joinOnColumn(social, locations, "geo_id")
     }
 
     if (country_name == "India") {
