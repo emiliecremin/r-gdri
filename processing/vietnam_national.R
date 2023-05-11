@@ -3,47 +3,27 @@
 # -------------------------------------------
 
 # gini_index
-S_ECO4 <- function(locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-    locations$val <- 35.7
-    return(
-        process_indicator(
-            "S_ECO4", locations,
-            append, normalize, plot, "output/social_susceptibility"
-        )
-    )
+S_ECO4 <- function(data) {
+    data$val <- 35.7
+    return(data)
 }
 
 # agriculture_to_GDP
-S_OCU1 <- function(locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-    locations$val <- 17.7
-    return(
-        process_indicator(
-            "S_OCU1", locations,
-            append, normalize, plot, "output/social_susceptibility"
-        )
-    )
+S_OCU1 <- function(data) {
+    data$val <- 17.7
+    return(data)
 }
 
 # Homicides
-S_STA1 <- function(locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-    locations$val <- 3.3
-    return(
-        process_indicator(
-            "S_STA1", locations,
-            append, normalize, plot, "output/social_susceptibility"
-        )
-    )
+S_STA1 <- function(data) {
+    data$val <- 3.3
+    return(data)
 }
 
 # Corruption
-S_GOV1 <- function(locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-    locations$val <- 31
-    return(
-        process_indicator(
-            "S_GOV1", locations,
-            append, normalize, plot, "output/social_susceptibility"
-        )
-    )
+S_GOV1 <- function(data) {
+    data$val <- 31
+    return(data)
 }
 
 # -------------------------------------------
@@ -51,69 +31,39 @@ S_GOV1 <- function(locations, append = FALSE, normalize = FALSE, plot = FALSE, o
 # -------------------------------------------
 
 # early_warning_systems
-C_EWS2 <- function(locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-    locations$val <- 4
-    return(
-        process_indicator(
-            "C_EWS2", locations,
-            append, normalize, plot, "output/adaptation_capacities"
-        )
-    )
+C_EWS2 <- function(data) {
+    data$val <- 4
+    return(data)
 }
 
 # health_coverage
-C_HEA34 <- function(locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-    locations$val <- 3.5
-    return(
-        process_indicator(
-            "C_HEA34", locations,
-            append, normalize, plot, "output/adaptation_capacities"
-        )
-    )
+C_HEA34 <- function(data) {
+    data$val <- 3.5
+    return(data)
 }
 
 # lending_interest
-C_SAV3 <- function(locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-    locations$val <- 7.1
-    return(
-        process_indicator(
-            "C_SAV3", locations,
-            append, normalize, plot, "output/adaptation_capacities"
-        )
-    )
+C_SAV3 <- function(data) {
+    data$val <- 7.1
+    return(data)
 }
 
 # Insurance
-C_INS1 <- function(locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-    locations$val <- 0.18
-    return(
-        process_indicator(
-            "C_INS1", locations,
-            append, normalize, plot, "output/adaptation_capacities"
-        )
-    )
+C_INS1 <- function(data) {
+    data$val <- 0.18
+    return(data)
 }
 
 # Foreign_Direct_Investment
-A_GOV4 <- function(locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-    locations$val <- 6.1
-    return(
-        process_indicator(
-            "A_GOV4", locations,
-            append, normalize, plot, "output/adaptation_capacities"
-        )
-    )
+A_GOV4 <- function(data) {
+    data$val <- 6.1
+    return(data)
 }
 
 # Research_and_development
-CA_IIR1 <- function(locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-    locations$val <- 0.6
-    return(
-        process_indicator(
-            "CA_IIR1", locations,
-            append, normalize, plot, "output/adaptation_capacities"
-        )
-    )
+CA_IIR1 <- function(data) {
+    data$val <- 0.6
+    return(data)
 }
 
 # -------------------------------------------
@@ -121,12 +71,7 @@ CA_IIR1 <- function(locations, append = FALSE, normalize = FALSE, plot = FALSE, 
 # -------------------------------------------
 
 # Participation_in_treaties
-ER_TRE1 <- function(locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-    locations$val <- 1
-    return(
-        process_indicator(
-            "ER_TRE1", locations,
-            append, normalize, plot, "output/ecosystem_robustness"
-        )
-    )
+ER_TRE1 <- function(data) {
+    data$val <- 1
+    return(data)
 }
