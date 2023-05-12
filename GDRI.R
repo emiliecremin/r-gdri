@@ -31,9 +31,9 @@ st_write(soc_sus_norm, "output/social_susceptibility/social_susceptibility.gpkg"
 # gdri <- update_gdri(indicator, gdri, "S_ECO1")
 
 # S_INF1 / S_INF1_631 Percentage of population without access to (improved) sanitation (%)
+S_INF1_631(bgd, country_name = "Bangladesh")
 indicator <- st_read("output/social_susceptibility/S_INF1_631.gpkg")
 gdri <- update_gdri(indicator, gdri, "S_INF1_631")
-
 
 # S_INF2 / S_INF2_611 Percentage of population without access to clean water (%)
 indicator <- st_read("output/social_susceptibility/S_INF2_611.gpkg")
@@ -42,11 +42,6 @@ gdri <- update_gdri(indicator, gdri, "S_INF2_611")
 # S_INF1_621 Percentage of population without access to (improved) sanitation (%)
 indicator <- st_read("output/social_susceptibility/S_INF1_621.gpkg")
 gdri <- update_gdri(indicator, gdri, "S_INF1_621")
-
-# S_INF3 Percentage of population without access to electricity (%)
-indicator <- st_read("output/social_susceptibility/S_INF3_electricity.gpkg")
-gdri <- update_gdri(indicator, gdri, "S_INF3")
-
 
 # --------------------------------------------------
 # COPING AND ADAPTATION CAPACITY
