@@ -109,7 +109,7 @@ social_susceptibility <- function(locations, country_name) {
         )
         indicator <- do.call(
             get(indicator_code),
-            list(data = )
+            list(data = locations)
         )
         process_indicator(
             indicator_code, indicator,
