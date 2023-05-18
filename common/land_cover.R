@@ -40,6 +40,10 @@ extract_classes <- function(landcover, classes) {
 }
 
 create_landcover <- function(landcover, roi, region_name) {
+  # roi <- terra::vect("data/ADMIN/admin_ind.gpkg")
+  # region_name <- "IND"
+  # landcover_roi <- terra::rast(str_glue("data/ESA_Landcover/{region_name}_roi.tif"))
+  
     roi <- roi %>%
         terra::aggregate()
     pv <- terra::project(roi, landcover)
@@ -47,27 +51,60 @@ create_landcover <- function(landcover, roi, region_name) {
     plot(landcover_roi)
     terra::writeRaster(
         landcover_roi,
-        filename = str_glue("data/ESA_Landcover/{region_name}_roi.tif")
+        filename = str_glue("data/ESA_Landcover/{region_name}_roi.tif"),
+        overwrite = TRUE
     )
-    # 10 = Tree cover / 20 = Shrubland / 30 = Grassland
-    # 80 = Permanent water bodies / 90 = Herbaceous wetland / 95 = Mangroves / 100 = Moss and lichen
-    ecosystems <- extract_classes(landcover_roi, c(9, 31, 1, 79, 101, 1))
+    
+    # Ecosystem = Shrubland 20 + Grassland 30 + Herbaceous wetland 90 + Mangroves 95
+    ecosystems <- extract_classes(landcover_roi, c(19, 31, 1, 89, 96, 1))
     plot(ecosystems)
-    terra::writeRaster(ecosystems, filename = str_glue("data/ESA_Landcover/{region_name}_ecosystems.tif"))
+    terra::writeRaster(
+      ecosystems,
+      filename = str_glue("data/ESA_Landcover/{region_name}_ecosystems.tif"),
+      overwrite = TRUE
+    )
 
+    # TODO: + protected areas (vect polygons) 
+    # xv <- rasterize(pv, r, fun=sum)
+    # https://rdrr.io/github/rspatial/terra/man/rasterize.html
+    # cover= FALSE
+    
     # TODO: rbind(c(10, 1), c(95, 1))
     forests <- extract_classes(landcover_roi, c(9, 11, 1, 94, 96, 1))
     plot(forests)
-    terra::writeRaster(forests, filename = str_glue("data/ESA_Landcover/{region_name}_forests.tif"))
+    terra::writeRaster(
+      forests,
+      filename = str_glue("data/ESA_Landcover/{region_name}_forests.tif"),
+      overwrite = TRUE
+    )
 
     # TODO: rbind(c(40, 1), c(80, 1))
-    agriculture <- extract_classes(landcover_roi, c(39, 41, 1, 79, 81, 1))
+    # Agriculture = cropland + agro-forestery = forest 10 (-protected area) + Cropland 40
+    agriculture <- extract_classes(landcover_roi, c(9, 11, 1, 39, 41, 1))
     plot(agriculture)
-    terra::writeRaster(agriculture, filename = str_glue("data/ESA_Landcover/{region_name}_agriculture.tif"))
+    terra::writeRaster(
+      agriculture,
+      filename = str_glue("data/ESA_Landcover/{region_name}_agriculture.tif"),
+      overwrite = TRUE
+    )
+    
+    # Aquaculture = Water bodies 80 + bare /sparse vegetation 60
+    # TODO: rbind c(80, 1))
+    aquaculture <- extract_classes(landcover_roi, c(79, 81, 1, 59, 61, 1))
+    plot(aquaculture)
+    terra::writeRaster(
+      aquaculture,
+      filename = str_glue("data/ESA_Landcover/{region_name}_aquaculture.tif"),
+      overwrite = TRUE
+    )
 }
+
 
 roi <- terra::vect("data/ADMIN/admin_vnm_with_buffer.gpkg")
 create_landcover(landcover, roi, "VNM")
 
-roi <- terra::vect("data/ADMIN/admin_ind_with_buffer.gpkg")
+roi <- terra::vect("data/ADMIN/admin_ind.gpkg")
 create_landcover(landcover, roi, "IND")
+
+roi <- terra::vect("data/ADMIN/admin_bgd_with_buffer.gpkg")
+create_landcover(landcover, roi, "BGD")
