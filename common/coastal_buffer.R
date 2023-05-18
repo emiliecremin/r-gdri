@@ -16,13 +16,13 @@ create_buffer <- function(admin_shp, geo_id) {
   ) %>%
     st_cast(geom_type)
   st_geometry(admin_buffer) <- "geometry"
-
+  plot(admin_buffer)
   admin_with_buffer <- rbind(admin_shp[c(geo_id, "geometry")], admin_buffer) %>%
-    group_by(geo_id) %>%
+    group_by(across(all_of(geo_id))) %>%
     summarise()
-
+  colnames(admin_with_buffer)
   admin_with_buffer <- st_drop_geometry(admin_shp) %>%
-    left_join(admin_with_buffer, by = geo_id) %>%
+    left_join(admin_with_buffer, by = {{geo_id}}) %>%
     st_as_sf() %>%
     st_cast(geom_type)
 
