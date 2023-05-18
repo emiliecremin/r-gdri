@@ -18,6 +18,7 @@ pop_vnm$GEOLEV2 <- as.character(pop_vnm$GEO2_VN)
 pop_vnm$pop <- pop_vnm$TOTPOP_GEO2_VN_VN2009A
 pop_vnm <- pop_vnm[, c("GEOLEV2", "pop")]
 admin_vnm <- dplyr::left_join(x = admin_vnm, y = pop_vnm, by = "GEOLEV2")
+# TODO: keep only useful columns
 st_write(admin_vnm, "data/ADMIN/admin_vnm.gpkg", append = FALSE)
 
 admin_vnm_with_buffer <- create_buffer(admin_vnm, "geo_id")
@@ -41,6 +42,7 @@ pop_bgd$GEOLEV2 <- as.character(pop_bgd$GEO2_BD)
 pop_bgd$pop <- pop_bgd$TOTPOP_GEO2_BD_BD2011A
 pop_bgd <- pop_bgd[, c("GEOLEV2", "pop")]
 admin_bgd <- dplyr::left_join(x = admin_bgd, y = pop_bgd, by = "GEOLEV2")
+# TODO: keep only useful columns
 st_write(admin_bgd, "data/ADMIN/admin_bgd.gpkg", append = FALSE)
 
 admin_bgd_with_buffer <- create_buffer(admin_bgd, "geo_id")
@@ -60,20 +62,20 @@ st_write(
 # other source: https://data.apps.fao.org/catalog/organization/fao-region-mapping
 
 admin_ind <- st_read(
-  "data/ADMIN/India-village-boundaries/India-village-boundaries-Dselect.shp"
+  "data/ADMIN/India-village-boundaries/India-village-boundaries-AOI.shp"
 ) %>% st_make_valid()
 admin_ind$geo_id <- admin_ind$C_CODE01
-# admin_ind$area <- units::set_units(st_area(admin_ind), km^2)
-admin_ind$pop <- admin_ind$TOT_P
+admin_ind$pop <- as.numeric(admin_ind$TOT_P)
+admin_ind$area <- units::set_units(st_area(admin_ind), km^2)
+admin_ind$density <- admin_ind$pop / as.numeric(admin_ind$area)
+# TODO: keep only useful columns
 st_write(admin_ind, "data/ADMIN/admin_ind.gpkg", append = FALSE)
 
-admin_ind_with_buffer <- create_buffer(admin_ind, "geo_id")
+# Buffer is missing some features, not very accurate for this roi
+admin_ind_with_buffer <- create_buffer(admin_ind, "UID")
 st_write(
   admin_ind_with_buffer,
   "data/ADMIN/admin_ind_with_buffer.gpkg",
   append = FALSE
 )
-admin_ind$TOT_P <- as.numeric(admin_ind$TOT_P)
-admin_ind$area <- units::set_units(st_area(admin_ind), km^2)
-admin_ind$density <- admin_ind$TOT_P / as.numeric(admin_ind$area)
-mapPlot(admin_ind, "TOT_P", "persons", "Total Population")
+# mapPlot(admin_ind, "pop", "persons", "Total Population")
