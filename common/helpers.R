@@ -11,7 +11,7 @@ mkdirs <- function(fp) {
 # https://medium.com/swlh/data-normalisation-with-r-6ef1d1947970#:~:text=Min%2DMax%20Normalization%20transforms%20x,been%20between%20%2D1%20and%201.
 normalize_minmax <- function(x, ...) {
   res <- 1
-  if(min(x, na.rm=TRUE) < max(x, na.rm=TRUE)){ 
+  if (min(x, na.rm = TRUE) < max(x, na.rm = TRUE)) {
     res <- (x - min(x, ...)) / (max(x, ...) - min(x, ...))
   }
   return(res)
@@ -20,8 +20,8 @@ normalize_minmax <- function(x, ...) {
 normalize <- function(data, ...) {
   tmp <- data[endsWith(colnames(data), "_val")] %>% st_drop_geometry()
   tmp[colnames(tmp)] <- lapply(
-      tmp[colnames(tmp)], 
-      FUN = function(x) normalize_minmax(x, na.rm=TRUE)
+    tmp[colnames(tmp)],
+    FUN = function(x) normalize_minmax(x, na.rm = TRUE)
   )
   norm <- rename_with(tmp, ~ gsub("_val", "_norm", .x, fixed = TRUE))
   return(cbind(data, norm))
@@ -30,7 +30,7 @@ normalize <- function(data, ...) {
 update_gdri <- function(df, shp, indicator_code) {
   df <- df %>% st_drop_geometry()
   cols <- c("geo_id", "val")
-  if("morm" %in% colnames(df)) {
+  if ("morm" %in% colnames(df)) {
     cols <- append(cols, "nrom")
   }
   indicator <- subset(df, select = cols)
@@ -80,10 +80,8 @@ my_map <- function(data, col_label, col_value, title, pal_colors) {
     domain = data[[col_value]]
   )
 
+  data[[col_value]][is.na(data[[col_value]])] <- 0
   data$label <- paste0(data[[col_label]], ": ", round(data[[col_value]], digits = 2))
-
-  # TODO: replace NA in char columns with empty string
-  data[is.na(data)] <- 0
 
   l <- leaflet() %>%
     addTiles() %>%
