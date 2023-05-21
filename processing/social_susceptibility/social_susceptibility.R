@@ -16,7 +16,10 @@ soc_susceptibility_nat_indicators <- c(
     "S_ECO4",
     "S_OCU1",
     "S_STA1",
-    "S_GOV1"
+    "S_GOV1",
+    "S_INF1_621",
+    "S_INF1_631",
+    "S_INF2_611"
 )
 
 
@@ -31,6 +34,7 @@ social_susceptibility <- function(locations, country_name) {
     result <- locations
     mkdirs(str_glue("output/social_susceptibility/{country_name}"))
     cat("This can take some time, depending on the size of the dataset.\n")
+    source("processing/social_susceptibility/aqueduct.R")
     cat(
         " ------------------------------------------------------------------\n",
         "If it fails with 'Error: vector memory exhausted (limit reached?)'\n",
