@@ -1,6 +1,6 @@
 source("common/helpers.R")
 
-# Census and ipums
+# Data sources: ipums, aqueduct and national indicators
 soc_susceptibility_indicators <- c(
     "S_SOC3",
     "S_SOC5",
@@ -8,11 +8,7 @@ soc_susceptibility_indicators <- c(
     "S_ECO2",
     "S_INF1",
     "S_INF2",
-    "S_INF3"
-)
-
-# National indicators
-soc_susceptibility_nat_indicators <- c(
+    "S_INF3",
     "S_ECO4",
     "S_OCU1",
     "S_STA1",
@@ -72,6 +68,7 @@ social_susceptibility <- function(locations, country_name) {
     }
 
     if (country_name == "India") {
+        # TODO: this is not ready yet
         source("processing/social_susceptibility/census_of_india.R")
         source("processing/india_national.R")
         social <- st_read(
@@ -80,7 +77,7 @@ social_susceptibility <- function(locations, country_name) {
         geo_id <- "C_CODE01"
         social$geo_id <- social$C_CODE01
     }
-    cat("Census indicators:\n")
+
     i <- 1
     for (indicator_code in soc_susceptibility_indicators) {
         cat(
@@ -89,34 +86,10 @@ social_susceptibility <- function(locations, country_name) {
         )
         indicator <- do.call(
             get(indicator_code),
-            list(data = social)
-        )
-        cat("Join social data with geometries...\n")
-        cat(colnames(indicator), "\n")
-        print(head(indicator, 2))
-        indicator <- joinOnColumn(indicator, locations, geo_id)
-        indicator$geo_id <- indicator[[geo_id]]
-        process_indicator(
-            indicator_code, indicator,
-            append=FALSE, normalize=FALSE,
-            plot=FALSE, output=str_glue("output/social_susceptibility/{country_name}")
-        )
-        result <- update_gdri(indicator, result, indicator_code)
-        i <- i + 1
-    }
-    cat("National indicators:\n")
-    i <- 1
-    for (indicator_code in soc_susceptibility_nat_indicators) {
-        cat(
-            "Processing indicator:", indicator_code,
-            "(", i, "/", length(soc_susceptibility_nat_indicators), ")\n"
-        )
-        indicator <- do.call(
-            get(indicator_code),
-            list(data = locations)
+            list(locations = locations, data = social)
         )
         process_indicator(
-            indicator_code, indicator,
+            indicator_code, indicator, locations,
             append=FALSE, normalize=FALSE,
             plot=FALSE, output=str_glue("output/social_susceptibility/{country_name}")
         )
