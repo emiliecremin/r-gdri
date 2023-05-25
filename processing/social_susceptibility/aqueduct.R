@@ -1,5 +1,6 @@
 # https://www.wri.org/research/aqueduct-30-updated-decision-relevant-global-water-risk-indicators
 # https://github.com/wri/aqueduct30_data_download/blob/master/metadata.md
+cat("Loading Aqueduct dataset...\n")
 aqueduct <- vect("data/Water/Y2019M07D12_Aqueduct30_V01/baseline/annual/y2019m07d11_aqueduct30_annual_v01.gpkg")
 
 map_aqueduct <- function(data, col_code) {
@@ -34,19 +35,19 @@ map_aqueduct <- function(data, col_code) {
 }
 
 # S_INF1_621 Percentage of population without access to (improved) sanitation (%)
-S_INF1_621 <- function(data) {
+S_INF1_621 <- function(locations, ...) {
     # usa: Unimproved/no sanitation
-    return(map_aqueduct(data, "usa"))
+    return(map_aqueduct(locations, "usa"))
 }
 
 # S_INF1 / S_INF1_631 Percentage of houseolds without access to wastewater treatment (%)
-S_INF1_631 <- function(data) {
+S_INF1_631 <- function(locations, ...) {
     # ucw: Untreated connected wastewater
-    return(map_aqueduct(data, "ucw"))
+    return(map_aqueduct(locations, "ucw"))
 }
 
 # S_INF2 / S_INF2_611 Percentage of population without access to clean driking water (%)
-S_INF2_611 <- function(data) {
+S_INF2_611 <- function(locations, ...) {
     # udw: Unimproved/no drinking water
-    return(map_aqueduct(data, "udw"))
+    return(map_aqueduct(locations, "udw"))
 }
