@@ -9,7 +9,8 @@ ipums_data <- read.csv(file = "data/IPUMS/ipumsi_00005.csv")
 
 country <- data.frame(name = "Vietnam", iso = "VNM", code = 704)
 vietnam_2009 <- dplyr::filter(ipums_data, YEAR == 2009 & COUNTRY == 704)
-write.csv(vietnam_2009, file = "./data/Vietnam/vietnam_2009.csv")
+saveRDS(vietnam_2009, "objects/vnm_ipums.rds")
+write.csv(vietnam_2009, file = "data/Vietnam/vietnam_2009.csv")
 # Mekong
 # 704082 Tien Giang [Province: Vietnam]
 # 704083 Ben Tre [Province: Vietnam]
@@ -40,4 +41,9 @@ red_river <- dplyr::filter(vietnam_2009, GEOLEV1 >= 704001 & GEOLEV1 <= 704038)
 # write.csv(red_river, file = "./output/Vietnam/red_river.csv")
 
 vn_deltas <- rbind(mekong, red_river)
-write.csv(vn_deltas, file = "./data/Vietnam/vn_deltas.csv")
+write.csv(vn_deltas, file = "data/Vietnam/vn_deltas.csv")
+
+bangladesh_2011 <- dplyr::filter(ipums_data, YEAR == 2011 & COUNTRY == 50)
+saveRDS(bangladesh_2011, "objects/bgd_ipums.rds")
+write.csv(bangladesh_2011, file = "data/Bangladesh/bangladesh_2011.csv")
+
