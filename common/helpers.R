@@ -10,12 +10,30 @@ mkdirs <- function(fp) {
 # https://stackoverflow.com/a/47051133/6081943
 # https://medium.com/swlh/data-normalisation-with-r-6ef1d1947970#:~:text=Min%2DMax%20Normalization%20transforms%20x,been%20between%20%2D1%20and%201.
 normalize_minmax <- function(x, ...) {
-  return((x - min(x, ...)) / (max(x, ...) - min(x, ...)))
+  res <- 1
+  if (min(x, na.rm = TRUE) < max(x, na.rm = TRUE)) {
+    res <- (x - min(x, ...)) / (max(x, ...) - min(x, ...))
+  }
+  return(res)
 }
 
-updateGdriShp <- function(df, shp, indicator_code) {
+normalize <- function(data, ...) {
+  tmp <- data[endsWith(colnames(data), "_val")] %>% st_drop_geometry()
+  tmp[colnames(tmp)] <- lapply(
+    tmp[colnames(tmp)],
+    FUN = function(x) normalize_minmax(x, na.rm = TRUE)
+  )
+  norm <- rename_with(tmp, ~ gsub("_val", "_norm", .x, fixed = TRUE))
+  return(cbind(data, norm))
+}
+
+update_gdri <- function(df, shp, indicator_code) {
   df <- df %>% st_drop_geometry()
-  indicator <- subset(df, select = c("geo_id", "val", "norm"))
+  cols <- c("geo_id", "val")
+  if ("morm" %in% colnames(df)) {
+    cols <- append(cols, "nrom")
+  }
+  indicator <- subset(df, select = cols)
   indicator <- indicator %>% rename_with(~ paste0(str_glue("{indicator_code}_"), .x), !matches("geo_id"))
   return(joinOnColumn(indicator, shp, "geo_id"))
 }
@@ -62,10 +80,8 @@ my_map <- function(data, col_label, col_value, title, pal_colors) {
     domain = data[[col_value]]
   )
 
+  data[[col_value]][is.na(data[[col_value]])] <- 0
   data$label <- paste0(data[[col_label]], ": ", round(data[[col_value]], digits = 2))
-
-  # TODO: replace NA in char columns with empty string
-  data[is.na(data)] <- 0
 
   l <- leaflet() %>%
     addTiles() %>%
@@ -101,4 +117,27 @@ joinOnPostcode <- function(df, shp) {
       dplyr::full_join(y = shp, by = "ADM2_PCODE") %>%
       st_as_sf()
   )
+}
+
+process_indicator <- function(indicator_name, data, locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
+  cat("process_indicator for", indicator_name, "\n")
+  cat("colnames", colnames(data), "\n")
+  cat("class", class(data), "\n")
+  if (!(is(data, "sf") || is(data, "SpatVector"))) {
+    cat("Join data with geometries...\n")
+    data <- joinOnColumn(data, locations, "geo_id")
+  }
+  if (normalize) {
+    cat("normalize", indicator_name, "\n")
+    data$norm <- normalize_minmax(data$val, na.rm = TRUE)
+  }
+  if (plot) {
+    cat("plot", indicator_name, "\n")
+    mapPlot(data, "norm", "norm min-max", indicator_name)
+  }
+  if (output != "") {
+    cat("write", indicator_name, "\n")
+    st_write(data, str_glue("{output}/{indicator_name}.gpkg"), append = append)
+  }
+  return(data)
 }

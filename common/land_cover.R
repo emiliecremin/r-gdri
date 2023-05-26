@@ -40,10 +40,10 @@ extract_classes <- function(landcover, classes) {
 }
 
 create_landcover <- function(landcover, roi, region_name) {
-  # roi <- terra::vect("data/ADMIN/admin_ind.gpkg")
-  # region_name <- "IND"
-  # landcover_roi <- terra::rast(str_glue("data/ESA_Landcover/{region_name}_roi.tif"))
-  
+    # roi <- terra::vect("data/ADMIN/admin_ind.gpkg")
+    # region_name <- "IND"
+    # landcover_roi <- terra::rast(str_glue("data/ESA_Landcover/{region_name}_roi.tif"))
+
     roi <- roi %>%
         terra::aggregate()
     pv <- terra::project(roi, landcover)
@@ -54,28 +54,28 @@ create_landcover <- function(landcover, roi, region_name) {
         filename = str_glue("data/ESA_Landcover/{region_name}_roi.tif"),
         overwrite = TRUE
     )
-    
+
     # Ecosystem = Shrubland 20 + Grassland 30 + Herbaceous wetland 90 + Mangroves 95
     ecosystems <- extract_classes(landcover_roi, c(19, 31, 1, 89, 96, 1))
     plot(ecosystems)
     terra::writeRaster(
-      ecosystems,
-      filename = str_glue("data/ESA_Landcover/{region_name}_ecosystems.tif"),
-      overwrite = TRUE
+        ecosystems,
+        filename = str_glue("data/ESA_Landcover/{region_name}_ecosystems.tif"),
+        overwrite = TRUE
     )
 
-    # TODO: + protected areas (vect polygons) 
+    # TODO: + protected areas (vect polygons)
     # xv <- rasterize(pv, r, fun=sum)
     # https://rdrr.io/github/rspatial/terra/man/rasterize.html
     # cover= FALSE
-    
+
     # TODO: rbind(c(10, 1), c(95, 1))
     forests <- extract_classes(landcover_roi, c(9, 11, 1, 94, 96, 1))
     plot(forests)
     terra::writeRaster(
-      forests,
-      filename = str_glue("data/ESA_Landcover/{region_name}_forests.tif"),
-      overwrite = TRUE
+        forests,
+        filename = str_glue("data/ESA_Landcover/{region_name}_forests.tif"),
+        overwrite = TRUE
     )
 
     # TODO: rbind(c(40, 1), c(80, 1))
@@ -83,19 +83,19 @@ create_landcover <- function(landcover, roi, region_name) {
     agriculture <- extract_classes(landcover_roi, c(9, 11, 1, 39, 41, 1))
     plot(agriculture)
     terra::writeRaster(
-      agriculture,
-      filename = str_glue("data/ESA_Landcover/{region_name}_agriculture.tif"),
-      overwrite = TRUE
+        agriculture,
+        filename = str_glue("data/ESA_Landcover/{region_name}_agriculture.tif"),
+        overwrite = TRUE
     )
-    
+
     # Aquaculture = Water bodies 80 + bare /sparse vegetation 60
     # TODO: rbind c(80, 1))
     aquaculture <- extract_classes(landcover_roi, c(79, 81, 1, 59, 61, 1))
     plot(aquaculture)
     terra::writeRaster(
-      aquaculture,
-      filename = str_glue("data/ESA_Landcover/{region_name}_aquaculture.tif"),
-      overwrite = TRUE
+        aquaculture,
+        filename = str_glue("data/ESA_Landcover/{region_name}_aquaculture.tif"),
+        overwrite = TRUE
     )
 }
 
