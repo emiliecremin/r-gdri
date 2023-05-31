@@ -1,0 +1,172 @@
+source("common/helpers.R")
+
+# C_SHE1
+# Access to shelter places
+# Density of schools km2 per 1,000 inhabitants
+# https://wiki.openstreetmap.org/wiki/Tag:amenity%3Dschool
+# density of primary and secondary schools per km2
+C_SHE1 <- function(locations, ...) {
+    locations <- vnm
+    education_services <- c("school", "college", "university")
+    tmp <- "objects/C_SHE1"
+    mkdirs(tmp)
+    g <- attr(locations, "sf_column")
+    for (i in 1:nrow(locations)) {
+        location <- locations[i, ]
+        osm_data <- get_osm(
+            location,
+            "amenity",
+            education_services,
+            tmp
+        )
+        # print(osm_data)
+        cnt <- 0
+        if (!is.null(osm_data$osm_points)) {
+            features_points <- st_intersection(location[[g]], st_make_valid(osm_data$osm_points))
+            cnt <- cnt + nrow(as.data.frame(features_points))
+        }
+        if (!is.null(osm_data$osm_polygons)) {
+            features_polygons <- st_intersection(location[[g]], st_make_valid(osm_data$osm_polygons))
+            cnt <- cnt + nrow(as.data.frame(features_polygons))
+        }
+        if (!is.null(osm_data$osm_multipolygons)) {
+            features_multipolygons <- st_intersection(location[[g]], st_make_valid(osm_data$osm_multipolygons))
+            cnt <- cnt + nrow(as.data.frame(features_multipolygons))
+        }
+        locations$cnt[i] <- cnt
+    }
+    locations$val <- locations$cnt / as.numeric(locations$area) / locations$pop * 1000
+    return(locations)
+}
+
+# C_GOV2
+# Access to emergency services: hospitals, fire brigades, police stations
+# Proxy: Density of  emergency services
+# hospitals, fire brigades, police stations per 1,000 inhabitants
+C_GOV2 <- function(locations, ...) {
+    emergency_services <- c("hospital", "clinic", "police", "fire_station")
+
+    tmp <- "objects/C_GOV2"
+    g <- attr(locations, "sf_column")
+    for (i in 1:nrow(locations)) {
+        location <- locations[i, ]
+        osm_data <- get_osm(
+            location,
+            "amenity",
+            emergency_services,
+            tmp
+        )
+        # print(osm_data)
+        cnt <- 0
+        if (!is.null(osm_data$osm_points)) {
+            features_points <- st_intersection(
+                location[[g]],
+                st_make_valid(osm_data$osm_points)
+            )
+            cnt <- cnt + nrow(as.data.frame(features_points))
+        }
+        if (!is.null(osm_data$osm_polygons)) {
+            features_polygons <- st_intersection(
+                location[[g]],
+                st_make_valid(osm_data$osm_polygons)
+            )
+            cnt <- cnt + nrow(as.data.frame(features_polygons))
+        }
+        if (!is.null(osm_data$osm_multipolygons)) {
+            features_multipolygons <- st_intersection(
+                location[[g]],
+                st_make_valid(osm_data$osm_multipolygons)
+            )
+            cnt <- cnt + nrow(as.data.frame(features_multipolygons))
+        }
+        locations$cnt[i] <- cnt
+    }
+    locations$val <- locations$cnt / locations$pop * 1000
+    return(locations)
+}
+
+# C_TRA1
+# Access to transportation network
+# Density of transportation network:
+# - roads (highways, trunks, primary / secondary / tertiary),
+# - waterways (rivers / canals / streams),
+# - ferry stations
+# per 1,000 inhabitants
+C_TRA1 <- function(locations, ...) {
+    # highway=trunk, highway=primary, highway=secondary, highway=tertiary, highway=unclassified
+    all_road_types <- c(
+        "motorway", "trunk", "primary", "secondary", "tertiary", "unclassified"
+    )
+
+    tmp <- "objects/C_TRA1/roads"
+    g <- attr(locations, "sf_column")
+    for (i in 1:nrow(locations)) {
+        location <- locations[i, ]
+        osm_data <- get_osm(
+            location,
+            "highway",
+            all_road_types,
+            tmp
+        )
+        # print(osm_data)
+        cnt <- 0
+        if (!is.null(osm_data$osm_lines)) {
+            roads <- st_intersection(
+                location[[g]],
+                st_make_valid(osm_data$osm_lines)
+            )
+            cnt <- as.numeric(sum(st_length(roads)))
+        }
+        if (!is.null(osm_data$osm_multilines)) {
+            roads <- st_intersection(
+                location[[g]],
+                st_make_valid(osm_data$osm_multilines)
+            )
+            cnt <- as.numeric(sum(st_length(roads)))
+        }
+        locations$cnt[i] <- cnt
+    }
+
+    # https://wiki.openstreetmap.org/wiki/Map_features#Waterway
+    # waterway=stream for a naturally-forming waterway that is too narrow to be classed as waterway=river
+    # (the commonly accepted rule for OpenStreetMap is that a stream can be jumped across by an active, able-bodied person).
+    # A stream need not be permanently filled with water. In case of varying size or intermittent waterways
+    # the distinction from larger rivers based on the above criterion should be made with respect to the high water level.
+
+    # Use waterway=fairway for a linear way representation of a navigable route in a body of water such as a lake or sea,
+    # in cases where other values such as waterway=river or waterway=canal are not appropriate.
+    # Do not use instead of waterway=river or waterway=canal.
+    waterways_types <- c("river", "canal", "fairway")
+
+    tmp <- "objects/C_TRA1/waterways"
+    g <- attr(locations, "sf_column")
+    for (i in 1:nrow(locations)) {
+        location <- locations[i, ]
+        osm_data <- get_osm(
+            location,
+            "waterway",
+            waterways_types,
+            tmp
+        )
+        # print(osm_data)
+        cnt <- 0
+        if (!is.null(osm_data$osm_lines)) {
+            waterways <- st_intersection(
+                location[[g]],
+                st_make_valid(osm_data$osm_lines)
+            )
+            cnt <- as.numeric(sum(st_length(waterways)))
+        }
+        if (!is.null(osm_data$osm_multilines)) {
+            waterways <- st_intersection(
+                location[[g]],
+                st_make_valid(osm_data$osm_multilines)
+            )
+            cnt <- as.numeric(sum(st_length(waterways)))
+        }
+        locations$cnt[i] <- locations$cnt[i] + cnt
+    }
+
+    locations$val <- locations$cnt / locations$pop * 1000
+    return(locations)
+}
