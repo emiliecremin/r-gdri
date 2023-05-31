@@ -1,3 +1,4 @@
+source("common/libraries.R")
 source("common/helpers.R")
 source("common/admin.R")
 
@@ -9,18 +10,29 @@ bgd <- st_read("data/ADMIN/admin_bgd.gpkg")
 gdri <- bind_rows(vnm, bgd) # ,ind)
 
 # --------------------------------------------------
+# DATA SOURCES
+# --------------------------------------------------
+source("processing/aqueduct.R")
+source("processing/social.R")
+source("processing/osm.R")
+source("processing/world_bank.R")
+
+# --------------------------------------------------
 # SOCIAL SUSCEPTIBILITY
 # --------------------------------------------------
 
 source("processing/social_susceptibility/social_susceptibility.R")
 
-soc_sus_vnm <- social_susceptibility(vnm, "Vietnam")
-soc_sus_bgd <- social_susceptibility(bgd, "Bangladesh")
+soc_sus_vnm <- social_susceptibility(vnm)
+soc_sus_bgd <- social_susceptibility(bgd)
 # soc_sus_ind <- social_susceptibility(gdri, ind, "India")
 soc_sus <- rbind(soc_sus_vnm, soc_sus_bgd) # , soc_sus_ind)
 
 soc_sus_norm <- normalize(soc_sus)
-st_write(soc_sus_norm, "output/social_susceptibility/social_susceptibility.gpkg")
+
+n <- dplyr::select(st_drop_geometry(soc_sus_norm), ends_with("_norm"))
+soc_sus_norm$SOC <- rowMeans(n, na.rm = TRUE)
+st_write(soc_sus_norm, "output/social_susceptibility/social_susceptibility.gpkg", append = FALSE)
 
 # TODO: S_SOC4 Travel time to closest city (mins) - to do
 # indicator <- st_read("output/social_susceptibility/S_SOC4_     .gpkg")
@@ -34,58 +46,34 @@ st_write(soc_sus_norm, "output/social_susceptibility/social_susceptibility.gpkg"
 # COPING AND ADAPTATION CAPACITY
 # --------------------------------------------------
 
-# C_EWS1 Percentage of households without access to information (%)
-indicator <- st_read("output/adaptation_capacities/C_EWS1_tv_radio.gpkg")
-gdri <- update_gdri(indicator, gdri, "C_EWS1")
+source("processing/adaptation_capacities/adaptation_capacities.R")
+
+cop_adapt_vnm <- adaptation_capacities(vnm)
+cop_adapt_bgd <- adaptation_capacities(bgd)
+# cop_adapt_ind <- social_susceptibility(gdri, ind, "India")
+cop_adapt <- rbind(cop_adapt_vnm, cop_adapt_bgd) # , cop_adapt_ind)
+
+cop_adapt_norm <- normalize(cop_adapt)
+
+n <- dplyr::select(st_drop_geometry(cop_adapt_norm), ends_with("_norm"))
+cop_adapt_norm$CA <- rowMeans(n, na.rm = TRUE)
+st_write(cop_adapt_norm, "output/adaptation_capacities/adaptation_capacities.gpkg", append = FALSE)
+
 
 # TODO: C_EWS2 Existence of early warning systems (EWS) to do
 
-# C_SHE1 Shelters - schools
-indicator <- st_read("output/adaptation_capacities/C_SHE1_schools.gpkg")
-gdri <- update_gdri(indicator, gdri, "C_SHE1")
-
-# TODO: C_INF1
-
-# C_TRA1 Access to transportation network
-indicator <- st_read("output/adaptation_capacities/C_TRA1_roads_waterways.gpkg")
-gdri <- update_gdri(indicator, gdri, "C_TRA1")
-
+# TODO: C_INF1 Percentage of houseolds without access to wastewater treatment (%)
 
 # TODO: C_TRA2 Percentage of households without individual means of transportation: car or motorcycle
 
 # TODO: C_GOV1 Poor governance (National?) Corruption Perception Index (CPI)
 
-
-# C_GOV2 Access to emergency services: hospitals, fire brigades, police stations
-indicator <- st_read("output/adaptation_capacities/C_GOV2_emergencies.gpkg")
-gdri <- update_gdri(indicator, gdri, "C_GOV2")
-
-# C_INS1 Percentage of households with insurance – excluding health insurance
-indicator <- st_read("output/adaptation_capacities/C_INS1_Insurance.gpkg")
-gdri <- update_gdri(indicator, gdri, "C_INS1")
-
-# A_GOV4 Foreign Direct Investment (FDI)
-indicator <- st_read("output/adaptation_capacities/A_GOV4_Foreign_Direct_Investment.gpkg")
-gdri <- update_gdri(indicator, gdri, "A_GOV4")
-
-# C_SAV3 Lending interest rate (%)
-indicator <- st_read("output/adaptation_capacities/C_SAV3_lending_interest.gpkg")
-gdri <- update_gdri(indicator, gdri, "C_SAV3")
-
-# A_IIR1 Percentage of GDP spent on innovation and research (%)
-indicator <- st_read("output/adaptation_capacities/CA_IIR1_Researc_and_development.gpkg")
-gdri <- update_gdri(indicator, gdri, "A_IIR1")
-
 "
 C_GOV3 No national food reserves available (binary) (National?)
 C_HEA1 Number of hospital beds per 1,000 inhabitants
-C_HEA3 Public health expenditure (% of GDP)
-C_HEA4 Private health expenditure (% of GDP)
 C_SAV1 Percentage of households without gross savings (%)
 C_SAV2 Percentage of households without access to bank loans / (micro-) credits (%)
 A_GOV6 Donor aid for adaptation (local)
-
-
 "
 
 # --------------------------------------------------
