@@ -160,6 +160,7 @@ ER_ECO3 | Road less area | to do  | to do     | to do   | (http://www.roadless.o
 | C_SAV2    | Percentage of households without access to bank loans / (micro-) credits (%)    | To do   | to do        | to do   | http://datatopics.worldbank.org            |
 | C_SAV3    | Lending interest rate (%) (National)                                            | To do   | to do        | to do   | http://data.worldbank.org                  |
 | C_INS1    | Percentage of households with insurance – excluding health insurance (National) | ✅     | to do        | to do   | http://www.worldmapofmicroinsurance.org    |
+| C_INF1_631          | Proportion of wastewater flows safely treated              | ✅    | to do   | WRI AQUEDUCT - https://www.wri.org/data/aqueduct-water-risk-atlas |
 | A_IIR1    | Percentage of GDP spent on innovation and research (%) (National)               | ✅      | to do        | to do   | http://data.uis.unesco.org                 |
 
 ### Social susceptibility
@@ -176,7 +177,6 @@ ER_ECO3 | Road less area | to do  | to do     | to do   | (http://www.roadless.o
 | S_SOC8              | Percentage of illiterate population (%)                    | ✅      | to do        | to do   | ipums census |
 | S_INF1 / S_INF1_621 | Population without access to (improved) sanitation (%)     | ✅      | to do        | to do   | ipums census - https://www.wri.org/data/aqueduct-water-risk-atlas |
 | S_INF2 / S_INF2_611 | Population without access to clean water (%)               | ✅      | to do        | to do   | ipums census - https://www.wri.org/data/aqueduct-water-risk-atlas |
-| S_INF1_631          | Proportion of wastewater flows safely treated              | ✅    | to do   | WRI AQUEDUCT - https://www.wri.org/data/aqueduct-water-risk-atlas |
 | S_INF3              | Population without access to electricity (%)               | ✅      | to do        | to do   | ipums census |
 | C_EWS1              | Percentage of households without access to information (%) | ✅      | to do        | to do   | ipums census | S
 |C_STA1              | Prevalence of violence (%): Homicides per 100k inhab.      | To do   | to do        | to do   | homicide.igarape.org.br / visionofhumanity.org           |
