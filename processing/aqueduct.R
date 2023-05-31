@@ -40,8 +40,8 @@ S_INF1_621 <- function(locations, ...) {
     return(map_aqueduct(locations, "usa"))
 }
 
-# S_INF1 / S_INF1_631 Percentage of houseolds without access to wastewater treatment (%)
-S_INF1_631 <- function(locations, ...) {
+# C_INF1_631 Percentage of houseolds without access to wastewater treatment (%)
+C_INF1_631 <- function(locations, ...) {
     # ucw: Untreated connected wastewater
     return(map_aqueduct(locations, "ucw"))
 }
