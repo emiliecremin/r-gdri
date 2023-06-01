@@ -14,9 +14,15 @@ S_OCU1 <- function(locations, ...) {
     return(locations)
 }
 
-# Homicides
+# Homicides 2018 Rate/100.000- data requested on https://homicide.igarape.org.br/ = available at the state level
 S_STA1 <- function(locations, ...) {
-    locations$val <- 2.6
+    locations$val <- 2.4
+    return(locations)
+}
+
+# Corruption
+C_GOV1 <- function(locations, ...) {
+    locations$val <- 25
     return(locations)
 }
 
@@ -58,21 +64,40 @@ C_SAV2 <- function(locations, ...) {
     return(locations)
 }
 
+# health_coverage 2014 - Public health expenditure (% of GDP) - http://data.worldbank.org/ 
+C_HEA3 <- function(locations, ...) {
+    locations$val <- 0.8
+    return(locations)
+}
+
+# health_coverage 2014 - Private health expenditure (% of GDP) - http://www.data.worldbank.org
+C_HEA4 <- function(locations, ...) {
+    locations$val <- 2
+    return(locations)
+
 # C_SAV3
 # Indicator: Lending interest rate (%)
 # Measuring unit (or proxy): Lending interest rate (%)
+# lending_interest 2015 - http://data.worldbank.org 
 C_SAV3 <- function(locations, ...) {
     locations$val <- 11.7
     return(locations)
 }
 
-# Insurance
+# Insurance 2022 - Percentage of households with insurance – excluding health insurance or Microinsurance penetration (%)
+# https://www.munichre-foundation.org/en/Inclusive_insurance/The_World_Map_of_Microinsurance.html#
 C_INS1 <- function(locations, ...) {
     locations$val <- 6.2
     return(locations)
 }
 
-# Research_and_development
+# Foreign_Direct_Investment - Net inflow in US$ (% of GDP) 2015
+A_GOV4 <- function(locations, ...) {
+    locations$val <- 1.7
+    return(locations)
+}
+
+# Research_and_development 2011 - Percentage of GDP spent on innovation and research (%) http://data.uis.unesco.org
 A_IIR1 <- function(locations, ...) {
     locations$val <- 0.08
     return(locations)
