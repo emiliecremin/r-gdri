@@ -1,9 +1,9 @@
-#Include the parallel library. If the next line does not work, run install.packages(“parallel”) first
+# Include the parallel library. If the next line does not work, run install.packages(“parallel”) first
 install.packages("osmextract")
 install.packages("parallel")
 install.packages("tidyverse")
-install.packages('rgeos', type="source")
-install.packages('rgdal', type="source")
+install.packages("rgeos", type = "source")
+install.packages("rgdal", type = "source")
 library(osmextract)
 library(parallel)
 library(purrr)
@@ -18,7 +18,7 @@ vietnam <- oe_get("Vietnam")
 
 q_roads <- "SELECT osm_id, highway, geometry FROM 'lines' WHERE highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'unclassified')"
 
-roads_vietnam = oe_get(
+roads_vietnam <- oe_get(
   "Vietnam",
   quiet = FALSE,
   query = q_roads
@@ -27,12 +27,12 @@ roads_vietnam = oe_get(
 locations <- admin_shp
 
 locations$ADM1_EN[10]
-roads_geo = oe_get(
+roads_geo <- oe_get(
   st_bbox(locations$geometry[10]),
   quiet = FALSE,
   query = q_roads
 )
-roads_clipped = oe_get(
+roads_clipped <- oe_get(
   locations$ADM2_VI[10],
   boundary = locations$geometry[10],
   boundary_type = "clipsrc",
@@ -48,7 +48,7 @@ plot(sf::st_geometry(roads_adm2))
 
 for (i in 1:nrow(locations)) {
   print(locations$ADM2_VI[i])
-  roads_adm1 = oe_get(
+  roads_adm1 <- oe_get(
     locations$ADM1_VI[i],
     quiet = FALSE,
     query = q_roads
@@ -60,8 +60,8 @@ for (i in 1:nrow(locations)) {
 # Use the detectCores() function to find the number of cores in system
 no_cores <- detectCores()
 # Setup cluster
-clust <- makeCluster(no_cores) #This line will take time
-#The parallel version of lapply() is parLapply() and needs an additional cluster argument.
+clust <- makeCluster(no_cores) # This line will take time
+# The parallel version of lapply() is parLapply() and needs an additional cluster argument.
 
 roads <- mcmapply(st_intersection, locations$geometry, roads_vietnam$geometry)
 stopCluster(clust)
@@ -86,3 +86,13 @@ saveRDS(roads_vietnam, "./roads_vietnam")
 
 f <- st_intersection(locations$geometry[1], roads_vietnam$geometry)
 plot(sf::st_geometry(f))
+
+q_roads <- "SELECT osm_id, highway, geometry FROM 'lines' WHERE highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'unclassified')"
+first <- oe_get(place = "Bangladesh", query = q_roads)
+first <- terra::crop(vect(first), vect(bgd[1, ]))
+plot(first)
+writeVector(
+  first,
+  "first.gpkg",
+  overwrite = TRUE
+)
