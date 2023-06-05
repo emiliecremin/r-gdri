@@ -1,37 +1,53 @@
 source("common/helpers.R")
 
+osm_extract <- function(location, shape, key, values) {
+    cat("osm_extract for", location$geo_id, "in", location$CNTRY_NAME, "\n")
+    cond <- values %>%
+        purrr::map_chr(~ paste0(
+            glue::glue("other_tags LIKE '%\"{key}\"=>\""), .
+        )) %>%
+        purrr::map_chr(paste0, "\"%'") %>%
+        paste(collapse = " OR ")
+    q <- glue::glue("SELECT osm_id, name, other_tags, geometry
+    FROM {shape}
+    WHERE {cond}")
+    osm_data <- oe_get(
+        place = location$CNTRY_NAME,
+        layer = shape,
+        query = q,
+        extra_tags = values,
+        quiet = TRUE
+    )
+    if (nrow(osm_data) > 0) {
+        osm_data <- terra::crop(vect(osm_data), vect(location))
+    }
+    return(osm_data)
+}
+
 # C_SHE1
 # Access to shelter places
 # Density of schools km2 per 1,000 inhabitants
 # https://wiki.openstreetmap.org/wiki/Tag:amenity%3Dschool
 # density of primary and secondary schools per km2
 C_SHE1 <- function(locations, ...) {
-    locations <- vnm
     education_services <- c("school", "college", "university")
-    tmp <- "objects/C_SHE1"
-    mkdirs(tmp)
+    # tmp <- "objects/extract/C_SHE1"
+    # mkdirs(tmp)
     g <- attr(locations, "sf_column")
     for (i in 1:nrow(locations)) {
         location <- locations[i, ]
-        osm_data <- get_osm(
-            location,
-            "amenity",
-            education_services,
-            tmp
-        )
-        # print(osm_data)
         cnt <- 0
-        if (!is.null(osm_data$osm_points)) {
-            features_points <- st_intersection(location[[g]], st_make_valid(osm_data$osm_points))
-            cnt <- cnt + nrow(as.data.frame(features_points))
+        osm_points <- osm_extract(
+            location, "points", "amenity", education_services
+        )
+        if (nrow(osm_points) > 0) {
+            cnt <- cnt + nrow(as.data.frame(osm_points))
         }
-        if (!is.null(osm_data$osm_polygons)) {
-            features_polygons <- st_intersection(location[[g]], st_make_valid(osm_data$osm_polygons))
-            cnt <- cnt + nrow(as.data.frame(features_polygons))
-        }
-        if (!is.null(osm_data$osm_multipolygons)) {
-            features_multipolygons <- st_intersection(location[[g]], st_make_valid(osm_data$osm_multipolygons))
-            cnt <- cnt + nrow(as.data.frame(features_multipolygons))
+        osm_multipolygons <- osm_extract(
+            location, "multipolygons", "amenity", education_services
+        )
+        if (nrow(osm_multipolygons) > 0) {
+            cnt <- cnt + nrow(as.data.frame(osm_multipolygons))
         }
         locations$cnt[i] <- cnt
     }
