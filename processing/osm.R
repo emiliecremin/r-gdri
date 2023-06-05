@@ -73,7 +73,7 @@ C_GOV2 <- function(locations, ...) {
             cnt <- cnt + nrow(as.data.frame(osm_points))
         }
         osm_multipolygons <- osm_extract(
-            location, "multipolygons", "amenity", education_services
+            location, "multipolygons", "amenity", emergency_services
         )
         if (nrow(osm_multipolygons) > 0) {
             cnt <- cnt + nrow(as.data.frame(osm_multipolygons))
