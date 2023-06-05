@@ -97,31 +97,20 @@ C_TRA1 <- function(locations, ...) {
         "motorway", "trunk", "primary", "secondary", "tertiary", "unclassified"
     )
 
-    tmp <- "objects/C_TRA1/roads"
-    g <- attr(locations, "sf_column")
     for (i in 1:nrow(locations)) {
         location <- locations[i, ]
-        osm_data <- get_osm(
-            location,
-            "highway",
-            all_road_types,
-            tmp
-        )
-        # print(osm_data)
         cnt <- 0
-        if (!is.null(osm_data$osm_lines)) {
-            roads <- st_intersection(
-                location[[g]],
-                st_make_valid(osm_data$osm_lines)
-            )
-            cnt <- as.numeric(sum(st_length(roads)))
+        osm_lines <- osm_extract(
+            location, "lines", "highway", all_road_types
+        )
+        if (nrow(osm_lines) > 0) {
+            cnt <- cnt + as.numeric(sum(st_length(osm_lines)))
         }
-        if (!is.null(osm_data$osm_multilines)) {
-            roads <- st_intersection(
-                location[[g]],
-                st_make_valid(osm_data$osm_multilines)
-            )
-            cnt <- as.numeric(sum(st_length(roads)))
+        osm_multilines <- osm_extract(
+            location, "multilinestrings", "highway", all_road_types
+        )
+        if (nrow(osm_multilines) > 0) {
+            cnt <- cnt + as.numeric(sum(st_length(osm_multilines)))
         }
         locations$cnt[i] <- cnt
     }
@@ -137,31 +126,20 @@ C_TRA1 <- function(locations, ...) {
     # Do not use instead of waterway=river or waterway=canal.
     waterways_types <- c("river", "canal", "fairway")
 
-    tmp <- "objects/C_TRA1/waterways"
-    g <- attr(locations, "sf_column")
     for (i in 1:nrow(locations)) {
         location <- locations[i, ]
-        osm_data <- get_osm(
-            location,
-            "waterway",
-            waterways_types,
-            tmp
-        )
-        # print(osm_data)
         cnt <- 0
-        if (!is.null(osm_data$osm_lines)) {
-            waterways <- st_intersection(
-                location[[g]],
-                st_make_valid(osm_data$osm_lines)
-            )
-            cnt <- as.numeric(sum(st_length(waterways)))
+        osm_lines <- osm_extract(
+            location, "lines", "waterway", waterways_types
+        )
+        if (nrow(osm_lines) > 0) {
+            cnt <- cnt + as.numeric(sum(st_length(osm_lines)))
         }
-        if (!is.null(osm_data$osm_multilines)) {
-            waterways <- st_intersection(
-                location[[g]],
-                st_make_valid(osm_data$osm_multilines)
-            )
-            cnt <- as.numeric(sum(st_length(waterways)))
+        osm_multilines <- osm_extract(
+            location, "multilinestrings", "waterway", waterways_types
+        )
+        if (nrow(osm_multilines) > 0) {
+            cnt <- cnt + as.numeric(sum(st_length(osm_multilines)))
         }
         locations$cnt[i] <- locations$cnt[i] + cnt
     }
