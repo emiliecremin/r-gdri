@@ -6,7 +6,7 @@ adaptation_capacities_indicators <- c(
     "C_SHE1", # OSM
     "C_TRA1", # OSM
     "C_GOV2", # OSM
-    "S_INF1_631", # Aqueduct
+    "C_INF1_631", # Aqueduct
     "A_GOV4", #  World Bank
     "C_SAV3", #  World Bank
     "C_HEA3", #  World Bank
