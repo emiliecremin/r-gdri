@@ -1,7 +1,6 @@
 source("common/helpers.R")
 
-osm_extract <- function(location, shape, key, values) {
-    cat("osm_extract for", location$geo_id, "in", location$CNTRY_NAME, "\n")
+osm_query <- function(shape, key, values) {
     cond <- values %>%
         purrr::map_chr(~ paste0(
             glue::glue("other_tags LIKE '%\"{key}\"=>\""), .
@@ -11,6 +10,12 @@ osm_extract <- function(location, shape, key, values) {
     q <- glue::glue("SELECT osm_id, name, other_tags, geometry
     FROM {shape}
     WHERE {cond}")
+    return(q)
+}
+
+osm_extract <- function(location, shape, key, values) {
+    cat("osm_extract for", location$geo_id, "in", location$CNTRY_NAME, "\n")
+    q <- osm_query(shape, key, values)
     osm_data <- oe_get(
         place = location$CNTRY_NAME,
         layer = shape,
@@ -31,9 +36,6 @@ osm_extract <- function(location, shape, key, values) {
 # density of primary and secondary schools per km2
 C_SHE1 <- function(locations, ...) {
     education_services <- c("school", "college", "university")
-    # tmp <- "objects/extract/C_SHE1"
-    # mkdirs(tmp)
-    g <- attr(locations, "sf_column")
     for (i in 1:nrow(locations)) {
         location <- locations[i, ]
         cnt <- 0
