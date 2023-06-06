@@ -8,6 +8,7 @@ colnames(ipums_shp)[colnames(ipums_shp) == "GEOLEVEL2"] <- "GEOLEV2"
 admin_vnm <- ipums_shp %>%
   dplyr::filter(CNTRY_NAME == "Vietnam") %>%
   st_make_valid()
+admin_vnm$country_iso3 <- "VNM"
 admin_vnm$geo_id <- admin_vnm$GEOLEV2
 admin_vnm$area <- units::set_units(st_area(admin_vnm), km^2)
 
@@ -32,6 +33,7 @@ st_write(
 admin_bgd <- ipums_shp %>%
   dplyr::filter(CNTRY_NAME == "Bangladesh") %>%
   st_make_valid()
+admin_bgd$country_iso3 <- "BGD"
 admin_bgd$GEOLEV2 <- str_remove(admin_bgd$GEOLEV2, "^0+")
 admin_bgd$CNTRY_CODE <- str_remove(admin_bgd$CNTRY_CODE, "^0+")
 admin_bgd$geo_id <- admin_bgd$GEOLEV2
@@ -67,6 +69,7 @@ st_write(
 admin_ind <- st_read(
   "data/ADMIN/India-village-boundaries/India-village-boundaries-AOI.shp"
 ) %>% st_make_valid()
+admin_ind$country_iso3 <- "IND"
 admin_ind$geo_id <- admin_ind$C_CODE01
 admin_ind$pop <- as.numeric(admin_ind$TOT_P)
 admin_ind$area <- units::set_units(st_area(admin_ind), km^2)
