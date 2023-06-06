@@ -141,3 +141,26 @@ process_indicator <- function(indicator_name, data, locations, append = FALSE, n
   }
   return(data)
 }
+
+
+# This can ERROR with HTTP 504
+# Saving each location as an object
+# we can re-run the code and skip if we already have it stored
+get_osm <- function(location, key, value, folder) {
+  g <- attr(location, "sf_column")
+  loc_code <- location$geo_id
+  loc_geo <- location[[g]]
+  f <- str_glue("{folder}/{loc_code}.rds")
+  if (file.exists(f) == TRUE) {
+    cat("already have features for: ", loc_code, "\n")
+    osm_features <- readRDS(f)
+  } else {
+    cat("get osm features for: ", loc_code, "\n")
+    osm_features <- opq(bbox = st_bbox(loc_geo), timeout = 1000) %>%
+      add_osm_feature(key, value) %>%
+      osmdata_sf() %>%
+      unique_osmdata()
+    saveRDS(osm_features, f)
+  }
+  return(osm_features)
+}
