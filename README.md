@@ -68,7 +68,7 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 | S_EXP_DRO | pop exposed to drought      | ✅           | to do        | to do   |  [aqueduct30](https://github.com/wri/aqueduct30_data_download/blob/master/metadata.md) |
 | S_EXP_FLO | pop exposed to floods       | ✅           | to do        | to do   | [unep](https://wesr.unepgrid.ch/static.html?views=MX-JXZXA-MFZNN-LTXZ8&zoomToViews=true) |
 | S_EXP_SLR | pop exposed to SLR +0.5m      | to do        | to do        | to do   | [climatecentral.org](https://sealevel.climatecentral.org/) |
-| S_EXP_SAL | pop exposed to salinity     | 🚫 (nodat a) | to do        | to do   | |
+| S_EXP_SAL | pop exposed to salinity     | to do | to do        | to do   | | [FAO](https://data.apps.fao.org/catalog/iso/40db0008-f365-43ca-953d-cabdcadc24a5)
 
 ### Ecosystem Exposure
 
@@ -78,7 +78,7 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 | E_EXP_CYC | ecosystem exposed to cyclones     | ✅           | to do        | to do   | cyclones / ecosystem in esa world cover|
 | E_EXP_DRO | ecosystem exposed to drought      | ✅           | to do        | to do   | drought / ecosystems in esa world cover|
 | E_EXP_FLO | ecosystem exposed to floods       | ✅           | to do        | to do   | floods / ecosystem in esa world cover|
-| E_EXP_SAL | ecosystem exposed to salinity     | 🚫 (no data) | to do        | to do   | salinity / ecosystem in esa world cover|
+| E_EXP_SAL | ecosystem exposed to salinity     | todo | to do        | to do   | salinity / ecosystem in esa world cover|
 
 
 ### Agrosystem Exposure
@@ -89,7 +89,7 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 | E_EXP_CYC | ecosystem exposed to cyclones     | ✅           | to do        | to do   | cyclones/ crop area in esa world cover |
 | E_EXP_DRO | ecosystem exposed to drought      | ✅           | to do        | to do   | drought / crop area in esa world cover |
 | E_EXP_FLO | ecosystem exposed to floods       | ✅           | to do        | to do   | floods / crop area in esa world cover |
-| E_EXP_SAL | ecosystem exposed to salinity     | 🚫 (no data) | to do        | to do   | salinity / crop area in esa world cover |
+| E_EXP_SAL | ecosystem exposed to salinity     | todo | to do        | to do   | salinity / crop area in esa world cover |
 
 
 Additional  
@@ -107,33 +107,40 @@ Other data can be extracted from GDIS + EM-DAT
 
 | indicator  | description                                       | Vietnam | Bangladesh | India | data source |
 | ---------- | ------------------------------------------------- | ------- | ---------- | ----- | ----------------- |
-| ES_BIO1a   | Species richness adjusted by intactness           | ✅      | to do        | to do     | https://www.unep-wcmc.org  or http://dx.doi.org/10.5519/0009936. Accessed through www.resourcewatch.org.                          |
-| ES_DEG1    | Water quality of freshwater bodies                | ✅      | to do        | to do   | update source |
+| ES_DES1511   |   Forest cover        | ✅      | ✅       | ✅      | [GFC](https://www.globalforestwatch.org/map/) |
+| ES_DES3    | Forest loss (%)                        | ✅      | ✅         | ✅   | [GFC](https://www.globalforestwatch.org/map/)  https://glad.umd.edu/dataset/global-2010-tree-cover-30-m      |
+| ES_DES1411    |   Eutrophication                     | ✅      | ✅        | ✅    | [GFC](https://www.globalforestwatch.org/map/)  https://glad.umd.edu/dataset/global-2010-tree-cover-30-m      |
+| ES_DEG1    | Water quality of freshwater bodies                | ?    | to do        | to do   | update source |
 | ES_DEG2    | Groundwater quality                               | ✅      | to do         | to do   | update source |
-| ES_DEG4    | Waterstress                                       | ✅      | to do         | to do   | [aqueduct](https://www.wri.org/data/aqueduct-water-risk-atlas) |
+| ES_DEG2_GTD    | Groundwater Table depletion                 | ✅     | to do         | to do   | WRI aqueduct       |
+| ES_DEG2_642_WS   | Freshwater scarcity= Baseline water stress                   | ✅      | to do         | to do   | [aqueduct](https://www.wri.org/data/aqueduct-water-risk-atlas) or[unep-wcmc](https://www.unep-wcmc.org) |
 | ES_DEG4    | Return Flow Ratio                                 | to do    | to do         | to do   | http://www.wri.org                                    |
-| ES_DEG6    | Soil organic carbon (matter)                      | ✅     | to do         | to do   | https://www.soilgrids.org or FAO GSP and ITPS, 2019. Global Soil Organic Carbon Map (GSOC map) http://54.229.242.119/GSOCmap/                    |
-| ES_DEG9    | Cation exchange capacity                          | ✅     | to do          | to do   | https://www.soilgrids.org                             |
-| ES_DEG_GTD | Ground Table Depletion                            | ✅      | to do         | to do   | http://www.wri.org   - https://www.wri.org/data/aqueduct-water-risk-atlas                                 |
-| ES_DES2    | Freshwater scarcity                               | to do     | to do         | to do   | [unep-wcmc](https://www.unep-wcmc.org) |
-| ES_DES3    | Forest loss (%)                        | ✅      | to do         | to do   | [GFC](https://www.globalforestwatch.org/map/)  https://glad.umd.edu/dataset/global-2010-tree-cover-30-m      |
+| ES_DEG6    | Soil organic carbon (matter)                      | ✅     | ✅   do         | to do   | https://www.soilgrids.org or FAO GSP and ITPS, 2019. Global Soil Organic Carbon Map (GSOC map) http://54.229.242.119/GSOCmap/                    |
+| ES_DEG9    | Cation exchange capacity                          | ✅     | ✅    do          | to do   | [soilgrids.org](https://git.wur.nl/isric/soilgrids/soilgrids.notebooks/-/blob/master/markdown/wcs_from_R.md) |
+| ES_BIO1a   | Species richness adjusted by intactness           | ✅      | ✅    do        | to do     | https://www.unep-wcmc.org  or http://dx.doi.org/10.5519/0009936. Accessed through www.resourcewatch.org. |
+
+Additionnal 
+
 | ES_FRA2    | River connectivity (River basin scale)            | to do   | to do        | to do   |            |
 | ES_FRA3    | Forest connectivity GFC | to do      | to do        | to do   | https://github.com/VeroL/BioFrag  |
 | ES_FRG1    | Percentage of area covered by “problem soils” (%) | to do    | to do        | to do   |           |
+| ES_BIO2   |           | ✅      | to do        | to do     | https://www.unep-wcmc.org  or http://dx.doi.org/10.5519/0009936. Accessed through www.resourcewatch.org. |
 
 ### Ecosystem robustness
 
 | indicator | description                                                    | Vietnam | Bangladesh | India | data source |
 | --------- | -------------------------------------------------------------- | ------- | ---------- | ----- | ----------- |
 | ER_CON1512   | Forest area protected, conservation of biodiversity (%)      | ✅      | to do        | to do   | http://www.wri.org https://www.protectedplanet.net |
-| ER_RES2   | Percentage of forest area restored (%) GFC  = forest gain       | ✅      | to do        | to do   | [GFC](https://www.globalforestwatch.org/map/), https://glad.umd.edu/, https://doi.org/10.3389/frsen.2022.856903 
+| ER_RES2   | Percentage of forest area restored (%) GFC  = forest gain       | ✅      | to do        | to do   | [GFC](https://www.globalforestwatch.org/map/), https://glad.umd.edu/, https://doi.org/10.3389/frsen.2022.856903 |
 | ER_POL2   | Policies supporting biodiversity conservation (National)       | ✅      | to do        | to do   | https://www.cbd.int/  |
+| ER_POL_1521   |  15.2.1 Progress towards sustainable forest management    | ✅      | to do        | to do   |http://www.wri.org https://www.protectedplanet.net https://www.cbd.int/  |
+| ER_FUN2   | Donor aid for adaptation (local)                               | to do   | to do        | to do   | http://aiddata.org/gis - to do                     |
 | ER_TRE1   | Participation in treaties - CBD, CITES, CMS, RAMSAR (National) | ✅      | to do        | to do   |  |
-| ER_BIO2   | Mean Species Abundance (MSA)                                   | ✅     | to do        | to do   | http://www.globio.info |
 | ER_ECO1   | Ecosystem Functionality Index (EFI)                            | ✅      | to do        | to do   |  to do  |
 ER_ECO2_FLII | Forest landscape Integrity Index | to do     | to do        | to do   |  to do  | https://www.forestlandscapeintegrity.com/ |
-ER_ECO3 | Road less area | to do  | to do     | to do   | (http://www.roadless.online/data/) |                                     |
-| ER_FUN2   | Donor aid for adaptation (local)                               | to do   | to do        | to do   | http://aiddata.org/gis - to do                     |
+ER_ECO3 | Road less area | to do  | to do     | to do   | (http://www.roadless.online/data/) |        
+| ER_BIO2   | Mean Species Abundance (MSA)                                   | ✅     | to do        | to do   | http://www.globio.info |
+
 
 - TODO: Need data sources
 
@@ -160,7 +167,6 @@ ER_ECO3 | Road less area | to do  | to do     | to do   | (http://www.roadless.o
 | C_SAV2    | Percentage of households without access to bank loans / (micro-) credits (%)    | To do   | to do        | to do   | http://datatopics.worldbank.org            |
 | C_SAV3    | Lending interest rate (%) (National)                                            | To do   | to do        | to do   | http://data.worldbank.org                  |
 | C_INS1    | Percentage of households with insurance – excluding health insurance (National) | ✅     | to do        | to do   | http://www.worldmapofmicroinsurance.org    |
-| C_INF1_631          | Proportion of wastewater flows safely treated              | ✅    | to do   | WRI AQUEDUCT - https://www.wri.org/data/aqueduct-water-risk-atlas |
 | A_IIR1    | Percentage of GDP spent on innovation and research (%) (National)               | ✅      | to do        | to do   | http://data.uis.unesco.org                 |
 
 ### Social susceptibility
@@ -177,6 +183,7 @@ ER_ECO3 | Road less area | to do  | to do     | to do   | (http://www.roadless.o
 | S_SOC8              | Percentage of illiterate population (%)                    | ✅      | to do        | to do   | ipums census |
 | S_INF1 / S_INF1_621 | Population without access to (improved) sanitation (%)     | ✅      | to do        | to do   | ipums census - https://www.wri.org/data/aqueduct-water-risk-atlas |
 | S_INF2 / S_INF2_611 | Population without access to clean water (%)               | ✅      | to do        | to do   | ipums census - https://www.wri.org/data/aqueduct-water-risk-atlas |
+| S_INF1_631          | Proportion of wastewater flows safely treated              | ✅    | to do   | WRI AQUEDUCT - https://www.wri.org/data/aqueduct-water-risk-atlas |
 | S_INF3              | Population without access to electricity (%)               | ✅      | to do        | to do   | ipums census |
 | C_EWS1              | Percentage of households without access to information (%) | ✅      | to do        | to do   | ipums census | S
 |C_STA1              | Prevalence of violence (%): Homicides per 100k inhab.      | To do   | to do        | to do   | homicide.igarape.org.br / visionofhumanity.org           |
@@ -266,4 +273,4 @@ osmdata_sf()
 OSM data from 2021
 Population census from 2009
 Ex: hospital per 1000 hab.
-Bias can be mesured by population growth between 2009 and 2021
+Bias can be measured by population growth between 2009 and 2021
