@@ -120,7 +120,8 @@ Other data can be extracted from GDIS + EM-DAT
 | ES_BIO1a   | Species richness adjusted by intactness           | ✅      | ✅    do        | to do     | https://www.unep-wcmc.org  or http://dx.doi.org/10.5519/0009936. Accessed through www.resourcewatch.org. |
 
 Additionnal 
-
+| indicator  | description                                       | Vietnam | Bangladesh | India | data source |
+| ---------- | ------------------------------------------------- | ------- | ---------- | ----- | ----------------- |
 | ES_FRA2    | River connectivity (River basin scale)            | to do   | to do        | to do   |            |
 | ES_FRA3    | Forest connectivity GFC | to do      | to do        | to do   | https://github.com/VeroL/BioFrag  |
 | ES_FRG1    | Percentage of area covered by “problem soils” (%) | to do    | to do        | to do   |           |
