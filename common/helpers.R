@@ -119,8 +119,9 @@ joinOnPostcode <- function(df, shp) {
   )
 }
 
-process_indicator <- function(indicator_name, data, locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-  cat("process_indicator for", indicator_name, "\n")
+
+format_indicator <- function(indicator_name, data, locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
+  cat("format_indicator for", indicator_name, "\n")
   cat("colnames", colnames(data), "\n")
   cat("class", class(data), "\n")
   if (!(is(data, "sf") || is(data, "SpatVector"))) {
