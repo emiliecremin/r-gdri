@@ -42,7 +42,7 @@ social_susceptibility <- function(locations) {
             get(indicator_code),
             list(locations = locations, data = social)
         )
-        process_indicator(
+        format_indicator(
             indicator_code, indicator, locations,
             append = FALSE, normalize = FALSE,
             plot = FALSE,
