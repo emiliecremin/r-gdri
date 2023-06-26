@@ -1,6 +1,12 @@
 source("common/libraries.R")
 source("common/helpers.R")
+
+# --------------------------------------------------
+# DATA PREPARATION
+# --------------------------------------------------
 source("common/admin.R")
+source("common/land_cover.R")
+source("common/GFC.R")
 
 # TODO: keep only useful columns in admin.R
 vnm <- st_read("data/ADMIN/admin_vnm.gpkg")
@@ -10,12 +16,14 @@ bgd <- st_read("data/ADMIN/admin_bgd.gpkg")
 gdri <- bind_rows(vnm, bgd) # ,ind)
 
 # --------------------------------------------------
-# DATA SOURCES
+# INDICATORS PER DATA SOURCE
 # --------------------------------------------------
 source("processing/aqueduct.R")
 source("processing/social.R")
 source("processing/osm.R")
 source("processing/world_bank.R")
+source("processing/forest.R")
+source("processing/biodiversity.R")
 
 # --------------------------------------------------
 # SOCIAL SUSCEPTIBILITY
@@ -50,7 +58,7 @@ source("processing/adaptation_capacities/adaptation_capacities.R")
 
 cop_adapt_vnm <- adaptation_capacities(vnm)
 cop_adapt_bgd <- adaptation_capacities(bgd)
-# cop_adapt_ind <- social_susceptibility(gdri, ind, "India")
+# cop_adapt_ind <- adaptation_capacities(gdri, ind, "India")
 cop_adapt <- rbind(cop_adapt_vnm, cop_adapt_bgd) # , cop_adapt_ind)
 
 cop_adapt_norm <- normalize(cop_adapt)
@@ -77,53 +85,27 @@ A_GOV6 Donor aid for adaptation (local)
 "
 
 # --------------------------------------------------
-# ECOSYSTEM SUSCEPTIBILITY
+# ECOSYSTEM SENSITIVITY
 # --------------------------------------------------
 
-# ES_DEG_1411 Eutrophication
-source("processing/ecosystem_sensitivity/ES_DEG_1411.R")
-ES_DEG_1411 <- st_read(
-    "output/ecosystem_sensitivity/ES_DEG_1411_eutrophication_risk.gpkg"
-)
-gdri <- update_gdri(ES_DEG_1411, gdri, "ES_DEG_1411")
+source("processing/ecosystem_sensitivity/ecosystem_sensitivity.R")
 
-# ES_DES_1511 Forest Area
-source("processing/ecosystem_sensitivity/ES_DES1511.R")
-ES_DES1511 <- st_read(
-    "output/ecosystem_sensitivity/ES_DES1511_forest_area.gpkg"
-)
-gdri <- update_gdri(ES_DES1511, gdri, "ES_DES1511")
+eco_sensitivity_vnm <- ecosystem_sensitivity(vnm)
+eco_sensitivity_bgd <- ecosystem_sensitivity(bgd)
+# eco_sensitivity_ind <- ecosystem_sensitivity(gdri, ind, "India")
+eco_sensitivity <- rbind(eco_sensitivity_vnm, eco_sensitivity_bgd) # , eco_sensitivity_ind)
 
+eco_sensitivity_norm <- normalize(eco_sensitivity)
 
-# ES_DES2 Freshwater scarcity
-source("processing/ecosystem_sensitivity/ES_DES1511.R")
-ES_DES1511 <- st_read(
-    "output/ecosystem_sensitivity/ES_DES1511_forest_area.gpkg"
-)
-gdri <- update_gdri(ES_DES1511, gdri, "ES_DES1511")
+n <- dplyr::select(st_drop_geometry(eco_sensitivity_norm), ends_with("_norm"))
+eco_sensitivity_norm$CA <- rowMeans(n, na.rm = TRUE)
+st_write(eco_sensitivity_norm, "output/ecosystem_sensitivity/ecosystem_sensitivity.gpkg", append = FALSE)
 
-# TODO: ES_DES3 Percentage of deforested area
-# "output/ecosystem_sensitivity/ES_DES3_forest_loss.gpkg"
-"
-ES_FRA2 River connectivity (River basin scale)
-
-ES_FRA3 Forest connectivity
-
-ES_DEG1 Water quality of freshwater bodies
-
-
-ES_DEG2 Groundwater quality
-
-ES_DEG4 Return Flow Ratio
-
-ES_DEG6 Soil organic matter
-
-ES_DEG9 Cation exchange capacity
-
-ES_FRG1 Percentage of area covered by “problem soils” (%)
-
-ES_BIO1 Species richness adjusted by intactness
-"
+# TODO: ES_FRA2 River connectivity (River basin scale)
+# TODO: ES_FRA3 Forest connectivity
+# TODO: ES_DEG2 Groundwater quality
+# TODO: ES_DEG4 Return Flow Ratio
+# TODO: ES_FRG1 Percentage of area covered by “problem soils” (%)
 
 # --------------------------------------------------
 # ECOSYSTEM ROBUSTNESS
