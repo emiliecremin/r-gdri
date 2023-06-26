@@ -18,16 +18,3 @@ geo_vnm <- dplyr::filter(geolev2_d, CNTRY_CODE == 704)
 
 # Join IPUMS GEOLEV2 shp with GADM
 geo_gadm_vnm <- merge(geo_vnm, gadm_vnm, by.x = "ADMIN_NAME", by.y = "VARNAME_2")
-
-# ES_DES3
-# Percentage of deforested area (%)
-# Hansen et al. (2013) High-Resolution Global Maps of 21st-Century Forest Cover Change
-# year_loss * 100 / count
-
-# rename columns?
-forest_cover_loss_2000_2020 <- read.csv(file = "data/Forests/VN ADM_3 GADM2.8 GlobalForestCoverLoss 2020/61a00f7b658cb64312252562_results.csv")
-forest_cover_loss_2000_2020_geo_v <- merge(gadm_vnm_v, forest_cover_loss_2000_2020, by = "ID_3")
-# filter for a year
-# normalize
-outfile <- "data/Forests/VN ADM_3 GADM2.8 GlobalForestCoverLoss 2020/forest_cover_loss_2000_2020_geo_vn.shp"
-writeVector(forest_cover_loss_2000_2020_geo_v, outfile, overwrite = TRUE)
