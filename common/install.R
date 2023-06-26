@@ -1,5 +1,6 @@
 install.packages("dplyr")
 install.packages("exactextractr")
+install.packages("gfcanalysis")
 install.packages("ggmap")
 install.packages("landscapemetrics")
 install.packages("landscapetools")
