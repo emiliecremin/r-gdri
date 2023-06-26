@@ -25,31 +25,13 @@ soc_susceptibility_indicators <- c(
 # Error: vector memory exhausted (limit reached?)
 # https://stackoverflow.com/questions/51295402/r-on-macos-error-vector-memory-exhausted-limit-reached
 
-social_susceptibility <- function(locations) {
-    result <- locations
-    country_iso3 <- unique(locations$country_iso3)[1]
-    output <- str_glue("output/social_susceptibility/{country_iso3}")
-    mkdirs(output)
-    social <- load_social_data(country_iso3)
 
-    i <- 1
-    for (indicator_code in soc_susceptibility_indicators) {
-        cat(
-            "Processing indicator:", indicator_code,
-            "(", i, "/", length(soc_susceptibility_indicators), ")\n"
+social_susceptibility <- function(locations) {
+    return(
+        process_indicators(
+            locations, 
+            indicators=soc_susceptibility_indicators, 
+            output="output/social_susceptibility"
         )
-        indicator <- do.call(
-            get(indicator_code),
-            list(locations = locations, data = social)
-        )
-        format_indicator(
-            indicator_code, indicator, locations,
-            append = FALSE, normalize = FALSE,
-            plot = FALSE,
-            output = output
-        )
-        result <- update_gdri(indicator, result, indicator_code)
-        i <- i + 1
-    }
-    return(result)
+    )
 }
