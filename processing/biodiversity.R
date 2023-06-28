@@ -21,6 +21,10 @@ ER_BIO2 <- function(locations, ...) {
     return(locations)
 }
 
+# Ecosystem Functionality Index (EFI)
+# Paper: https://www.sciencedirect.com/science/article/abs/pii/S1476945X12000669
+# doi: https://doi.org/10.1016/j.ecocom.2012.08.002
+# https://catalog.ipbes.net/assessments/200
 ER_ECO1 <- function(locations, ...) {
     efi <- rast("data/Biodiversity/Ecosystem_Functionality_Index/EFI.tif") # nolint
     locations$cnt <- exact_extract(efi, locations, "sum", progress = TRUE)
