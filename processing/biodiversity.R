@@ -21,6 +21,13 @@ ER_BIO2 <- function(locations, ...) {
     return(locations)
 }
 
+ER_ECO1 <- function(locations, ...) {
+    efi <- rast("data/Biodiversity/Ecosystem_Functionality_Index/EFI.tif") # nolint
+    locations$cnt <- exact_extract(efi, locations, "sum", progress = TRUE)
+    locations$val <- locations$cnt / locations$area
+    return(locations)
+}
+
 # Other data sources
 
 # Endangered species
