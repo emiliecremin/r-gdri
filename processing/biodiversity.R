@@ -1,8 +1,8 @@
-# Tim Newbold; Lawrence Hudson; Andy Arnell; Sara Contu et al. (2016). Global map of the Biodiversity Intactness Index, from Newbold et al. (2016) Science [Data set]. Natural History Museum. https://doi.org/10.5519/0009936
-# https://data.nhm.ac.uk/dataset/global-map-of-the-biodiversity-intactness-index-from-newbold-et-al-2016-science
-# https://resourcewatch.org/data/explore/bio_014-Biodiversity-Intactness
-
-# Biodiversity Intactness Index
+# Biodiversity Intactness Index (BII)
+# Tim Newbold; Lawrence Hudson; Andy Arnell; Sara Contu et al. (2016). Global map of the Biodiversity Intactness Index, from Newbold et al. (2016) Science [Data set]. Natural History Museum.
+# doi: https://doi.org/10.5519/0009936
+# data: https://data.nhm.ac.uk/dataset/global-map-of-the-biodiversity-intactness-index-from-newbold-et-al-2016-science
+# visual: https://resourcewatch.org/data/explore/bio_014-Biodiversity-Intactness
 ES_BIO1a <- function(locations, ...) {
     bii <- rast("data/Biodiversity/Biodiversity_Intactness_Index/BII.asc") # nolint
     locations$cnt <- exact_extract(bii, locations, "sum", progress = TRUE)
@@ -11,7 +11,7 @@ ES_BIO1a <- function(locations, ...) {
     return(locations)
 }
 
-
+# Mean Species Abundance (MSA)
 # https://www.globio.info/globio-data-downloads
 # https://dataportaal.pbl.nl/downloads/GLOBIO/Schipper_etal_2020/2015/Globio4_TerrestrialMSA_10sec_2015.zip
 ER_BIO2 <- function(locations, ...) {
