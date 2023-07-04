@@ -12,12 +12,12 @@ library(wdpar)
 # Export.table.toDrive({collection: studyArea, fileFormat: 'SHP', description: "WCMC_WPDA_IND"});
 
 get_conservation_areas <- function(iso3) {
+  objects <- "objects/conservation"
+  mkdirs(objects)
   filename <- glue::glue("{objects}/protectedplanet_{iso3}.gpkg")
   if (file.exists(filename) == TRUE) {
     pa_data <- terra::vect(f)
   } else {
-    objects <- "objects/conservation"
-    mkdirs(objects)
     raw_pa_data <- wdpa_fetch(
       iso3, wait = TRUE, download_dir = (objects)
     )
