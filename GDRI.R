@@ -99,7 +99,7 @@ eco_sensitivity <- rbind(eco_sensitivity_vnm, eco_sensitivity_bgd) # , eco_sensi
 eco_sensitivity_norm <- normalize(eco_sensitivity)
 
 n <- dplyr::select(st_drop_geometry(eco_sensitivity_norm), ends_with("_norm"))
-eco_sensitivity_norm$CA <- rowMeans(n, na.rm = TRUE)
+eco_sensitivity_norm$ES <- rowMeans(n, na.rm = TRUE)
 st_write(eco_sensitivity_norm, "output/ecosystem_sensitivity/ecosystem_sensitivity.gpkg", append = FALSE)
 
 # TODO: ES_FRA2 River connectivity (River basin scale)
@@ -122,7 +122,7 @@ eco_robustness <- rbind(eco_robustness_vnm, eco_robustness_bgd) # , eco_robustne
 eco_robustness_norm <- normalize(eco_robustness)
 
 n <- dplyr::select(st_drop_geometry(eco_robustness_norm), ends_with("_norm"))
-eco_robustness_norm$CA <- rowMeans(n, na.rm = TRUE)
+eco_robustness_norm$ER <- rowMeans(n, na.rm = TRUE)
 st_write(eco_robustness_norm, "output/ecosystem_robustness/ecosystem_robustness.gpkg", append = FALSE)
 
 "
@@ -147,7 +147,7 @@ eco_exposure <- rbind(eco_exposure_vnm, eco_exposure_bgd) # , eco_exposure_ind)
 eco_exposure_norm <- normalize(eco_exposure)
 
 n <- dplyr::select(st_drop_geometry(eco_exposure_norm), ends_with("_norm"))
-eco_exposure_norm$CA <- rowMeans(n, na.rm = TRUE)
+eco_exposure_norm$E_EXP <- rowMeans(n, na.rm = TRUE)
 st_write(eco_exposure_norm, "output/exposure/ecosystem_exposure.gpkg", append = FALSE)
 
 # --------------------------------------------------
@@ -164,7 +164,7 @@ soc_exposure <- rbind(soc_exposure_vnm, soc_exposure_bgd) # , soc_exposure_ind)
 soc_exposure_norm <- normalize(soc_exposure)
 
 n <- dplyr::select(st_drop_geometry(soc_exposure_norm), ends_with("_norm"))
-soc_exposure_norm$CA <- rowMeans(n, na.rm = TRUE)
+soc_exposure_norm$S_EXP <- rowMeans(n, na.rm = TRUE)
 st_write(soc_exposure_norm, "output/exposure/social_exposure.gpkg", append = FALSE)
 
 # --------------------------------------------------
@@ -181,7 +181,7 @@ agri_exposure <- rbind(agri_exposure_vnm, agri_exposure_bgd) # , agri_exposure_i
 agri_exposure_norm <- normalize(agri_exposure)
 
 n <- dplyr::select(st_drop_geometry(agri_exposure_norm), ends_with("_norm"))
-agri_exposure_norm$CA <- rowMeans(n, na.rm = TRUE)
+agri_exposure_norm$A_EXP <- rowMeans(n, na.rm = TRUE)
 st_write(agri_exposure_norm, "output/exposure/agriculture_exposure.gpkg", append = FALSE)
 
 # --------------------------------------------------
@@ -198,7 +198,7 @@ water_exposure <- rbind(water_exposure_vnm, water_exposure_bgd) # , water_exposu
 water_exposure_norm <- normalize(water_exposure)
 
 n <- dplyr::select(st_drop_geometry(water_exposure_norm), ends_with("_norm"))
-water_exposure_norm$CA <- rowMeans(n, na.rm = TRUE)
+water_exposure_norm$W_EXP <- rowMeans(n, na.rm = TRUE)
 st_write(water_exposure_norm, "output/exposure/waterscape_exposure.gpkg", append = FALSE)
 
 
