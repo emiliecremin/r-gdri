@@ -48,7 +48,7 @@ create_landcover <- function(landcover, roi, region_name) {
         terra::aggregate()
     pv <- terra::project(roi, landcover)
     landcover_roi <- terra::crop(landcover, pv, mask = TRUE)
-    plot(landcover_roi)
+    # plot(landcover_roi)
     terra::writeRaster(
         landcover_roi,
         filename = str_glue("data/ESA_Landcover/{region_name}_roi.tif"),
@@ -57,7 +57,7 @@ create_landcover <- function(landcover, roi, region_name) {
 
     # Ecosystem = Shrubland 20 + Grassland 30 + Herbaceous wetland 90 + Mangroves 95
     ecosystems <- extract_classes(landcover_roi, c(19, 31, 1, 89, 96, 1))
-    plot(ecosystems)
+    # plot(ecosystems)
     terra::writeRaster(
         ecosystems,
         filename = str_glue("data/ESA_Landcover/{region_name}_ecosystems.tif"),
@@ -71,7 +71,7 @@ create_landcover <- function(landcover, roi, region_name) {
 
     # TODO: rbind(c(10, 1), c(95, 1))
     forests <- extract_classes(landcover_roi, c(9, 11, 1, 94, 96, 1))
-    plot(forests)
+    # plot(forests)
     terra::writeRaster(
         forests,
         filename = str_glue("data/ESA_Landcover/{region_name}_forests.tif"),
@@ -81,20 +81,20 @@ create_landcover <- function(landcover, roi, region_name) {
     # TODO: rbind(c(40, 1), c(80, 1))
     # Agriculture = cropland + agro-forestery = forest 10 (-protected area) + Cropland 40
     agriculture <- extract_classes(landcover_roi, c(9, 11, 1, 39, 41, 1))
-    plot(agriculture)
+    # plot(agriculture)
     terra::writeRaster(
         agriculture,
         filename = str_glue("data/ESA_Landcover/{region_name}_agriculture.tif"),
         overwrite = TRUE
     )
 
-    # Aquaculture = Water bodies 80 + bare /sparse vegetation 60
-    # TODO: rbind c(80, 1))
-    aquaculture <- extract_classes(landcover_roi, c(79, 81, 1, 59, 61, 1))
-    plot(aquaculture)
+    # Waterscape = Water bodies 80 + bare /sparse vegetation 60
+    # Can be associated to aquaculture in coastal areas
+    waterscape <- extract_classes(landcover_roi, c(79, 81, 1, 59, 61, 1))
+    # plot(waterscape)
     terra::writeRaster(
-        aquaculture,
-        filename = str_glue("data/ESA_Landcover/{region_name}_aquaculture.tif"),
+        waterscape,
+        filename = str_glue("data/ESA_Landcover/{region_name}_waterscape.tif"),
         overwrite = TRUE
     )
 }
