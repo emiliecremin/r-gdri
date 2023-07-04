@@ -119,8 +119,36 @@ joinOnPostcode <- function(df, shp) {
   )
 }
 
-process_indicator <- function(indicator_name, data, locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
-  cat("process_indicator for", indicator_name, "\n")
+process_indicators <- function(locations, indicators, output) {
+    result <- locations
+    country_iso3 <- unique(locations$country_iso3)[1]
+    output <- str_glue("{output}/{country_iso3}")
+    mkdirs(output)
+    social <- load_social_data(country_iso3)
+
+    i <- 1
+    for (indicator_code in indicators) {
+        cat(
+            "Processing indicator:", indicator_code,
+            "(", i, "/", length(indicators), ")\n"
+        )
+        indicator <- do.call(
+            get(indicator_code),
+            list(locations = locations, data = social)
+        )
+        format_indicator(
+            indicator_code, indicator, locations,
+            append = FALSE, normalize = FALSE, plot = FALSE,
+            output = output
+        )
+        result <- update_gdri(indicator, result, indicator_code)
+        i <- i + 1
+    }
+    return(result)
+}
+
+format_indicator <- function(indicator_name, data, locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
+  cat("format_indicator for", indicator_name, "\n")
   cat("colnames", colnames(data), "\n")
   cat("class", class(data), "\n")
   if (!(is(data, "sf") || is(data, "SpatVector"))) {

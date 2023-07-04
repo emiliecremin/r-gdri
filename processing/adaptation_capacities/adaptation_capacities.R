@@ -16,29 +16,11 @@ adaptation_capacities_indicators <- c(
 )
 
 adaptation_capacities <- function(locations) {
-    result <- locations
-    country_iso3 <- unique(locations$country_iso3)[1]
-    output <- str_glue("output/adaptation_capacities/{country_iso3}")
-    mkdirs(output)
-    social <- load_social_data(country_iso3)
-
-    i <- 1
-    for (indicator_code in adaptation_capacities_indicators) {
-        cat(
-            "Processing indicator:", indicator_code,
-            "(", i, "/", length(adaptation_capacities_indicators), ")\n"
+    return(
+        process_indicators(
+            locations, 
+            indicators=adaptation_capacities_indicators, 
+            output="output/adaptation_capacities"
         )
-        indicator <- do.call(
-            get(indicator_code),
-            list(locations = locations, data = social)
-        )
-        process_indicator(
-            indicator_code, indicator, locations,
-            append = FALSE, normalize = FALSE, plot = FALSE,
-            output = output
-        )
-        result <- update_gdri(indicator, result, indicator_code)
-        i <- i + 1
-    }
-    return(result)
+    )
 }
