@@ -27,12 +27,14 @@ E_EXP_CYC <- function(locations, ...) {
 }
 
 # Drought data source Aqueduct
-# Note: Calculated on administrative area not on Ecosystems area
+# Note: Calculated on the whole administrative area
+# will be the exact same for ecosystems, agriculture and waterscape for now
+# TODO: take into account the relevant area of the raster
 E_EXP_DRO <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     # drr: Drought risk
-    locations <- map_aqueduct(locations, "drr")
-    locations$val <- locations$cnt / as.numeric(locations$area)
+    drought <- map_aqueduct(locations, "drr")
+    locations$val <- drought$val / as.numeric(locations$area)
     return(locations)
 }
 
