@@ -7,7 +7,7 @@
 # Indicator: Foreign Direct Investment (FDI)
 # Measuring unit (or proxy): Net inflow (% of GDP)
 # http://data.worldbank.org
-A_GOV4 <- function(locations) {
+A_GOV4 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
     FDI <- read.csv(file = "data/WorldBank/FDI/API_BX.KLT.DINV.WD.GD.ZS_DS2_en_csv_v2_3159100.csv", skip = 4)
     A_GOV4 <- dplyr::filter(FDI, Country.Code == country_iso3)
@@ -23,7 +23,7 @@ A_GOV4 <- function(locations) {
 
 # C_HEA3
 # Indicator: Public health expenditure (% of GDP)
-C_HEA3 <- function(locations) {
+C_HEA3 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
 
     # Domestic general government health expenditure (% of GDP)
@@ -52,7 +52,7 @@ C_HEA3 <- function(locations) {
 # Share of current health expenditures funded from domestic private sources.
 # Domestic private sources include funds from households, corporations and non-profit organizations.
 # Such expenditures can be either prepaid to voluntary health insurance or paid directly to healthcare providers.
-C_HEA4 <- function(locations) {
+C_HEA4 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
     HEALTH_PRIV_EXP <- read.csv(file = "data/WorldBank/HEALTH_PRIV_EXP/API_SH.XPD.PVTD.CH.ZS_DS2_en_csv_v2_3165539.csv", skip = 4)
     C_HEA4 <- dplyr::filter(HEALTH_PRIV_EXP, Country.Code == country_iso3)
