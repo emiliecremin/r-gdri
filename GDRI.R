@@ -24,6 +24,7 @@ source("processing/osm.R")
 source("processing/world_bank.R")
 source("processing/forest.R")
 source("processing/biodiversity.R")
+source("processing/conservation.R")
 
 # --------------------------------------------------
 # SOCIAL SUSCEPTIBILITY
@@ -98,7 +99,7 @@ eco_sensitivity <- rbind(eco_sensitivity_vnm, eco_sensitivity_bgd) # , eco_sensi
 eco_sensitivity_norm <- normalize(eco_sensitivity)
 
 n <- dplyr::select(st_drop_geometry(eco_sensitivity_norm), ends_with("_norm"))
-eco_sensitivity_norm$CA <- rowMeans(n, na.rm = TRUE)
+eco_sensitivity_norm$ES <- rowMeans(n, na.rm = TRUE)
 st_write(eco_sensitivity_norm, "output/ecosystem_sensitivity/ecosystem_sensitivity.gpkg", append = FALSE)
 
 # TODO: ES_FRA2 River connectivity (River basin scale)
@@ -110,29 +111,96 @@ st_write(eco_sensitivity_norm, "output/ecosystem_sensitivity/ecosystem_sensitivi
 # --------------------------------------------------
 # ECOSYSTEM ROBUSTNESS
 # --------------------------------------------------
-# ER_CON_1512_conservation_areas
-ES_CON1512 <- st_read(
-    "output/ecosystem_sensitivity/ER_CON_1512_conservation_areas.gpkg"
-)
-gdri <- update_gdri(ES_CON1512, gdri, "ER_CON_1512")
 
-# ER_RES2 Forest gain
-ES_RES2 <- st_read("output/ecosystem_sensitivity/ER_RES2_forestgain.gpkg")
-gdri <- update_gdri(ES_RES2, gdri, "ER_RES2")
+source("processing/ecosystem_robustness/ecosystem_robustness.R")
 
-# ER_TRE1457 Participation in Treaties
-ER_TRE1457 <- st_read("output/ecosystem_sensitivity/ER_TRE1_Participation_in_treaties.gpkg")
-gdri <- update_gdri(ER_TRE1457, gdri, "ER_TRE1457")
+eco_robustness_vnm <- ecosystem_robustness(vnm)
+eco_robustness_bgd <- ecosystem_robustness(bgd)
+# eco_robustness_ind <- ecosystem_robustness(gdri, ind, "India")
+eco_robustness <- rbind(eco_robustness_vnm, eco_robustness_bgd) # , eco_robustness_ind)
+
+eco_robustness_norm <- normalize(eco_robustness)
+
+n <- dplyr::select(st_drop_geometry(eco_robustness_norm), ends_with("_norm"))
+eco_robustness_norm$ER <- rowMeans(n, na.rm = TRUE)
+st_write(eco_robustness_norm, "output/ecosystem_robustness/ecosystem_robustness.gpkg", append = FALSE)
 
 "
 ER_POL2 Policies supporting biodiversity conservation
 ER_FUN2 Donor aid for adaptation
-ER_TRE4  Participation in Treaties - Convention on International Trade in Endangered Species of Wild Fauna and Flora (CITES) (yes/no)
+ER_TRE4 Participation in Treaties - Convention on International Trade in Endangered Species of Wild Fauna and Flora (CITES) (yes/no)
 ER_TRE5 Participation in Treaties - Convention on the Conservation of Migratory Species of Wild Animals (CMS)  (yes/no)
 ER_TRE7 Participation in Treaties - Ramsar Convention on Wetlands  (yes/no)
-ER_ECO1 Functionality Index
-ER_BIO2 Mean Species Abundance (MSA)
 "
+
+# --------------------------------------------------
+# ECOSYSTEM EXPOSURE
+# --------------------------------------------------
+
+source("processing/exposure/ecosystem_exposure.R")
+
+eco_exposure_vnm <- ecosystem_exposure(vnm)
+eco_exposure_bgd <- ecosystem_exposure(bgd)
+# eco_exposure_ind <- ecosystem_exposure(gdri, ind, "India")
+eco_exposure <- rbind(eco_exposure_vnm, eco_exposure_bgd) # , eco_exposure_ind)
+
+eco_exposure_norm <- normalize(eco_exposure)
+
+n <- dplyr::select(st_drop_geometry(eco_exposure_norm), ends_with("_norm"))
+eco_exposure_norm$E_EXP <- rowMeans(n, na.rm = TRUE)
+st_write(eco_exposure_norm, "output/exposure/ecosystem_exposure.gpkg", append = FALSE)
+
+# --------------------------------------------------
+# SOCIAL EXPOSURE
+# --------------------------------------------------
+
+source("processing/exposure/social_exposure.R")
+
+soc_exposure_vnm <- social_exposure(vnm)
+soc_exposure_bgd <- social_exposure(bgd)
+# soc_exposure_ind <- social_exposure(gdri, ind, "India")
+soc_exposure <- rbind(soc_exposure_vnm, soc_exposure_bgd) # , soc_exposure_ind)
+
+soc_exposure_norm <- normalize(soc_exposure)
+
+n <- dplyr::select(st_drop_geometry(soc_exposure_norm), ends_with("_norm"))
+soc_exposure_norm$S_EXP <- rowMeans(n, na.rm = TRUE)
+st_write(soc_exposure_norm, "output/exposure/social_exposure.gpkg", append = FALSE)
+
+# --------------------------------------------------
+# AGRICULTURE EXPOSURE
+# --------------------------------------------------
+
+source("processing/exposure/agriculture_exposure.R")
+
+agri_exposure_vnm <- agriculture_exposure(vnm)
+agri_exposure_bgd <- agriculture_exposure(bgd)
+# agri_exposure_ind <- agriculture_exposure(gdri, ind, "India")
+agri_exposure <- rbind(agri_exposure_vnm, agri_exposure_bgd) # , agri_exposure_ind)
+
+agri_exposure_norm <- normalize(agri_exposure)
+
+n <- dplyr::select(st_drop_geometry(agri_exposure_norm), ends_with("_norm"))
+agri_exposure_norm$A_EXP <- rowMeans(n, na.rm = TRUE)
+st_write(agri_exposure_norm, "output/exposure/agriculture_exposure.gpkg", append = FALSE)
+
+# --------------------------------------------------
+# WATERSCAPE EXPOSURE
+# --------------------------------------------------
+
+source("processing/exposure/waterscape_exposure.R")
+
+water_exposure_vnm <- waterscape_exposure(vnm)
+water_exposure_bgd <- waterscape_exposure(bgd)
+# water_exposure_ind <- waterscape_exposure(gdri, ind, "India")
+water_exposure <- rbind(water_exposure_vnm, water_exposure_bgd) # , water_exposure_ind)
+
+water_exposure_norm <- normalize(water_exposure)
+
+n <- dplyr::select(st_drop_geometry(water_exposure_norm), ends_with("_norm"))
+water_exposure_norm$W_EXP <- rowMeans(n, na.rm = TRUE)
+st_write(water_exposure_norm, "output/exposure/waterscape_exposure.gpkg", append = FALSE)
+
 
 st_write(gdri, "gdri.gpkg", append = FALSE)
 write.csv(gdri %>% st_drop_geometry(), "gdri.csv")
