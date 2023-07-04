@@ -36,10 +36,10 @@ S_EXP_CYC <- function(locations, ...) {
 
 # Drought data source Aqueduct
 S_EXP_DRO <- function(locations, ...) {
-    locations <- locations %>% st_transform(4326)
+     locations <- locations %>% st_transform(4326)
     # drr: Drought risk
-    locations <- map_aqueduct(locations, "drr")
-    locations$val <- locations$val * drought_shp$pop
+    drought <- map_aqueduct(locations, "drr")
+    locations$val <- drought$val * locations$pop
     return(locations)
 }
 
@@ -51,7 +51,7 @@ S_EXP_FLO <- function(locations, ...) {
     floods <- rast("data/Hazards/Floods/fl_hazard_100_yrp.tif")
 
     ### zonal statistics using "exactextractr"
-    locations$cnt <- exact_extract(cyclones, locations, "mean", progress = TRUE)
+    locations$cnt <- exact_extract(floods, locations, "mean", progress = TRUE)
     locations$val <- locations$cnt * locations$pop
     return(locations)
 }
