@@ -88,13 +88,13 @@ create_landcover <- function(landcover, roi, region_name) {
         overwrite = TRUE
     )
 
-    # Aquaculture = Water bodies 80 + bare /sparse vegetation 60
-    # TODO: rbind c(80, 1))
-    aquaculture <- extract_classes(landcover_roi, c(79, 81, 1, 59, 61, 1))
-    # plot(aquaculture)
+    # Waterscape = Water bodies 80 + bare /sparse vegetation 60
+    # Can be associated to aquaculture in coastal areas
+    waterscape <- extract_classes(landcover_roi, c(79, 81, 1, 59, 61, 1))
+    # plot(waterscape)
     terra::writeRaster(
-        aquaculture,
-        filename = str_glue("data/ESA_Landcover/{region_name}_aquaculture.tif"),
+        waterscape,
+        filename = str_glue("data/ESA_Landcover/{region_name}_waterscape.tif"),
         overwrite = TRUE
     )
 }
