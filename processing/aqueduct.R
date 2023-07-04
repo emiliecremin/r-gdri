@@ -1,3 +1,13 @@
+# tuto: https://inbo.github.io/tutorials/tutorials/spatial_standards_vector/#reading-a-geopackage-file
+
+# datasource ---------------------
+# Author: Rutger Hofste
+# Date: 2019/07/12
+# Version: 01
+# S3 Path: s3://wri-projects/Aqueduct30/finalData/Y2019M07D12_Aqueduct30_V01
+# Instructions: https://github.com/wri/aqueduct30_data_download/blob/master/metadata.md
+# --------------------------------
+
 # https://www.wri.org/research/aqueduct-30-updated-decision-relevant-global-water-risk-indicators
 # https://github.com/wri/aqueduct30_data_download/blob/master/metadata.md
 cat("Loading Aqueduct dataset...\n")
@@ -50,4 +60,28 @@ C_INF1_631 <- function(locations, ...) {
 S_INF2_611 <- function(locations, ...) {
     # udw: Unimproved/no drinking water
     return(map_aqueduct(locations, "udw"))
+}
+
+# ES_DEG_1411 Eutrophication
+ES_DEG_1411 <- function(locations, ...) {
+    # cep: Coastal eutrophication potential
+    return(map_aqueduct(locations, "cep"))
+}
+
+# ES_DES2 Freshwater scarcity
+ES_DES2 <- function(locations, ...) {
+    # bwd: Baseline water depletion
+    return(map_aqueduct(locations, "bwd"))
+}
+
+# ES_WS_642 Baseline water stress
+ES_WS_642 <- function(locations, ...) {
+    # bws: Baseline water stress
+    return(map_aqueduct(locations, "bws"))
+}
+
+# ES_DEG2 Groundwater quality proxy Groundwater table decline
+ES_DEG2 <- function(locations, ...) {
+    # gtd: Groundwater table decline
+    return(map_aqueduct(locations, "gtd"))
 }
