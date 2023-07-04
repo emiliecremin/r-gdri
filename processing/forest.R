@@ -33,6 +33,7 @@ ER_RES2 <- function(locations, ...) {
 # Forest landscape Integrity Index
 # Data: https://www.forestintegrity.com/download-data
 # Paper: https://www.nature.com/articles/s41467-020-19493-3
+# TODO: limited to Asia given the raster used, could be improved
 ER_ECO2_FLII <- function(locations, ...) {
     flii <- rast("data/Forests/Forest_Landscape_Integrity_Index/FLII_Asia.tif") # nolint
     locations$cnt <- exact_extract(flii, locations, "sum", progress = TRUE)
