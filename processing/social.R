@@ -38,13 +38,9 @@ load_social_data <- function(country_iso3) {
 
     if (country_iso3 == "IND") {
         # TODO: this is not ready yet
+        colnames(social)
         source("processing/census_of_india.R")
         source("processing/india_national.R")
-        social <- st_read(
-            "data/ADMIN/India-village-boundaries/India-village-boundaries-Dselect.shp" # nolint
-        ) %>% st_drop_geometry()
-        geo_id <- "C_CODE01"
-        social$geo_id <- social$C_CODE01
     }
 
     return(social)
