@@ -8,9 +8,13 @@ adaptation_capacities_indicators <- c(
     "C_GOV2", # OSM
     "C_INF1_631", # Aqueduct
     "A_GOV4", #  World Bank
-    "C_SAV3", #  World Bank
     "C_HEA3", #  World Bank
     "C_HEA4", #  World Bank
+    "C_GOV1", # National
+    "C_GOV3", # National
+    "C_SAV1", # National
+    "C_SAV2", # National
+    "C_SAV3", # National
     "C_INS1", # National
     "A_IIR1" # National
 )
