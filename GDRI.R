@@ -4,21 +4,22 @@ source("common/helpers.R")
 # If you have a slow internet connection increase the timeout
 options(timeout = 1800) # set the timeout to 30 minutes
 
-# --------------------------------------------------
-# DATA PREPARATION
-# --------------------------------------------------
+# ---------------------------------------------------------------
+# DATA PREPARATION: run once to generate admin layers
+# ---------------------------------------------------------------
+# TODO: keep only useful columns in admin.R
 source("common/admin.R")
 source("common/land_cover.R")
 source("common/GFC.R")
+# ---------------------------------------------------------------
 
-# TODO: keep only useful columns in admin.R
 vnm <- st_read("data/ADMIN/admin_vnm.gpkg")
 bgd <- st_read("data/ADMIN/admin_bgd.gpkg")
 # ind <- st_read("data/ADMIN/admin_ind.gpkg")
 
-# --------------------------------------------------
+# ---------------------------------------------------------------
 # INDICATORS PER DATA SOURCE
-# --------------------------------------------------
+# ---------------------------------------------------------------
 source("processing/aqueduct.R")
 source("processing/social.R")
 source("processing/osm.R")
@@ -27,9 +28,9 @@ source("processing/forest.R")
 source("processing/biodiversity.R")
 source("processing/conservation.R")
 
-# --------------------------------------------------
+# ---------------------------------------------------------------
 # SOCIAL SUSCEPTIBILITY
-# --------------------------------------------------
+# ---------------------------------------------------------------
 
 source("processing/social_susceptibility/social_susceptibility.R")
 
@@ -56,9 +57,9 @@ st_write(soc_sus_norm, "output/social_susceptibility/social_susceptibility.gpkg"
 # indicator <- st_read("output/social_susceptibility/S_ECO1_     .gpkg")
 # gdri <- update_gdri(indicator, gdri, "S_ECO1")
 
-# --------------------------------------------------
+# ---------------------------------------------------------------
 # COPING AND ADAPTATION CAPACITY
-# --------------------------------------------------
+# ---------------------------------------------------------------
 
 source("processing/adaptation_capacities/adaptation_capacities.R")
 
@@ -94,9 +95,9 @@ C_SAV2 Percentage of households without access to bank loans / (micro-) credits 
 A_GOV6 Donor aid for adaptation (local)
 "
 
-# --------------------------------------------------
+# ---------------------------------------------------------------
 # ECOSYSTEM SENSITIVITY
-# --------------------------------------------------
+# ---------------------------------------------------------------
 
 source("processing/ecosystem_sensitivity/ecosystem_sensitivity.R")
 
@@ -121,9 +122,9 @@ st_write(eco_sensitivity_norm, "output/ecosystem_sensitivity/ecosystem_sensitivi
 # TODO: ES_DEG4 Return Flow Ratio
 # TODO: ES_FRG1 Percentage of area covered by “problem soils” (%)
 
-# --------------------------------------------------
+# ---------------------------------------------------------------
 # ECOSYSTEM ROBUSTNESS
-# --------------------------------------------------
+# ---------------------------------------------------------------
 
 source("processing/ecosystem_robustness/ecosystem_robustness.R")
 
@@ -150,9 +151,9 @@ ER_TRE5 Participation in Treaties - Convention on the Conservation of Migratory 
 ER_TRE7 Participation in Treaties - Ramsar Convention on Wetlands  (yes/no)
 "
 
-# --------------------------------------------------
+# ---------------------------------------------------------------
 # ECOSYSTEM EXPOSURE
-# --------------------------------------------------
+# ---------------------------------------------------------------
 
 source("processing/exposure/ecosystem_exposure.R")
 
@@ -168,9 +169,9 @@ eco_exposure_norm$E_EXP_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(eco_exposure_norm, "output/exposure/ecosystem_exposure.rds")
 st_write(eco_exposure_norm, "output/exposure/ecosystem_exposure.gpkg", append = FALSE)
 
-# --------------------------------------------------
+# ---------------------------------------------------------------
 # SOCIAL EXPOSURE
-# --------------------------------------------------
+# ---------------------------------------------------------------
 
 source("processing/exposure/social_exposure.R")
 
@@ -186,9 +187,9 @@ soc_exposure_norm$S_EXP_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(soc_exposure_norm, "output/exposure/social_exposure.rds")
 st_write(soc_exposure_norm, "output/exposure/social_exposure.gpkg", append = FALSE)
 
-# --------------------------------------------------
+# ---------------------------------------------------------------
 # AGRICULTURE EXPOSURE
-# --------------------------------------------------
+# ---------------------------------------------------------------
 
 source("processing/exposure/agriculture_exposure.R")
 
@@ -204,9 +205,9 @@ agri_exposure_norm$A_EXP_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(agri_exposure_norm, "output/exposure/agriculture_exposure.rds")
 st_write(agri_exposure_norm, "output/exposure/agriculture_exposure.gpkg", append = FALSE)
 
-# --------------------------------------------------
+# ---------------------------------------------------------------
 # WATERSCAPE EXPOSURE
-# --------------------------------------------------
+# ---------------------------------------------------------------
 
 source("processing/exposure/waterscape_exposure.R")
 
