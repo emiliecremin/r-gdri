@@ -20,15 +20,25 @@ S_STA1 <- function(locations, ...) {
     return(locations)
 }
 
+# -------------------------------------------
+# Adaptation Capacities
+# -------------------------------------------
+
 # Corruption
-S_GOV1 <- function(locations, ...) {
+C_GOV1 <- function(locations, ...) {
     locations$val <- 31
     return(locations)
 }
 
-# -------------------------------------------
-# Adaptation Capacities
-# -------------------------------------------
+# No national food reserves available (binary) (National?)
+# Measuring unit (or proxy): No national food reserves available (YES)
+# http://projects.worldbank.org/
+# http://www.foodgrainsbank.ca
+C_GOV3 <- function(locations, ...) {
+    locations$val <- 0
+    return(locations)
+}
+
 
 # early_warning_systems
 C_EWS2 <- function(locations, ...) {
@@ -36,13 +46,25 @@ C_EWS2 <- function(locations, ...) {
     return(locations)
 }
 
-# health_coverage
-C_HEA34 <- function(locations, ...) {
-    locations$val <- 3.5
+# C_SAV1
+# Indicator: Percentage of households without gross savings (%)
+# Measuring unit (or proxy): Population (age 15+) who has not saved any money in the last year (%)
+C_SAV1 <- function(locations, ...) {
+    locations$val <- 36.7
     return(locations)
 }
 
-# lending_interest
+# C_SAV2
+# Indicator: Percentage of households without access to bank loans / (micro-) credits (%)
+# Measuring unit (or proxy): Population (age 15+) who has not borrowed any money in the last year (%)
+C_SAV2 <- function(locations, ...) {
+    locations$val <- 53.2
+    return(locations)
+}
+
+# C_SAV3
+# Indicator: Lending interest rate (%)
+# Measuring unit (or proxy): Lending interest rate (%)
 C_SAV3 <- function(locations, ...) {
     locations$val <- 7.1
     return(locations)
@@ -54,9 +76,9 @@ C_INS1 <- function(locations, ...) {
     return(locations)
 }
 
-# Foreign_Direct_Investment
-A_GOV4 <- function(locations, ...) {
-    locations$val <- 6.1
+# A_GOV6 Donor aid for adaptation (local)
+A_GOV6 <- function(locations, ...) {
+    locations$val <- 0
     return(locations)
 }
 
@@ -67,11 +89,45 @@ A_IIR1 <- function(locations, ...) {
 }
 
 # -------------------------------------------
+# Ecosystem Sensitivity
+# -------------------------------------------
+
+# River connectivity (River basin scale)
+ES_FRA2 <- function(locations, ...) {
+    locations$val <- 0.5
+    return(locations)
+}
+
+# -------------------------------------------
 # Ecosystem Robustness
 # -------------------------------------------
 
-# Participation_in_treaties
+# Participation_in_treaties - Convention on Biodiversity (CBD)
 ER_TRE1 <- function(locations, ...) {
     locations$val <- 1
+    return(locations)
+}
+
+# Participation in Treaties - Convention on International Trade in Endangered Species of Wild Fauna and Flora (CITES) (yes/no)
+ER_TRE4 <- function(locations, ...) {
+    locations$val <- 1
+    return(locations)
+}
+
+# Participation in Treaties - Convention on the Conservation of Migratory Species of Wild Animals (CMS)  (yes/no)
+ER_TRE5 <- function(locations, ...) {
+    locations$val <- 0
+    return(locations)
+}
+
+# Participation in Treaties - Ramsar Convention on Wetlands  (yes/no)
+ER_TRE7 <- function(locations, ...) {
+    locations$val <- 1
+    return(locations)
+}
+
+# Policies supporting biodiversity conservation
+ER_POL2 <- function(locations, ...) {
+    locations$val <- 0.746
     return(locations)
 }
