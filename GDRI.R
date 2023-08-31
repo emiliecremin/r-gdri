@@ -219,6 +219,7 @@ water_exposure_norm <- normalize(water_exposure)
 
 n <- dplyr::select(st_drop_geometry(water_exposure_norm), ends_with("_norm"))
 water_exposure_norm$W_EXP_MH <- rowMeans(n, na.rm = TRUE)
+saveRDS(water_exposure_norm, "output/exposure/waterscape_exposure.rds")
 st_write(water_exposure_norm, "output/exposure/waterscape_exposure.gpkg", append = FALSE)
 
 
