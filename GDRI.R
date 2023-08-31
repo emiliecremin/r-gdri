@@ -201,6 +201,7 @@ agri_exposure_norm <- normalize(agri_exposure)
 
 n <- dplyr::select(st_drop_geometry(agri_exposure_norm), ends_with("_norm"))
 agri_exposure_norm$A_EXP_MH <- rowMeans(n, na.rm = TRUE)
+saveRDS(agri_exposure_norm, "output/exposure/agriculture_exposure.rds")
 st_write(agri_exposure_norm, "output/exposure/agriculture_exposure.gpkg", append = FALSE)
 
 # --------------------------------------------------
