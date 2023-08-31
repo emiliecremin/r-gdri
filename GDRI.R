@@ -78,21 +78,9 @@ cop_adapt_norm$CA_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(cop_adapt_norm, "output/adaptation_capacities/adaptation_capacities.rds")
 st_write(cop_adapt_norm, "output/adaptation_capacities/adaptation_capacities.gpkg", append = FALSE)
 
-
-# TODO: C_EWS2 Existence of early warning systems (EWS) to do
-
-# TODO: C_INF1 Percentage of houseolds without access to wastewater treatment (%)
-
-# TODO: C_TRA2 Percentage of households without individual means of transportation: car or motorcycle
-
-# TODO: C_GOV1 Poor governance (National?) Corruption Perception Index (CPI)
-
 "
-C_GOV3 No national food reserves available (binary) (National?)
-C_HEA1 Number of hospital beds per 1,000 inhabitants
-C_SAV1 Percentage of households without gross savings (%)
-C_SAV2 Percentage of households without access to bank loans / (micro-) credits (%)
-A_GOV6 Donor aid for adaptation (local)
+# TODO: C_TRA2 Percentage of households without individual means of transportation: car or motorcycle
+# TODO: C_HEA1 Number of hospital beds per 1,000 inhabitants
 "
 
 # ---------------------------------------------------------------
@@ -116,9 +104,7 @@ eco_sensitivity_norm$ES_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(eco_sensitivity_norm, "output/ecosystem_sensitivity/ecosystem_sensitivity.rds")
 st_write(eco_sensitivity_norm, "output/ecosystem_sensitivity/ecosystem_sensitivity.gpkg", append = FALSE)
 
-# TODO: ES_FRA2 River connectivity (River basin scale)
 # TODO: ES_FRA3 Forest connectivity
-# TODO: ES_DEG2 Groundwater quality
 # TODO: ES_DEG4 Return Flow Ratio
 # TODO: ES_FRG1 Percentage of area covered by “problem soils” (%)
 
@@ -144,11 +130,7 @@ saveRDS(eco_robustness_norm, "output/ecosystem_robustness/ecosystem_robustness.r
 st_write(eco_robustness_norm, "output/ecosystem_robustness/ecosystem_robustness.gpkg", append = FALSE)
 
 "
-ER_POL2 Policies supporting biodiversity conservation
 ER_FUN2 Donor aid for adaptation
-ER_TRE4 Participation in Treaties - Convention on International Trade in Endangered Species of Wild Fauna and Flora (CITES) (yes/no)
-ER_TRE5 Participation in Treaties - Convention on the Conservation of Migratory Species of Wild Animals (CMS)  (yes/no)
-ER_TRE7 Participation in Treaties - Ramsar Convention on Wetlands  (yes/no)
 "
 
 # ---------------------------------------------------------------
