@@ -242,7 +242,7 @@ gdri$SES_VU_MH <- (gdri$SES_SUS_MH + gdri$SES_CA_MH) / 2
 
 gdri$SES_EXP_MH <- (gdri$S_EXP_MH + gdri$E_EXP_MH + gdri$A_EXP_MH + gdri$W_EXP_MH) / 4
 
-gdri$RISK_MH <- SES_VU_MH * SES_EXP_MH
+gdri$RISK_MH <- gdri$SES_VU_MH * gdri$SES_EXP_MH
 
 st_write(gdri, "gdri.gpkg", append = FALSE)
 write.csv(gdri %>% st_drop_geometry(), "gdri.csv")
