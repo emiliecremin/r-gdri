@@ -128,18 +128,18 @@ st_write(eco_sensitivity_norm, "output/ecosystem_sensitivity/ecosystem_sensitivi
 source("processing/ecosystem_robustness/ecosystem_robustness.R")
 
 eco_robustness_vnm <- ecosystem_robustness(vnm)
-saveRDS(eco_robustness_vnm, "output/eco_robustness/eco_robustness_VNM.rds")
+saveRDS(eco_robustness_vnm, "output/ecosystem_robustness/ecosystem_robustness_VNM.rds")
 eco_robustness_bgd <- ecosystem_robustness(bgd)
-saveRDS(eco_robustness_bgd, "output/eco_robustness/eco_robustness_BGD.rds")
+saveRDS(eco_robustness_bgd, "output/ecosystem_robustness/ecosystem_robustness_BGD.rds")
 # eco_robustness_ind <- ecosystem_robustness(gdri, ind, "India")
-# saveRDS(eco_robustness_ind, "output/eco_robustness/eco_robustness_IND.rds")
+# saveRDS(eco_robustness_ind, "output/ecosystem_robustness/ecosystem_robustness_IND.rds")
 eco_robustness <- rbind(eco_robustness_vnm, eco_robustness_bgd) # , eco_robustness_ind)
 
 eco_robustness_norm <- normalize(eco_robustness)
 
 n <- dplyr::select(st_drop_geometry(eco_robustness_norm), ends_with("_norm"))
 eco_robustness_norm$ER_MH <- rowMeans(n, na.rm = TRUE)
-saveRDS(eco_robustness_norm, "output/eco_robustness/eco_robustness.rds")
+saveRDS(eco_robustness_norm, "output/ecosystem_robustness/ecosystem_robustness.rds")
 st_write(eco_robustness_norm, "output/ecosystem_robustness/ecosystem_robustness.gpkg", append = FALSE)
 
 "
