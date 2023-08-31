@@ -8,13 +8,14 @@ ecosystem_sensitivity_indicators <- c(
     "ES_WS_642", # Baseline water stress - aqueduct
     "ES_DEG2", # Groundwater quality = gtd: Groundwater table decline - aqueduct
     "ES_BIO1a", # Biodiversity Intactness Index - nhm.ac.uk
-    #"ES_DEG6", # Soil organic matter
+    "ES_DEG6", # Soil organic matter
     #"ES_DEG9", # Cation exchange capacity
+    "ES_FRA2", # National - River connectivity (River basin scale)
     "ES_DES3" # Percentage of deforested area - GFC
-    # TODO: ES_FRA2 River connectivity (River basin scale)
+
     # TODO: ES_FRA3 Forest connectivity
     # TODO: ES_FRG1 Percentage of area covered by “problem soils” (%)
-    # C_INF1_631: ES_DEG4 Return Flow Ratio - ucw: Untreated connected wastewater
+    # TODO: ES_DEG4 Return Flow Ratio
 )
 
 ecosystem_sensitivity <- function(locations) {
