@@ -2,6 +2,7 @@
 ### zonal statistics using "exactextractr"
 
 # ES_DEG6 Soil_organic_carbone
+# https://data.apps.fao.org/catalog/dataset/7730e747-eb73-49c9-bfe6-84ebae718743
 ES_DEG6 <- function(locations, ...) {
     soc <- rast("data/Soil/GSOCmap1.5.0.tif") # nolint
     locations$cnt <- exact_extract(soc, locations, "sum", progress = TRUE)
