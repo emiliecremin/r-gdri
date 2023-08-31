@@ -5,7 +5,11 @@ ecosystem_robustness_indicators <- c(
     "ER_CON_1512", # Conservation areas - conservation.R - protectedplanet.net
     "ER_RES2", # Forest gain - forest.R - GFC
     "ER_ECO2_FLII", # Forest Landscape Integrity Index - forest.R - forestintegrity.com
-    # "ER_TRE1457", # Participation in Treaties - National indicator
+    "ER_TRE1", # Participation in Treaties - National indicator
+    "ER_TRE4", # Participation in Treaties - National indicator
+    "ER_TRE5", # Participation in Treaties - National indicator
+    "ER_TRE7", # Participation in Treaties - National indicator
+    "ER_POL2", # Policies supporting biodiversity conservation - National indicator
     "ER_ECO1", # Ecosystem Functionality Index - biodiversity.R - 
     "ER_BIO2" # Mean Species Abundance (MSA) - biodiversity.R - Globio
 )
