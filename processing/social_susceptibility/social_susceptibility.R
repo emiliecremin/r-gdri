@@ -12,7 +12,6 @@ soc_susceptibility_indicators <- c(
     "S_ECO4",
     "S_OCU1",
     "S_STA1",
-    "S_GOV1",
     "S_INF1_621",
     "S_INF2_611"
 )
