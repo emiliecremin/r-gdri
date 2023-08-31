@@ -15,12 +15,6 @@ A_GOV4 <- function(locations, ...) {
     return(locations)
 }
 
-# C_GOV3
-# Indicator: No national food reserves available (binary)
-# Measuring unit (or proxy): No national food reserves available (YES)
-# http://projects.worldbank.org/
-# http://www.foodgrainsbank.ca
-
 # C_HEA3
 # Indicator: Public health expenditure (% of GDP)
 C_HEA3 <- function(locations, ...) {
@@ -59,18 +53,6 @@ C_HEA4 <- function(locations, ...) {
     locations$val <- C_HEA4$X2009
     return(locations)
 }
-
-# C_SAV1
-# Indicator: Percentage of households without gross savings (%)
-# Measuring unit (or proxy): Population (age 15+) who has not saved any money in the last year (%)
-
-# C_SAV2
-# Indicator: Percentage of households without access to bank loans / (micro-) credits (%)
-# Measuring unit (or proxy): Population (age 15+) who has not borrowed any money in the last year (%)
-
-# C_SAV3
-# Indicator: Lending interest rate (%)
-# Measuring unit (or proxy): Lending interest rate (%)
 
 # S_ECO4
 # Poverty & inequality
