@@ -40,7 +40,7 @@ create_gfc <- function(roi, region_name, output, forest_threshold = 20) {
     filename = glue::glue("{output}/gfc_extract_thresholded_{region_name}.tif"),
     overwrite = TRUE
   )
-  
+  saveRDS(gfc_thresholded, glue::glue("{output}/gfc_extract_thresholded_{region_name}.rds"))
   # Keep thresholded but Remove extract file
   unlink(glue::glue("{output}/gfc_extract_{region_name}.tif"))
 }
