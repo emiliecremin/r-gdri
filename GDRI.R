@@ -165,6 +165,7 @@ eco_exposure_norm <- normalize(eco_exposure)
 
 n <- dplyr::select(st_drop_geometry(eco_exposure_norm), ends_with("_norm"))
 eco_exposure_norm$E_EXP_MH <- rowMeans(n, na.rm = TRUE)
+saveRDS(eco_exposure_norm, "output/exposure/ecosystem_exposure.rds")
 st_write(eco_exposure_norm, "output/exposure/ecosystem_exposure.gpkg", append = FALSE)
 
 # --------------------------------------------------
