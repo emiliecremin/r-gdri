@@ -182,6 +182,7 @@ soc_exposure_norm <- normalize(soc_exposure)
 
 n <- dplyr::select(st_drop_geometry(soc_exposure_norm), ends_with("_norm"))
 soc_exposure_norm$S_EXP_MH <- rowMeans(n, na.rm = TRUE)
+saveRDS(soc_exposure_norm, "output/exposure/social_exposure.rds")
 st_write(soc_exposure_norm, "output/exposure/social_exposure.gpkg", append = FALSE)
 
 # --------------------------------------------------
