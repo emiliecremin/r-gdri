@@ -23,6 +23,7 @@ C_SHE1 <- function(locations, ...) {
     q <- osm_query("points", "amenity", education_services)
     osm_points <- oe_get(
         place = locations[1, ]$CNTRY_NAME,
+        quiet = FALSE,
         layer = "points",
         query = q,
         extra_tags = education_services
@@ -30,6 +31,7 @@ C_SHE1 <- function(locations, ...) {
     q <- osm_query("multipolygons", "amenity", education_services)
     osm_multipolygons <- oe_get(
         place = locations[1, ]$CNTRY_NAME,
+        quiet = FALSE,
         layer = "multipolygons",
         query = q,
         extra_tags = education_services
@@ -76,6 +78,7 @@ C_GOV2 <- function(locations, ...) {
     q <- osm_query("points", "amenity", emergency_services)
     osm_points <- oe_get(
         place = locations[1, ]$CNTRY_NAME,
+        quiet = FALSE,
         layer = "points",
         query = q,
         extra_tags = emergency_services
@@ -83,6 +86,7 @@ C_GOV2 <- function(locations, ...) {
     q <- osm_query("multipolygons", "amenity", emergency_services)
     osm_multipolygons <- oe_get(
         place = locations[1, ]$CNTRY_NAME,
+        quiet = FALSE,
         layer = "multipolygons",
         query = q,
         extra_tags = emergency_services
@@ -128,7 +132,6 @@ C_GOV2 <- function(locations, ...) {
 # - ferry stations
 # per 1,000 inhabitants
 C_TRA1 <- function(locations, ...) {
-    locations <- bgd
     all_road_types <- c(
         "motorway", "trunk", "primary", "secondary", "tertiary", "unclassified"
     )
@@ -136,7 +139,8 @@ C_TRA1 <- function(locations, ...) {
     waterways_types <- c("river", "canal", "fairway")
     waterways_types <- paste(shQuote(waterways_types), collapse = ", ")
     osm_data <- oe_get(
-        place = location$CNTRY_NAME,
+        place = locations[1, ]$CNTRY_NAME,
+        quiet = FALSE,
         layer = "lines",
         query = glue::glue("
             SELECT osm_id, name, highway, waterway, geometry

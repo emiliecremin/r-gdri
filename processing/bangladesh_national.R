@@ -61,7 +61,7 @@ A_GOV4 <- function(locations, ...) {
 }
 
 # Research_and_development
-CA_IIR1 <- function(locations, ...) {
+A_IIR1 <- function(locations, ...) {
     locations$val <- 0.6
     return(locations)
 }

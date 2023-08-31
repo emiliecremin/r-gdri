@@ -4,7 +4,7 @@
 # data: https://data.nhm.ac.uk/dataset/global-map-of-the-biodiversity-intactness-index-from-newbold-et-al-2016-science
 # visual: https://resourcewatch.org/data/explore/bio_014-Biodiversity-Intactness
 ES_BIO1a <- function(locations, ...) {
-    bii <- rast("data/Biodiversity/Biodiversity_Intactness_Index/BII.asc") # nolint
+    bii <- rast("data/Biodiversity/Biodiversity_Intactness_Index/lbii.asc") # nolint
     locations$cnt <- exact_extract(bii, locations, "sum", progress = TRUE)
     locations$val <- locations$cnt / locations$area
     # my_map(data = aoi, "ADM2_EN", "norm", "ES_BIO1a Biodiversity Intactness", "Greens")
