@@ -16,7 +16,7 @@ get_conservation_areas <- function(iso3) {
   mkdirs(objects)
   filename <- glue::glue("{objects}/protectedplanet_{iso3}.gpkg")
   if (file.exists(filename) == TRUE) {
-    pa_data <- terra::vect(f)
+    pa_data <- terra::vect(filename)
   } else {
     raw_pa_data <- wdpa_fetch(
       iso3, wait = TRUE, download_dir = (objects)
@@ -37,12 +37,13 @@ get_conservation_areas <- function(iso3) {
 ER_CON_1512 <- function(locations, ...) {
   country_iso3 <- unique(locations$country_iso3)[1]
   conservation <- get_conservation_areas(country_iso3)
-  conservation <- terra::vect(glue::glue("{objects}/protectedplanet_{country_iso3}.gpkg"))
-  adm <- terra::vect(locations)
-  conservation <- project(conservation, adm)
-  # https://gis.stackexchange.com/questions/445620/how-to-efficiently-get-the-intersection-between-vector-and-raster-in-r
-  conservation <- terra::crop(adm, conservation)
-  df <- sf::st_as_sf(conservation) %>% st_drop_geometry()
+  sf_use_s2(FALSE)
+  conservation <- st_read(glue::glue("objects/conservation/protectedplanet_{country_iso3}.gpkg"))
+  intersect <- st_intersection(locations, st_union(st_geometry(conservation)))
+  sf_use_s2(TRUE)
+  st_write(intersect, glue::glue("objects/conservation/protectedplanet_intersection_{country_iso3}.gpkg"), append = FALSE)
+  intersect$conservation_area <- units::set_units(st_area(i), km^2)
+  df <- sf::st_as_sf(intersect) %>% st_drop_geometry()
   locations <-
       right_join(df[c("geo_id", "conservation_area")], locations) %>%
       st_as_sf()
