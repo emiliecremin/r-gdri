@@ -1,5 +1,11 @@
 source("common/libraries.R")
 
+extract_classes <- function(landcover, classes) {
+    rclmat <- matrix(classes, ncol = 3, byrow = TRUE)
+    extracted_classes <- terra::classify(landcover, rclmat, others = NA)
+    return(extracted_classes)
+}
+
 mkdirs <- function(fp) {
   if (!file.exists(fp)) {
     mkdirs(dirname(fp))
