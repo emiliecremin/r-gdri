@@ -13,6 +13,40 @@ osm_query <- function(shape, key, values) {
     return(q)
 }
 
+count_osm_features <- function(location, osm_data, path, counting = "numbers") {
+    cnt <- 0
+    country_iso3 <- location$country_iso3
+    objects <- str_glue("objects/osm/{country_iso3}/{path}")
+    mkdirs(objects)
+    geom_type <- unique(st_geometry_type(osm_data))
+    filename <- glue::glue("{objects}/{location$geo_id}_{geom_type}.rds")
+    if (file.exists(filename) == TRUE) {
+        cat(
+            "using cached osm data for", location$geo_id,
+            "in", location$CNTRY_NAME, "\n"
+        )
+        location_osm <- readRDS(filename)
+    } else {
+        cat(
+            "croping osm data for", location$geo_id,
+            "in", location$CNTRY_NAME, "\n"
+        )
+        location_osm <- terra::crop(
+            vect(osm_data), vect(location)
+        )
+        saveRDS(location_osm, filename)
+    }
+    if (nrow(location_osm) > 0) {
+        if (counting == "length") {
+            cnt <- as.numeric(
+                    sum(st_length(st_as_sf(location_osm)))
+            )
+        } else {
+            cnt <- nrow(as.data.frame(location_osm))
+        }
+    }
+    return(cnt)
+}
 # C_SHE1
 # Access to shelter places
 # Density of schools km2 per 1,000 inhabitants
@@ -37,31 +71,14 @@ C_SHE1 <- function(locations, ...) {
         extra_tags = education_services
     )
     for (i in 1:nrow(locations)) {
+        cat(i, "/", nrow(locations), " ")
         location <- locations[i, ]
         cnt <- 0
         if (nrow(osm_points) > 0) {
-            cat(
-                "osm_extract points for", location$geo_id,
-                "in", location$CNTRY_NAME, "\n"
-            )
-            location_points <- terra::crop(
-                vect(osm_points), vect(location)
-            )
-            if (nrow(location_points) > 0) {
-                cnt <- cnt + nrow(as.data.frame(location_points))
-            }
+            cnt <- cnt + count_osm_features(location, osm_points, "C_SHE1")
         }
         if (nrow(osm_multipolygons) > 0) {
-            cat(
-                "osm_extract multipolygons for", location$geo_id,
-                "in", location$CNTRY_NAME, "\n"
-            )
-            location_multipolygons <- terra::crop(
-                vect(osm_multipolygons), vect(location)
-            )
-            if (nrow(location_multipolygons) > 0) {
-                cnt <- cnt + nrow(as.data.frame(location_multipolygons))
-            }
+            cnt <- cnt + count_osm_features(location, osm_multipolygons, "C_SHE1")
         }
         locations$cnt[i] <- cnt
     }
@@ -92,31 +109,14 @@ C_GOV2 <- function(locations, ...) {
         extra_tags = emergency_services
     )
     for (i in 1:nrow(locations)) {
+        cat(i, "/", nrow(locations), " ")
         location <- locations[i, ]
         cnt <- 0
         if (nrow(osm_points) > 0) {
-            cat(
-                "osm_extract points for", location$geo_id,
-                "in", location$CNTRY_NAME, "\n"
-            )
-            location_points <- terra::crop(
-                vect(osm_points), vect(location)
-            )
-            if (nrow(location_points) > 0) {
-                cnt <- cnt + nrow(as.data.frame(location_points))
-            }
+            cnt <- cnt + count_osm_features(location, osm_points, "C_GOV2")
         }
         if (nrow(osm_multipolygons) > 0) {
-            cat(
-                "osm_extract multipolygons for", location$geo_id,
-                "in", location$CNTRY_NAME, "\n"
-            )
-            location_multipolygons <- terra::crop(
-                vect(osm_multipolygons), vect(location)
-            )
-            if (nrow(location_multipolygons) > 0) {
-                cnt <- cnt + nrow(as.data.frame(location_multipolygons))
-            }
+            cnt <- cnt + count_osm_features(location, osm_multipolygons, "C_GOV2")
         }
         locations$cnt[i] <- cnt
     }
@@ -138,7 +138,7 @@ C_TRA1 <- function(locations, ...) {
     road_types <- paste(shQuote(all_road_types), collapse = ", ")
     waterways_types <- c("river", "canal", "fairway")
     waterways_types <- paste(shQuote(waterways_types), collapse = ", ")
-    osm_data <- oe_get(
+    osm_lines <- oe_get(
         place = locations[1, ]$CNTRY_NAME,
         quiet = FALSE,
         layer = "lines",
@@ -150,19 +150,11 @@ C_TRA1 <- function(locations, ...) {
         ")
     )
     for (i in 1:nrow(locations)) {
+        cat(i, "/", nrow(locations), " ")
         location <- locations[i, ]
         cnt <- 0
-        if (nrow(osm_data) > 0) {
-            cat(
-                "osm_extract highways and waterways for", location$geo_id,
-                "in", location$CNTRY_NAME, "\n"
-            )
-            location_data <- terra::crop(vect(osm_data), vect(location))
-            if (nrow(location_data) > 0) {
-                cnt <- as.numeric(
-                    sum(st_length(st_as_sf(location_data)))
-                )
-            }
+        if (nrow(osm_lines) > 0) {
+            cnt <- cnt + count_osm_features(location, osm_lines, "C_TRA1", counting = "length")
         }
         locations$cnt[i] <- cnt
     }
