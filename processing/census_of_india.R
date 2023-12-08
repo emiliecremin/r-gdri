@@ -92,6 +92,27 @@ towns_duplicates <- pca11_towns |>
   filter(n > 1) |>
   distinct()
 
+# There are 2 lines for this Town in the Census,
+# but only 1 Polygon in the shapefile.
+# We need to add the values of these 2 Census villages together
+# to match the shapefile
+# 318642
+sum_kendra <- pca11_towns %>%
+  dplyr::filter(`Town/Village` == 318642) %>%
+  summarize_if(is.numeric, sum, na.rm = TRUE)
+sum_kendra <- data.frame(sum_kendra)
+drop_list <- colnames(sum_kendra)
+
+sum_kendra$`Town/Village` <- "318642"
+
+sum_kendra <- pca11_towns %>%
+  dplyr::filter(`Town/Village` == 318642) %>%
+  filter(row_number() == 1) %>%
+  dplyr::select(-one_of(drop_list)) %>%
+  left_join(sum_kendra, by = "Town/Village")
+
+pca11_towns <- rbind(pca11_towns %>%
+  dplyr::filter(`Town/Village` != 318642), sum_kendra)
 
 keep_cols <- c(
   "censuscode",
