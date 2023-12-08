@@ -128,11 +128,13 @@ keep_cols <- c(
 )
 binding_min <- binding[, keep_cols]
 
+towns_nohh <- binding_min %>%
+  inner_join(
+    pca11_towns,
+    by = c("censusco_1" = "Town/Village", "no_hh" = "No_HH")
+  ) %>%
+  st_as_sf()
 
-census_ind_2011 <- dplyr::left_join(
-  esri_wb, pca11_wb,
-  by = c("censusco_1" = "Town/Village", "lgd_subdis" = "Subdistt")
-) %>% st_as_sf()
 
 
 census_ind_2011$geo_id <- paste(
