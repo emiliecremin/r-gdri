@@ -178,6 +178,14 @@ no_binding_min <- no_binding_min %>%
   dplyr::select(-`Town/Village`) %>%
   st_as_sf()
 
+setdiff(colnames(census_2011_villages), colnames(towns_nohh))
+census_2011 <- rbind(towns_nohh, census_2011_villages, no_binding_min)
+
+st_write(
+  census_2011,
+  "data/admin/INDIA/full_census_2011.gpkg",
+  append = FALSE
+)
 
 census_ind_2011$geo_id <- paste(
   census_ind_2011$lgd_statec,
@@ -187,11 +195,6 @@ census_ind_2011$geo_id <- paste(
   sep = ""
 )
 
-st_write(
-  census_ind_2011,
-  "data/admin/INDIA/census_ind_2011.gpkg",
-  append = FALSE
-)
 
 # census_ind_2011 <- st_read("data/admin/INDIA/census_ind_2011.gpkg")
 
