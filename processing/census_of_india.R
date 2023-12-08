@@ -9,7 +9,10 @@ esri_wb <- st_read(
 ) %>%
   dplyr::filter(lgd_statec == 19) %>%
   st_make_valid()
-
+# Format subdistrict to compare with the census of india
+max(nchar(as.character(esri_wb$lgd_subdis)), na.rm = TRUE)
+esri_wb$lgd_subdis[is.na(esri_wb$lgd_subdis)] <- 99999
+esri_wb$lgd_subdis <- sprintf("%05s", as.character(esri_wb$lgd_subdis))
 esri_wb$C_CODE11 <- esri_wb$censusco_1
 
 # POPULATION FINDER 2011
