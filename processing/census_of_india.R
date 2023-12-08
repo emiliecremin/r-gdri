@@ -151,6 +151,15 @@ villages_duplicates <- pca11_villages |>
   filter(n > 1) |>
   distinct()
 
+census_2011_villages <- dplyr::inner_join(
+  binding_min, pca11_villages,
+  by = c(
+    "censusco_1" = "Town/Village",
+    "lgd_subdis" = "Subdistt"
+  )
+) %>%
+  st_as_sf()
+
 
 census_ind_2011$geo_id <- paste(
   census_ind_2011$lgd_statec,
