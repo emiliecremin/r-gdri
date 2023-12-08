@@ -164,6 +164,20 @@ census_2011_villages <- census_2011_villages %>%
   dplyr::select(-No_HH) %>%
   st_as_sf()
 
+# Define empty columns
+empty_cols <- colnames(pca11_towns)
+no_binding_min <- no_binding[, keep_cols] %>% st_drop_geometry()
+# Add multiple empty columns
+no_binding_min[, empty_cols] <- NA
+no_binding_min$geometry <- no_binding$geometry
+no_binding_min$Name <- no_binding$name
+no_binding_min$TRU <- no_binding$tru
+no_binding_min <- no_binding_min %>%
+  dplyr::select(-Subdistt) %>%
+  dplyr::select(-No_HH) %>%
+  dplyr::select(-`Town/Village`) %>%
+  st_as_sf()
+
 
 census_ind_2011$geo_id <- paste(
   census_ind_2011$lgd_statec,
