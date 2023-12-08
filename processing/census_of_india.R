@@ -71,22 +71,21 @@ no_binding <- esri_wb %>% dplyr::filter(is.na(censusco_1))
 # https://censusindia.gov.in/nada/index.php/catalog/42554/download/46180/2011-IndiaStateDistSbDistVill-0000.xlsx
 pca11_villages <- read_excel(
   "data/ADMIN/INDIA/CENSUS-2011/2011-IndiaStateDistSbDistVill-0000.xlsx"
-)
+) %>%
+  dplyr::filter(
+    State == 19
+  ) %>%
+  dplyr::filter(Level == "VILLAGE")
 # Basic Population Figures of India, States, Districts, Sub-District and Town (Without Ward), 2011.
 # https://censusindia.gov.in/nada/index.php/catalog/42559/download/46185/2011-IndiaStateDistSbDistTwn-0000.xlsx
 pca11_towns <- read_excel(
   "data/ADMIN/INDIA/CENSUS-2011/2011-IndiaStateDistSbDistTwn-0000.xlsx"
-)
-pca11 <- rbind(pca11_towns, pca11_villages)
+) %>%
+  dplyr::filter(
+    State == 19
+  ) %>%
+  dplyr::filter(Level %in% c("TOWN"))
 
-colnames(pca11)
-unique(pca11$TRU)
-unique(pca11$Level)
-pca11_wb <- pca11 %>% dplyr::filter(
-  State == 19
-)
-write.csv(pca11_wb, "data/ADMIN/INDIA/CENSUS-2011/pca11_wb.csv")
-pca11_wb$Subdistt <- as.numeric(pca11_wb$Subdistt)
 
 keep_cols <- c(
   "censuscode",
