@@ -29,6 +29,19 @@ st_write(
   append = FALSE
 )
 
+dup_without_nohh <- duplicate_counts %>%
+  dplyr::filter(is.na(no_hh)) %>%
+  dplyr::select(censusco_1)
+dup_without_nohh$censusco_1
+
+# We found 3 duplicates in the shapefile that have NA in no_hh column.
+# We need to merge each duplicate:
+# 801760 - Haldia (x2)
+# 801634 - Darjiling (x2)
+# 801740 - Haora (x2)
+to_merge <- dup_without_nohh$censusco_1
+
+
 # POPULATION FINDER 2011
 # https://censusindia.gov.in/census.website/data/population-finder
 
