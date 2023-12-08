@@ -135,7 +135,15 @@ towns_nohh <- binding_min %>%
   ) %>%
   st_as_sf()
 
+towns_nohh <- towns_nohh %>%
+  dplyr::select(-Subdistt) %>%
+  st_as_sf()
 
+st_write(
+  towns_nohh,
+  "data/admin/INDIA/towns_nohh.gpkg",
+  append = FALSE
+)
 
 census_ind_2011$geo_id <- paste(
   census_ind_2011$lgd_statec,
