@@ -15,6 +15,20 @@ esri_wb$lgd_subdis[is.na(esri_wb$lgd_subdis)] <- 99999
 esri_wb$lgd_subdis <- sprintf("%05s", as.character(esri_wb$lgd_subdis))
 esri_wb$C_CODE11 <- esri_wb$censusco_1
 
+# Analysis of duplicates in the shapefile
+nrow(esri_wb)
+no_na <- esri_wb %>% dplyr::filter(!is.na(censusco_1))
+duplicate_counts <- no_na |>
+  add_count(censusco_1) |>
+  filter(n > 1) |>
+  distinct()
+
+st_write(
+  duplicate_counts,
+  "data/admin/INDIA/duplicates.gpkg",
+  append = FALSE
+)
+
 # POPULATION FINDER 2011
 # https://censusindia.gov.in/census.website/data/population-finder
 
