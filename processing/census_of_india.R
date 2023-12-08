@@ -86,6 +86,12 @@ pca11_towns <- read_excel(
   ) %>%
   dplyr::filter(Level %in% c("TOWN"))
 
+# Duplicates in Towns
+towns_duplicates <- pca11_towns |>
+  add_count(`Town/Village`) |>
+  filter(n > 1) |>
+  distinct()
+
 
 keep_cols <- c(
   "censuscode",
