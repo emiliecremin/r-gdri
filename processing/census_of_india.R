@@ -4,10 +4,12 @@ source("common/helpers.R")
 # https://livingatlas-dcdev.opendata.arcgis.com/datasets/esriindia1::india-village-boundary-2021/about
 # https://opendata.arcgis.com/api/v3/datasets/6e48332636074603acbc55e116ab264e_0/downloads/data?format=shp&spatialRefId=4326&where=1%3D1
 print("India_Village_Boundary_2021 is a large data source, loading...")
-esri_ind <- st_read(
+esri_wb <- st_read(
   "data/ADMIN/INDIA/ESRI - 2021/India_Village_Boundary_2021/India_Village_Boundary_2021.shp"
-) %>% st_make_valid()
-esri_wb <- esri_ind %>% dplyr::filter(lgd_statec == 19)
+) %>%
+  dplyr::filter(lgd_statec == 19) %>%
+  st_make_valid()
+
 esri_wb$C_CODE11 <- esri_wb$censusco_1
 
 # POPULATION FINDER 2011
