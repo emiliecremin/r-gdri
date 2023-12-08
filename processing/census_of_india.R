@@ -160,6 +160,10 @@ census_2011_villages <- dplyr::inner_join(
 ) %>%
   st_as_sf()
 
+census_2011_villages <- census_2011_villages %>%
+  dplyr::select(-No_HH) %>%
+  st_as_sf()
+
 
 census_ind_2011$geo_id <- paste(
   census_ind_2011$lgd_statec,
