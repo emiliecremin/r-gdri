@@ -145,6 +145,13 @@ st_write(
   append = FALSE
 )
 
+# No duplicates in villages using sub-district
+villages_duplicates <- pca11_villages |>
+  add_count(`Town/Village`, Subdistt) |>
+  filter(n > 1) |>
+  distinct()
+
+
 census_ind_2011$geo_id <- paste(
   census_ind_2011$lgd_statec,
   census_ind_2011$District,
