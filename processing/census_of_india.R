@@ -62,6 +62,7 @@ binding <- rbind(
   merged,
   esri_wb %>% dplyr::filter(!(censusco_1 %in% to_merge))
 )
+no_binding <- esri_wb %>% dplyr::filter(is.na(censusco_1))
 
 # POPULATION FINDER 2011
 # https://censusindia.gov.in/census.website/data/population-finder
