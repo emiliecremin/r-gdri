@@ -41,6 +41,21 @@ dup_without_nohh$censusco_1
 # 801740 - Haora (x2)
 to_merge <- dup_without_nohh$censusco_1
 
+unified <- esri_wb %>%
+  dplyr::filter(censusco_1 %in% to_merge) %>%
+  group_by(censusco_1) %>%
+  summarise(geometry = sf::st_union(geometry)) %>%
+  ungroup()
+
+merged <- esri_wb %>%
+  dplyr::filter(censusco_1 %in% to_merge & !is.na(no_hh)) %>%
+  st_drop_geometry() %>%
+  dplyr::left_join(
+    unified,
+    by = "censusco_1"
+  ) %>%
+  st_as_sf()
+
 
 # POPULATION FINDER 2011
 # https://censusindia.gov.in/census.website/data/population-finder
