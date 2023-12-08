@@ -56,6 +56,12 @@ merged <- esri_wb %>%
   ) %>%
   st_as_sf()
 
+# TODO: recalculate area and length of the merged polygons
+
+binding <- rbind(
+  merged,
+  esri_wb %>% dplyr::filter(!(censusco_1 %in% to_merge))
+)
 
 # POPULATION FINDER 2011
 # https://censusindia.gov.in/census.website/data/population-finder
