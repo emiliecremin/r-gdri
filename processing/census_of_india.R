@@ -115,6 +115,8 @@ pca11_towns <- rbind(pca11_towns %>%
   dplyr::filter(`Town/Village` != 318642), sum_kendra)
 
 keep_cols <- c(
+  "censusname",
+  "no_hh",
   "censuscode",
   "censusco_1",
   "censusco_2",
@@ -124,7 +126,8 @@ keep_cols <- c(
   "lgd_subdis",
   "geometry"
 )
-esri_wb <- esri_wb[, keep_cols]
+binding_min <- binding[, keep_cols]
+
 
 census_ind_2011 <- dplyr::left_join(
   esri_wb, pca11_wb,
