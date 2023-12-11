@@ -198,6 +198,45 @@ census_ind_2011$geo_id <- paste(
 
 # census_ind_2011 <- st_read("data/admin/INDIA/census_ind_2011.gpkg")
 
+# S_SOC3
+# Percentage female-headed households (%)
+# Data source:
+# https://censusindia.gov.in/nada/index.php/catalog/7036
+# Download:
+# https://censusindia.gov.in/nada/index.php/catalog/7036/download/10149/PCA-0000.xlsx
+
+# Other data sources:
+# https://data.gov.in/resource/female-headed-households-type-structure-census-houses-occupied-2011-west-bengal
+# https://data.gov.in/resource/female-headed-households-availability-type-latrine-facility-2011-west-bengal
+female_hh <- read_excel(
+  "data/ADMIN/INDIA/CENSUS-2011/PC11_PCA-FH/PCA-0000.xlsx"
+) %>%
+  dplyr::filter(
+    `State Code` == "19"
+  )
+
+
+female_hh$District <- female_hh$`Dist.Code`
+female_hh$F_HH <- female_hh$No_HH
+
+
+keep_cols <- c(
+  "F_HH",
+  "District",
+  "TRU"
+)
+female_hh_min <- female_hh[, keep_cols]
+
+unique(census_2011$lgd_distri)
+tmp <- dplyr::inner_join(
+  female_hh_min, census_2011,
+  by = c(
+    "District" = "District",
+    "TRU" = "TRU"
+  )
+) %>%
+  st_as_sf()
+
 # --------------------------------------------------
 # SOCIAL SUSCEPTIBILITY
 # --------------------------------------------------
