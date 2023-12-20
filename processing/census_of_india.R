@@ -360,8 +360,55 @@ S_ECO2 <- function(data, ...) {
 # PC11_HL14-19
 # Number of households not having latrine facility within the premises (col 100)
 S_INF1 <- function(data, ...) {
+  dir <- "data/ADMIN/INDIA/CENSUS-2011/PC11_HL14"
+  hlpca_files <- list.files(
+    normalizePath(dir),
+    pattern = "\\.(xls|xlsx)$",
+    ignore.case = TRUE,
+    full.names = TRUE
+  )
+  hlpca = data.frame()
+  for (f in hlpca_files) {
+      tmp <- read_excel(
+        f,
+        skip = 2
+      ) %>%
+      dplyr::filter(
+        `State Code` == "19",
+        `Rural/\r\nUrban` != "Total"
+      )
+      hlpca <- rbind(hlpca,tmp)
+  }
+  colnames(hlpca)
+  # TMP ##########################
+  data <- st_read("data/admin/INDIA/full_census_2011.gpkg")
+  ################################
+  hlpca_filtered <- hlpca %>% dplyr::filter(
+    # `Tehsil Code` != "00000",
+    # `Town Code/Village code` != "00000",
+    `Ward No` == "0000"
+  )
+  nrow(hlpca_filtered)
+  hlpca_census_2011 <- data %>% dplyr::left_join(
+    hlpca,
+    by = c(
+      "censusco_1" = "Town Code/Village code", 
+      "District" = "District Code", 
+      "lgd_subdis" = "Tehsil Code",
+      "Ward" = "Ward No",
+      "TRU" = "Rural/\r\nUrban"
+    )
+  )
+
+  st_write(
+    hlpca_census_2011,
+    "data/admin/INDIA/hlpca_census_2011.gpkg",
+    append = FALSE
+  )
   return(clean_column(data, "S_INF1"))
 }
+
+
 
 # S_INF2
 # Percentage of population without access to clean water (%)
