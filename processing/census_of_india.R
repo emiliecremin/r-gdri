@@ -275,7 +275,55 @@ S_SOC3 <- function(data, ...) {
 
 # S_SOC5
 # Percentage of population with disabilities (%)
+# https://censusindia.gov.in/nada/index.php/catalog/43388
+# https://censusindia.gov.in/nada/index.php/catalog/43388/download/47092/DDW-C20-1900.xlsx
 S_SOC5 <- function(data, ...) {
+   disabilities <- read_excel("data/ADMIN/INDIA/CENSUS-2011/DDW-C20-1900.xlsx", skip = 1) %>% 
+    dplyr::filter(
+      `State Code` == "19",
+      `Distt.Code` != "000",
+      `Age-group` == "Total",
+      `Total/Rural/Urban` != "Total"
+    )
+    colnames(disabilities)
+    unique(disabilities$`Distt.Code`)
+    disabilities$District <- disabilities$`Distt.Code`
+    disabilities$TRU <- disabilities$`Total/Rural/Urban`
+    disabilities$disabled_persons <- as.integer(disabilities$`Total number of disabled persons`)
+    keep_cols <- c(
+      "District",
+      "TRU",
+      "disabled_persons"
+    )
+    disabilities <- disabilities[, keep_cols]
+    pca11_districts <- read_excel(
+      "data/ADMIN/INDIA/CENSUS-2011/2011-IndiaStateDistSbDistTwn-0000.xlsx"
+    ) %>%
+    dplyr::filter(
+      State == 19
+    ) %>%
+    dplyr::filter(Level %in% c("DISTRICT"))
+    pca11_districts <- dplyr::inner_join(
+      disabilities, pca11_districts,
+      by = c(
+        "District" = "District",
+        "TRU" = "TRU"
+      )
+    )
+    pca11_districts$S_SOC5 <- pca11_districts$disabled_persons / pca11_districts$TOT_P
+    keep_cols <- c(
+      "S_SOC5",
+      "District",
+      "TRU"
+    )
+    pca11_districts <- pca11_districts[, keep_cols]
+    data <- dplyr::inner_join(
+      data, pca11_districts,
+      by = c(
+        "District" = "District",
+        "TRU" = "TRU"
+      )
+    )
   return(clean_column(data, "S_SOC5"))
 }
 
