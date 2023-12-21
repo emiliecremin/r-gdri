@@ -389,7 +389,7 @@ S_INF1 <- function(data, ...) {
     `Ward No` == "0000"
   )
   nrow(hlpca_filtered)
-  hlpca_census_2011 <- data %>% dplyr::left_join(
+  hlpca_census_villages <- data %>% dplyr::inner_join(
     hlpca,
     by = c(
       "censusco_1" = "Town Code/Village code", 
@@ -399,10 +399,61 @@ S_INF1 <- function(data, ...) {
       "TRU" = "Rural/\r\nUrban"
     )
   )
+  st_write(
+    hlpca_census_villages,
+    "data/admin/INDIA/hlpca_census_villages.gpkg",
+    append = FALSE
+  )
+
+  keep_cols <- hlpca %>%
+    dplyr::select(`Number of households with condition of Census House as`:last_col())
+  
+
+  hlpca_towns <- hlpca %>% dplyr::filter(
+    `Tehsil Code` == "99999",
+    `Town Code/Village code` != "000000",
+    `Ward No` == "0000"
+  )
+
+  hlpca_census_towns <- data %>% dplyr::inner_join(
+    hlpca_towns,
+    by = c(
+      "censusco_1" = "Town Code/Village code", 
+      "District" = "District Code", 
+      #"lgd_subdis" = "Tehsil Code",
+      # "Ward" = "Ward No",
+      "TRU" = "Rural/\r\nUrban"
+    )
+  )
 
   st_write(
-    hlpca_census_2011,
-    "data/admin/INDIA/hlpca_census_2011.gpkg",
+    hlpca_census_towns,
+    "data/admin/INDIA/hlpca_census_towns.gpkg",
+    append = FALSE
+  )
+
+  hlpca_per_district <- hlpca %>% dplyr::filter(`Tehsil Code` == "00000")
+
+  hlpca_per_subdistrict <- hlpca %>% dplyr::filter(
+    `Town Code/Village code` == "000000",
+    `Tehsil Code` != "00000",
+    `Tehsil Code` != "99999"
+  )
+
+  hlpca_census_subdistrict <- data %>% dplyr::inner_join(
+    hlpca_per_subdistrict,
+    by = c(
+      # "censusco_1" = "Town Code/Village code", 
+      "District" = "District Code", 
+      "lgd_subdis" = "Tehsil Code",
+      # "Ward" = "Ward No",
+      "TRU" = "Rural/\r\nUrban"
+    )
+  )
+
+  st_write(
+    hlpca_census_subdistrict,
+    "data/admin/INDIA/hlpca_census_subdistrict.gpkg",
     append = FALSE
   )
   return(clean_column(data, "S_INF1"))
