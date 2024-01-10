@@ -198,6 +198,140 @@ census_ind_2011$geo_id <- paste(
 
 # census_ind_2011 <- st_read("data/admin/INDIA/census_ind_2011.gpkg")
 
+  dir <- "data/ADMIN/INDIA/CENSUS-2011/PC11_HL14"
+  hlpca_files <- list.files(
+    normalizePath(dir),
+    pattern = "\\.(xls|xlsx)$",
+    ignore.case = TRUE,
+    full.names = TRUE
+  )
+  hlpca = data.frame()
+  for (f in hlpca_files) {
+      tmp <- read_excel(
+        f,
+        skip = 2
+      ) %>%
+      dplyr::filter(
+        `State Code` == "19",
+        `Rural/Urban` != "Total"
+      )
+      hlpca <- rbind(hlpca,tmp)
+  }
+  colnames(hlpca)
+  cols_hlpca <- read.csv("data/ADMIN/INDIA/CENSUS-2011/PC11_HL14/hlpca-colnames.csv")
+  colnames(hlpca) <- cols_hlpca$column_name
+
+  # TMP ##########################
+  data <- st_read("data/admin/INDIA/full_census_2011.gpkg")
+  ################################
+  hlpca_filtered <- hlpca %>% dplyr::filter(
+    # `Tehsil Code` != "00000",
+    # `Town Code/Village code` != "00000",
+    `Ward No` == "0000"
+  )
+  nrow(hlpca_filtered)
+  hlpca_census_villages <- data %>% dplyr::inner_join(
+    hlpca,
+    by = c(
+      "censusco_1" = "Town Code/Village code", 
+      "District" = "District Code", 
+      "lgd_subdis" = "Tehsil Code",
+      "Ward" = "Ward No",
+      "TRU" = "Rural/Urban"
+    )
+  )
+  st_write(
+    hlpca_census_villages,
+    "data/admin/INDIA/hlpca_census_villages.gpkg",
+    append = FALSE
+  )
+
+  keep_cols <- hlpca %>%
+    dplyr::select(`Number of households with condition of Census House as: Total (Total)`:last_col())
+  
+
+  hlpca_towns <- hlpca %>% dplyr::filter(
+    `Tehsil Code` == "99999",
+    `Town Code/Village code` != "000000",
+    `Ward No` == "0000"
+  )
+
+  hlpca_census_towns <- data %>% dplyr::inner_join(
+    hlpca_towns,
+    by = c(
+      "censusco_1" = "Town Code/Village code", 
+      "District" = "District Code", 
+      #"lgd_subdis" = "Tehsil Code",
+      # "Ward" = "Ward No",
+      "TRU" = "Rural/Urban"
+    )
+  ) %>% dplyr::filter(!censusco_1 %in% hlpca_census_villages$censusco_1)
+
+  st_write(
+    hlpca_census_towns,
+    "data/admin/INDIA/hlpca_census_towns.gpkg",
+    append = FALSE
+  )
+
+  hlpca_per_subdistrict <- hlpca %>% dplyr::filter(
+    `Town Code/Village code` == "000000",
+    `Tehsil Code` != "00000",
+    `Tehsil Code` != "99999"
+  )
+
+  hlpca_census_subdistrict <- data %>% 
+  dplyr::filter(!censusco_1 %in% c(hlpca_census_villages$censusco_1, hlpca_census_towns$censusco_1)) %>%
+  dplyr::inner_join(
+    hlpca_per_subdistrict,
+    by = c(
+      # "censusco_1" = "Town Code/Village code", 
+      "District" = "District Code", 
+      "lgd_subdis" = "Tehsil Code",
+      # "Ward" = "Ward No",
+      "TRU" = "Rural/Urban"
+    )
+  )
+
+  st_write(
+    hlpca_census_subdistrict,
+    "data/admin/INDIA/hlpca_census_subdistrict.gpkg",
+    append = FALSE
+  )
+
+  no_binding <- data %>% dplyr::filter(is.na(District))
+  # Define empty columns
+  empty_cols <- colnames(hlpca)
+  no_binding_min <- no_binding[, keep_cols] %>% st_drop_geometry()
+  # Add multiple empty columns
+  no_binding[, empty_cols] <- NA
+  no_binding <- no_binding %>% st_as_sf()
+  # st_geometry(no_binding) <- "geometry"
+  no_binding <- no_binding %>% relocate(geom, .after = last_col())
+
+  drop_cols <- setdiff(colnames(no_binding), colnames(hlpca_census_villages))
+  no_binding$`District Code`
+  no_binding$`Tehsil Code`
+  no_binding$`Town Code/Village code`
+  no_binding$`Ward No`
+  no_binding$`Rural/Urban`
+  no_binding_drop <- no_binding %>% dplyr::select(-one_of(drop_cols))
+  setdiff(colnames(no_binding_drop), colnames(hlpca_census_villages))
+  rbind(hlpca_census_villages, no_binding_drop)
+  
+  drop_cols <- setdiff(colnames(hlpca_census_subdistrict), colnames(hlpca_census_villages))
+  hlpca_census_subdistrict_drop <- hlpca_census_subdistrict %>% dplyr::select(-one_of(drop_cols))
+
+  drop_cols <- setdiff(colnames(hlpca_census_towns), colnames(hlpca_census_villages))
+  hlpca_census_towns_drop <- hlpca_census_towns %>% dplyr::select(-one_of(drop_cols))
+
+  hlpca_full <- rbind(hlpca_census_villages, hlpca_census_towns_drop, hlpca_census_subdistrict_drop, no_binding_drop)
+  st_write(
+    hlpca_full,
+    "data/admin/INDIA/hlpca_census_2011.gpkg",
+    append = FALSE
+  )
+
+
 # --------------------------------------------------
 # SOCIAL SUSCEPTIBILITY
 # --------------------------------------------------
@@ -360,106 +494,9 @@ S_ECO2 <- function(data, ...) {
 # PC11_HL14-19
 # Number of households not having latrine facility within the premises (col 100)
 S_INF1 <- function(data, ...) {
-  dir <- "data/ADMIN/INDIA/CENSUS-2011/PC11_HL14"
-  hlpca_files <- list.files(
-    normalizePath(dir),
-    pattern = "\\.(xls|xlsx)$",
-    ignore.case = TRUE,
-    full.names = TRUE
-  )
-  hlpca = data.frame()
-  for (f in hlpca_files) {
-      tmp <- read_excel(
-        f,
-        skip = 2
-      ) %>%
-      dplyr::filter(
-        `State Code` == "19",
-        `Rural/\r\nUrban` != "Total"
-      )
-      hlpca <- rbind(hlpca,tmp)
-  }
-  colnames(hlpca)
-  # TMP ##########################
-  data <- st_read("data/admin/INDIA/full_census_2011.gpkg")
-  ################################
-  hlpca_filtered <- hlpca %>% dplyr::filter(
-    # `Tehsil Code` != "00000",
-    # `Town Code/Village code` != "00000",
-    `Ward No` == "0000"
-  )
-  nrow(hlpca_filtered)
-  hlpca_census_villages <- data %>% dplyr::inner_join(
-    hlpca,
-    by = c(
-      "censusco_1" = "Town Code/Village code", 
-      "District" = "District Code", 
-      "lgd_subdis" = "Tehsil Code",
-      "Ward" = "Ward No",
-      "TRU" = "Rural/\r\nUrban"
-    )
-  )
-  st_write(
-    hlpca_census_villages,
-    "data/admin/INDIA/hlpca_census_villages.gpkg",
-    append = FALSE
-  )
-
-  keep_cols <- hlpca %>%
-    dplyr::select(`Number of households with condition of Census House as`:last_col())
-  
-
-  hlpca_towns <- hlpca %>% dplyr::filter(
-    `Tehsil Code` == "99999",
-    `Town Code/Village code` != "000000",
-    `Ward No` == "0000"
-  )
-
-  hlpca_census_towns <- data %>% dplyr::inner_join(
-    hlpca_towns,
-    by = c(
-      "censusco_1" = "Town Code/Village code", 
-      "District" = "District Code", 
-      #"lgd_subdis" = "Tehsil Code",
-      # "Ward" = "Ward No",
-      "TRU" = "Rural/\r\nUrban"
-    )
-  )
-
-  st_write(
-    hlpca_census_towns,
-    "data/admin/INDIA/hlpca_census_towns.gpkg",
-    append = FALSE
-  )
-
-  hlpca_per_district <- hlpca %>% dplyr::filter(`Tehsil Code` == "00000")
-
-  hlpca_per_subdistrict <- hlpca %>% dplyr::filter(
-    `Town Code/Village code` == "000000",
-    `Tehsil Code` != "00000",
-    `Tehsil Code` != "99999"
-  )
-
-  hlpca_census_subdistrict <- data %>% dplyr::inner_join(
-    hlpca_per_subdistrict,
-    by = c(
-      # "censusco_1" = "Town Code/Village code", 
-      "District" = "District Code", 
-      "lgd_subdis" = "Tehsil Code",
-      # "Ward" = "Ward No",
-      "TRU" = "Rural/\r\nUrban"
-    )
-  )
-
-  st_write(
-    hlpca_census_subdistrict,
-    "data/admin/INDIA/hlpca_census_subdistrict.gpkg",
-    append = FALSE
-  )
+  data$S_INF1 <- data$`Number of households not having latrine facility within the premises`
   return(clean_column(data, "S_INF1"))
 }
-
-
 
 # S_INF2
 # Percentage of population without access to clean water (%)
@@ -478,13 +515,17 @@ S_INF1 <- function(data, ...) {
 # 79 River/Canal
 # 80 Tank/Pond/Lake
 # 81 Other sources
+# --------------------
+# We consider 72 (Tap water from treated source) and 78 (Spring) as clean water
 S_INF2 <- function(data, ...) {
+  data$S_INF2 <- data$`Main Source of Drinking Water: Tapwater from treated source` + data$`Main Source of Drinking Water: Spring`
   return(clean_column(data, "S_INF2"))
 }
 
 # S_INF3
 # Percentage of population without access to electricity (%)
 S_INF3 <- function(data, ...) {
+  data$S_INF3 <- data$`Main Source of lighting: Electricity`
   return(clean_column(data, "S_INF3"))
 }
 
@@ -495,20 +536,8 @@ S_INF3 <- function(data, ...) {
 # C_EWS1
 # Percentage of households without access to information (%)
 # Proxy: Percentage of households without radio or TV (%)
+# Availability of assets: None of the assets specified in col. 10 to 19: TV - Computer/Laptop - Telephone/mobile phone - Scooter/Car
 C_EWS1 <- function(data, ...) {
+  data$C_EWS1 <- data$`Availability of assets: None of the assets specified in col. 10 to 19`
   return(clean_column(data, "C_EWS1"))
 }
-
-# Mobile
-# https://www.gsma.com/mobileeconomy/wp-content/uploads/2021/08/GSMA_ME_APAC_2021_Web_Singles.pdf
-# https://www.gsma.com/mobilefordevelopment/wp-content/uploads/2021/03/Achieving-mobile-enabled-digital-inclusion-in-Bangladesh.pdf
-# https://www.gsma.com/mobilefordevelopment/
-# https://www.gsma.com/betterfuture/wp-content/uploads/2019/08/Mobile-Economic-Impact-2019-Vietnam.pdf
-# https://www.nperf.com/fr/about-us/
-# https://www.gsmaintelligence.com/data/
-# https://www.itu.int/en/ITU-D/Statistics/Pages/stat/default.aspx
-# https://www.itu.int/itu-d/sites/statistics/
-
-# Data sources
-# http://hdr.undp.org/en/content/human-development-report-office-statistical-data-api
-# http://hdr.undp.org/en/statistics/understanding/sources
