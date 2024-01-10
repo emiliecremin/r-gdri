@@ -1,4 +1,4 @@
-source("common/libraries.R")
+source("common/helpers.R")
 
 "
 Value	Color	Description
@@ -32,12 +32,6 @@ landcover <- terra::vrt(raster_files,
     filename = "data/ESA_Landcover/Asia.vrt",
     overwrite = TRUE
 )
-
-extract_classes <- function(landcover, classes) {
-    rclmat <- matrix(classes, ncol = 3, byrow = TRUE)
-    extracted_classes <- terra::classify(landcover, rclmat, others = NA)
-    return(extracted_classes)
-}
 
 create_landcover <- function(landcover, roi, region_name) {
     # roi <- terra::vect("data/ADMIN/admin_ind.gpkg")
