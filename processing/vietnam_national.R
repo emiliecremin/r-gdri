@@ -27,8 +27,10 @@ S_STA1 <- function(locations, ...) {
 # -------------------------------------------
 
 # Corruption
+# CPI 100 is very clean and 0 is highly corrupt
+# https://www.transparency.org/en/cpi/2022/index/vnm
 C_GOV1 <- function(locations, ...) {
-    locations$val <- 31
+    locations$val <- 42
     return(locations)
 }
 

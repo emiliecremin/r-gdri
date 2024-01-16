@@ -156,7 +156,7 @@ ER_ECO3 | Road less area | to do  | to do     | to do   | (http://www.roadless.o
 | C_SHE1    | Access to shelter: Density of schools km2 / 100k inhab.                         | ✅      | ✅        | to do   | http://www.openstreetmap.org               |
 | C_TRA1    | Access to transportation network: roads, waterways / 100k inhab.                | ✅      | ✅        | to do   | http://www.openstreetmap.org               |
 | C_TRA2    | Percentage of households without individual car or motorcycle (%)               | ✅      | ✅         | to do   |                       
-| C_GOV1    | Poor governance (National?): Corruption Perception Index (CPI)                  | To do   | ✅         | to do   | http://www.transparency.org |
+| C_GOV1    | Poor governance: Corruption Perception Index (CPI)(National)                    | ✅      | ✅         |  ✅    | http://www.transparency.org |
 | C_GOV2    | Access to emergency services: hospitals, fire brigades, police                  | ✅      | ✅         | to do   | http://www.openstreetmap.org   |
 | C_GOV3    | to donational food reserves available (binary) (National?)                      | To do   | ✅       | to do   | projects.worldbank.org / foodgrainsbank.ca |
 | A_GOV4    | Foreign Direct Investment (FDI) (National)                                      | ✅      | ✅        | to do   | http://data.worldbank.org                  |
