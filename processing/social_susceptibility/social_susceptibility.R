@@ -3,6 +3,7 @@ source("common/helpers.R")
 # Data sources: ipums, aqueduct and national indicators
 soc_susceptibility_indicators <- c(
     "S_SOC3",
+    "S_SOC4", # travel time to cities
     "S_SOC5",
     "S_SOC8",
     "S_ECO2",
@@ -28,8 +29,8 @@ soc_susceptibility_indicators <- c(
 social_susceptibility <- function(locations) {
     return(
         process_indicators(
-            locations, 
-            indicators=soc_susceptibility_indicators, 
+            locations,
+            indicators=soc_susceptibility_indicators,
             output="output/social_susceptibility"
         )
     )
