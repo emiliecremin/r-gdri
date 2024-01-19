@@ -50,13 +50,7 @@ soc_sus_norm$SOC_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(soc_sus_norm, "output/social_susceptibility/social_susceptibility.rds")
 st_write(soc_sus_norm, "output/social_susceptibility/social_susceptibility.gpkg", append = FALSE)
 
-# TODO: S_SOC4 Travel time to closest city (mins) - to do
-# indicator <- st_read("output/social_susceptibility/S_SOC4_     .gpkg")
-# gdri <- update_gdri(indicator, gdri, "S_SOC4")
-
 # TODO: S_ECO1 Percentage of population below national poverty line (%) - to do
-# indicator <- st_read("output/social_susceptibility/S_ECO1_     .gpkg")
-# gdri <- update_gdri(indicator, gdri, "S_ECO1")
 
 # ---------------------------------------------------------------
 # COPING AND ADAPTATION CAPACITY
