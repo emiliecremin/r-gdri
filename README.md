@@ -187,7 +187,7 @@ ER_ECO3 | Road less area | to do  | to do     | to do   | (http://www.roadless.o
 | S_INF1_631          | Proportion of wastewater flows safely treated              | ✅    | ✅    | WRI AQUEDUCT - https://www.wri.org/data/aqueduct-water-risk-atlas |
 | S_INF3              | Population without access to electricity (%)               | ✅      | ✅         | to do   | ipums census |
 | C_EWS1              | Percentage of households without access to information (%) | ✅      | ✅         | to do   | ipums census | S
-|C_STA1              | Prevalence of violence (%): Homicides per 100k inhab.      | To do   | to do        | to do   | homicide.igarape.org.br / visionofhumanity.org           |
+|S_STA1              | Prevalence of violence (%): Homicides per 100k inhab.      | ✅      | ✅        |  ✅   |  who.int (National)          |
 |S_GOV1 | Bribe      | ✅    |  tod| to do   | homicide.igarape.org.br / visionofhumanity.org           |
 Additional
 
