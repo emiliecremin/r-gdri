@@ -171,7 +171,7 @@ ER_ECO3 | Road less area | ✅   | ✅    | ✅    | (http://www.roadless.online
 | C_GOV3    | to donational food reserves available (binary) (National?)                      | ✅   | ✅       | ✅  | projects.worldbank.org / foodgrainsbank.ca |
 | A_GOV4    | Foreign Direct Investment (FDI) (National)                                      | ✅      | ✅        | ✅    | http://data.worldbank.org                  |
 | A_GOV6    | Donor aid for adaptation (local)                                                | ✅   | ✅         | ✅    | http://aiddata.org/gis                     |
-| C_HEA1    | Number of hospital beds per 1,000 inhabitants                                   | To do   | to do        | to do   | bbs.gov.bd / wbhealth.gov.in / gso.gov.vn  |
+| C_HEA1    | Number of hospital beds per 1,000 people                                  | ✅   | ✅        | ✅   | https://data.worldbank.org/indicator/SH.MED.BEDS.ZS  |
 | C_HEA3    | Public health expenditure (% of GDP)                                            | To do   | to do        | to do   | http://data.worldbank.org/                 |
 | C_HEA4    | Private health expenditure (% of GDP)                                           | To do   | to do        | to do   | http://data.worldbank.org/                 |
 | C_SAV1    | Percentage of households without gross savings (%)                              | To do   | to do        | to do   | http://datatopics.worldbank.org            |

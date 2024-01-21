@@ -75,7 +75,6 @@ st_write(cop_adapt_norm, "output/adaptation_capacities/adaptation_capacities.gpk
 
 "
 # TODO: C_TRA2 Percentage of households without individual means of transportation: car or motorcycle
-# TODO: C_HEA1 Number of hospital beds per 1,000 inhabitants
 "
 
 # ---------------------------------------------------------------
