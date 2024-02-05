@@ -65,22 +65,31 @@ ER_FUN2 <- function(locations, ...) {
     )
     # https://gis.stackexchange.com/a/323706
     locations$aid_points <- lengths(st_intersects(locations, aid_points))
-    # ggplot() +
-    # geom_sf(
-    #     data = locations,
-    #     aes(fill = aid_points)
-    # ) +
-    # scale_fill_viridis_c(option = "C")
+    locations$val <- locations$aid_points / locations$area
+    return(locations)
+}
 
-    # locations$aid_density <- locations$aid_points / locations$area
-    # ggplot() +
-    # geom_sf(
-    #     data = locations,
-    #     aes(fill = aid_density)
-    # ) +
-    # scale_fill_viridis_c(option = "C")
-    # ggsave("all_env.png")
-
+A_FUN3 <- function(locations, ...) {
+    # ad_sector_code
+    # 240 Banking and financial services
+    aid_data <- read.csv(
+        "data/WorldBank_GeocodedResearchRelease_Level1_v1.4.2/data/level_1a.csv"
+    ) %>%
+        dplyr::filter(
+            end_actual_isodate > "2014-01-01" &
+                recipients_iso3 %in% unique(locations$country_iso3) &
+                !is.na(longitude) & !is.na(latitude)
+        ) %>%
+        dplyr::filter(
+            grepl("240", ad_sector_codes)
+        )
+    aid_points <- st_as_sf(
+        aid_data,
+        coords = c("longitude", "latitude"),
+        crs = 4326
+    )
+    # https://gis.stackexchange.com/a/323706
+    locations$aid_points <- lengths(st_intersects(locations, aid_points))
     locations$val <- locations$aid_points / locations$area
     return(locations)
 }
