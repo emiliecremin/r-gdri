@@ -9,6 +9,7 @@ A_GOV6 <- function(locations, ...) {
     aid_data <- read.csv(
       "data/WorldBank_GeocodedResearchRelease_Level1_v1.4.2/data/level_1a.csv"
     ) %>% dplyr::filter(
+        end_actual_isodate > "2014-01-01" &
         recipients_iso3 %in% unique(locations$country_iso3) &
         grepl('151', ad_sector_codes) &
         !is.na(longitude) & !is.na(latitude)
