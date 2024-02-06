@@ -15,8 +15,10 @@ S_OCU1 <- function(locations, ...) {
 }
 
 # Homicides
+# Homicide rate per 100,000 inhabitants in 2019
+# https://www.who.int/data/gho/data/indicators/indicator-details/GHO/estimates-of-rates-of-homicides-per-100-000-population
 S_STA1 <- function(locations, ...) {
-    locations$val <- 2.8
+    locations$val <- 3.8
     return(locations)
 }
 
@@ -25,8 +27,10 @@ S_STA1 <- function(locations, ...) {
 # -------------------------------------------
 
 # Corruption
+# CPI 100 is very clean and 0 is highly corrupt
+# https://www.transparency.org/en/cpi/2022/index/ind
 C_GOV1 <- function(locations, ...) {
-    locations$val <- 38
+    locations$val <- 40
     return(locations)
 }
 

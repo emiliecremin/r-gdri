@@ -156,7 +156,7 @@ ER_ECO3 | Road less area | to do  | to do     | to do   | (http://www.roadless.o
 | C_SHE1    | Access to shelter: Density of schools km2 / 100k inhab.                         | ✅      | ✅        | to do   | http://www.openstreetmap.org               |
 | C_TRA1    | Access to transportation network: roads, waterways / 100k inhab.                | ✅      | ✅        | to do   | http://www.openstreetmap.org               |
 | C_TRA2    | Percentage of households without individual car or motorcycle (%)               | ✅      | ✅         | to do   |                       
-| C_GOV1    | Poor governance (National?): Corruption Perception Index (CPI)                  | To do   | ✅         | to do   | http://www.transparency.org |
+| C_GOV1    | Poor governance: Corruption Perception Index (CPI)(National)                    | ✅      | ✅         |  ✅    | http://www.transparency.org |
 | C_GOV2    | Access to emergency services: hospitals, fire brigades, police                  | ✅      | ✅         | to do   | http://www.openstreetmap.org   |
 | C_GOV3    | to donational food reserves available (binary) (National?)                      | To do   | ✅       | to do   | projects.worldbank.org / foodgrainsbank.ca |
 | A_GOV4    | Foreign Direct Investment (FDI) (National)                                      | ✅      | ✅        | to do   | http://data.worldbank.org                  |
@@ -187,7 +187,7 @@ ER_ECO3 | Road less area | to do  | to do     | to do   | (http://www.roadless.o
 | S_INF1_631          | Proportion of wastewater flows safely treated              | ✅    | ✅    | WRI AQUEDUCT - https://www.wri.org/data/aqueduct-water-risk-atlas |
 | S_INF3              | Population without access to electricity (%)               | ✅      | ✅         | to do   | ipums census |
 | C_EWS1              | Percentage of households without access to information (%) | ✅      | ✅         | to do   | ipums census | S
-|C_STA1              | Prevalence of violence (%): Homicides per 100k inhab.      | To do   | to do        | to do   | homicide.igarape.org.br / visionofhumanity.org           |
+|S_STA1              | Prevalence of violence (%): Homicides per 100k inhab.      | ✅      | ✅        |  ✅   |  who.int (National)          |
 |S_GOV1 | Bribe      | ✅    |  tod| to do   | homicide.igarape.org.br / visionofhumanity.org           |
 Additional
 

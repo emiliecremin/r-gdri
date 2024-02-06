@@ -14,15 +14,11 @@ S_OCU1 <- function(locations, ...) {
     return(locations)
 }
 
-# Homicides 2018 Rate/100.000- data requested on https://homicide.igarape.org.br/ = available at the state level
+# Homicides
+# Homicide rate per 100,000 inhabitants in 2019
+# https://www.who.int/data/gho/data/indicators/indicator-details/GHO/estimates-of-rates-of-homicides-per-100-000-population
 S_STA1 <- function(locations, ...) {
-    locations$val <- 2.4
-    return(locations)
-}
-
-# Corruption
-C_GOV1 <- function(locations, ...) {
-    locations$val <- 25
+    locations$val <- 2.8
     return(locations)
 }
 
@@ -31,6 +27,8 @@ C_GOV1 <- function(locations, ...) {
 # -------------------------------------------
 
 # Corruption
+# CPI 100 is very clean and 0 is highly corrupt
+# https://www.transparency.org/en/cpi/2022/index/bgd
 C_GOV1 <- function(locations, ...) {
     locations$val <- 25
     return(locations)
