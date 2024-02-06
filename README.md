@@ -179,7 +179,7 @@ ER_ECO3 | Road less area | to do  | to do     | to do   | (http://www.roadless.o
 | S_ECO4              | GINI index (national level?)                               | ✅       | ✅        | to do   | [UNDP](http://hdr.undp.org) or http://data.worldbank.org/indicator/SI.POV.GINI |
 | S_OCU1              | Dependency on agriculture / forestry / fisheries (%) Part of agricultural sector in the GDP       | ✅      | to do        | to do   |   National level  |
 | S_SOC3              | Percentage female-headed households (%)                    | ✅      | ✅        | to do   | ipums census |
-| S_SOC4              | Travel time to closest city (mins)                         | ✅      | ✅         | to do   | OSM or [JRC](https://forobs.jrc.ec.europa.eu/products/gam/) or AidDataGeoQuery |
+| S_SOC4              | Travel time to closest city (mins)                         | ✅      | ✅         | to do   | Nelson, Andy (2019) [doi figshare](https://doi.org/10.6084/m9.figshare.7638134.v4) |
 | S_SOC5              | Percentage of population with disabilities (%)             | ✅      | ✅        | to do   | ipums census |
 | S_SOC8              | Percentage of illiterate population (%)                    | ✅      | ✅         | to do   | ipums census |
 | S_INF1 / S_INF1_621 | Population without access to (improved) sanitation (%)     | ✅      | ✅         | to do   | ipums census - https://www.wri.org/data/aqueduct-water-risk-atlas |
