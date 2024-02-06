@@ -80,12 +80,6 @@ C_INS1 <- function(locations, ...) {
     return(locations)
 }
 
-# A_GOV6 Donor aid for adaptation (local)
-A_GOV6 <- function(locations, ...) {
-    locations$val <- 0
-    return(locations)
-}
-
 # Research_and_development
 A_IIR1 <- function(locations, ...) {
     locations$val <- 0.6
