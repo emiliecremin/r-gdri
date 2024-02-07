@@ -25,23 +25,23 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 
 ## All classes
 
-| Value | Color  | Description                | Forests | Ecosystems | Agrosystem |
-| ----- | ------ | -------------------------- | ------- | ---------- | ---------- |
-| 10    | 006400 | Trees                      | ✅      | ✅         |            |
-| 20    | ffbb22 | Shrubland                  |         | ✅         |            |
-| 30    | ffff4c | Grassland                  |         | ✅         |            |
-| 40    | f096ff | Cropland                   |         |            | ✅         |
-| 50    | fa0000 | Built-up                   |         |            |            |
-| 60    | b4b4b4 | Barren / sparse vegetation |         |          |      ✅      |
-| 70    | f0f0f0 | Snow and ice               |         |     N/A       |            |
-| 80    | 0064c8 | Open water                 |         |     |    ✅         |
-| 90    | 0096a0 | Herbaceous wetland         |         | ✅         |            |
-| 95    | 00cf75 | Mangroves                  | ✅      | ✅         |            |
-| 100   | fae6a0 | Moss and lichen            |         | N/A         |            |
+| Value | Color  | Description                | Forests | Ecosystems | Agrosystem | Water-Aquaculture |
+| ----- | ------ | -------------------------- | ------- | ---------- | ---------- | ---------- |
+| 10    | 006400 | Trees                      | ✅      | ✅         |            |                 |
+| 20    | ffbb22 | Shrubland                  |         | ✅         |            |                 |
+| 30    | ffff4c | Grassland                  |         | ✅         |            |                 |
+| 40    | f096ff | Cropland                   |         |            | ✅         |                 |
+| 50    | fa0000 | Built-up                   |         |            |            |                 |
+| 60    | b4b4b4 | Barren / sparse vegetation |         |          |      ✅      |                 |
+| 70    | f0f0f0 | Snow and ice               |         |     N/A       |         |              |
+| 80    | 0064c8 | Open water                 |         |             |          |             ✅ |
+| 90    | 0096a0 | Herbaceous wetland         |         | ✅         |            |               |
+| 95    | 00cf75 | Mangroves                  | ✅      | ✅         |            |                |
+| 100   | fae6a0 | Moss and lichen            |         | N/A         |            |               |
 
 # GDRI
 
-## Categories
+## Main categories
 
 ### Ecosystem
 
@@ -49,11 +49,12 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 - Ecosystem susceptibility: E_SUS
 - Ecosystem robustness: ER\_
 
-### Social
+### Social or population
 
 - Social exposure: S_EXP
 - Social susceptibility: S\_
 - Social Lack of coping capacity: CA\_
+
 
 # Status
 
@@ -63,10 +64,10 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 
 | indicator | description                 | Vietnam      | India | Bangladesh | source |
 | --------- | --------------------------- | ------------ | ---------- | ----- | ----- |
-| S_EXP_COF | pop exposed to storm surges | ✅           | ✅        | to do   | [energydata.info](https://energydata.info/dataset/global-coastal-flood-hazard/resource/) |
-| S_EXP_CYC | pop exposed to cyclones     | ✅           | ✅         | to do   | [unep](https://datacore.unepgrid.ch/) |
-| S_EXP_DRO | pop exposed to drought      | ✅           | ✅         | to do   |  [aqueduct30](https://github.com/wri/aqueduct30_data_download/blob/master/metadata.md) |
-| S_EXP_FLO | pop exposed to floods       | ✅           | ✅       | to do   | [unep](https://wesr.unepgrid.ch/static.html?views=MX-JXZXA-MFZNN-LTXZ8&zoomToViews=true) |
+| S_EXP_COF | pop exposed to storm surges | ✅           | ✅        | ✅   | [energydata.info](https://energydata.info/dataset/global-coastal-flood-hazard/resource/) |
+| S_EXP_CYC | pop exposed to cyclones     | ✅           | ✅         | ✅    | [unep](https://datacore.unepgrid.ch/) |
+| S_EXP_DRO | pop exposed to drought      | ✅           | ✅         | ✅   |  [aqueduct30](https://github.com/wri/aqueduct30_data_download/blob/master/metadata.md) |
+| S_EXP_FLO | pop exposed to floods       | ✅           | ✅       | ✅    | [unep](https://wesr.unepgrid.ch/static.html?views=MX-JXZXA-MFZNN-LTXZ8&zoomToViews=true) |
 | S_EXP_SLR | pop exposed to SLR +0.5m      | to do        | to do        | to do   | [climatecentral.org](https://sealevel.climatecentral.org/) |
 | S_EXP_SAL | pop exposed to salinity     | to do | to do        | to do   | | [FAO](https://data.apps.fao.org/catalog/iso/40db0008-f365-43ca-953d-cabdcadc24a5)
 
@@ -74,10 +75,10 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 
 | indicator | description                       | Vietnam      | India | Bangladesh | source |
 | --------- | --------------------------------- | ------------ | ---------- | ----- | ------ |
-| E_EXP_COF | ecosystem exposed to storm surges | ✅           | ✅          | to do   | [worldcover2020](https://worldcover2020.esa.int/downloader) and [energydata.info](https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c) | 
-| E_EXP_CYC | ecosystem exposed to cyclones     | ✅           | ✅           | to do   | cyclones / ecosystem in esa world cover|
-| E_EXP_DRO | ecosystem exposed to drought      | ✅           | ✅           | to do   | drought / ecosystems in esa world cover|
-| E_EXP_FLO | ecosystem exposed to floods       | ✅           | ✅           | to do   | floods / ecosystem in esa world cover|
+| E_EXP_COF | ecosystem exposed to storm surges | ✅           | ✅          | ✅   | [worldcover2020](https://worldcover2020.esa.int/downloader) and [energydata.info](https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c) | 
+| E_EXP_CYC | ecosystem exposed to cyclones     | ✅           | ✅           | ✅   | cyclones / ecosystem in esa world cover|
+| E_EXP_DRO | ecosystem exposed to drought      | ✅           | ✅           | ✅    | drought / ecosystems in esa world cover|
+| E_EXP_FLO | ecosystem exposed to floods       | ✅           | ✅           | ✅   | floods / ecosystem in esa world cover|
 | E_EXP_SAL | ecosystem exposed to salinity     | todo | to do        | to do   | salinity / ecosystem in esa world cover|
 
 
@@ -85,12 +86,21 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 
 | indicator | description                       | Vietnam      | India | Bangladesh | source |
 | --------- | --------------------------------- | ------------ | ---------- | ----- | ------ |
-| E_EXP_COF | ecosystem exposed to storm surges | ✅           | ✅      | to do   | [worldcover2020](https://worldcover2020.esa.int/downloader) and [energydata.info](https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c) |
-| E_EXP_CYC | ecosystem exposed to cyclones     | ✅           | ✅        | to do   | cyclones/ crop area in esa world cover |
-| E_EXP_DRO | ecosystem exposed to drought      | ✅           | ✅        | to do   | drought / crop area in esa world cover |
-| E_EXP_FLO | ecosystem exposed to floods       | ✅           | ✅        | to do   | floods / crop area in esa world cover |
-| E_EXP_SAL | ecosystem exposed to salinity     | todo | to do        | to do   | salinity / crop area in esa world cover |
+| A_EXP_COF | ecosystem exposed to storm surges | ✅           | ✅      | ✅    | [worldcover2020](https://worldcover2020.esa.int/downloader) and [energydata.info](https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c) |
+| A_EXP_CYC | ecosystem exposed to cyclones     | ✅           | ✅        | ✅    | cyclones/ crop area in esa world cover |
+| A_EXP_DRO | ecosystem exposed to drought      | ✅           | ✅        | ✅    | drought / crop area in esa world cover |
+| A_EXP_FLO | ecosystem exposed to floods       | ✅           | ✅        | ✅   | floods / crop area in esa world cover |
+| A_EXP_SAL | ecosystem exposed to salinity     | todo | to do        | to do   | salinity / crop area in esa world cover |
 
+### Aquaculture or Water
+
+| indicator | description                       | Vietnam      | India | Bangladesh | source |
+| --------- | --------------------------------- | ------------ | ---------- | ----- | ------ |
+| W_EXP_COF | ecosystem exposed to storm surges | ✅           | ✅      | ✅   | [worldcover2020](https://worldcover2020.esa.int/downloader) and [energydata.info](https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c) |
+| W_EXP_CYC | ecosystem exposed to cyclones     | ✅           | ✅        | ✅    | cyclones/ crop area in esa world cover |
+| W_EXP_DRO | ecosystem exposed to drought      | ✅           | ✅        | ✅   | drought / crop area in esa world cover |
+| W_EXP_FLO | ecosystem exposed to floods       | ✅           | ✅        | ✅   | floods / crop area in esa world cover |
+| W_EXP_SAL | ecosystem exposed to salinity     | todo | to do        | to do   | salinity / crop area in esa world cover |
 
 Additional  
 | indicator | description | Vietnam | Bangladesh | India |
@@ -110,14 +120,13 @@ Other data can be extracted from GDIS + EM-DAT
 | ES_DES1511   |   Forest cover        | ✅      | ✅       | ✅      | [GFC](https://www.globalforestwatch.org/map/) |
 | ES_DES3    | Forest loss (%)                        | ✅      | ✅         | ✅   | [GFC](https://www.globalforestwatch.org/map/)  https://glad.umd.edu/dataset/global-2010-tree-cover-30-m      |
 | ES_DES1411    |   Eutrophication                     | ✅      | ✅        | ✅    | [GFC](https://www.globalforestwatch.org/map/)  https://glad.umd.edu/dataset/global-2010-tree-cover-30-m      |
-| ES_DEG1    | Water quality of freshwater bodies                | ?    | ?      | to do   | update source |
-| ES_DEG2    | Groundwater quality                               | ✅      | ✅         | to do   | update source |
-| ES_DEG2_GTD    | Groundwater Table depletion                 | ✅     | ✅         | to do   | WRI aqueduct       |
-| ES_DEG2_642_WS   | Freshwater scarcity= Baseline water stress                   | ✅      | to do         | to do   | [aqueduct](https://www.wri.org/data/aqueduct-water-risk-atlas) or[unep-wcmc](https://www.unep-wcmc.org) |
-| ES_DEG4    | Return Flow Ratio                                 | to do    | to do         | to do   | http://www.wri.org                                    |
-| ES_DEG6    | Soil organic carbon (matter)                      | ✅     | ✅   do         | to do   | https://www.soilgrids.org or FAO GSP and ITPS, 2019. Global Soil Organic Carbon Map (GSOC map) http://54.229.242.119/GSOCmap/                    |
-| ES_DEG9    | Cation exchange capacity                          | ✅     | ✅    do          | to do   | [soilgrids.org](https://git.wur.nl/isric/soilgrids/soilgrids.notebooks/-/blob/master/markdown/wcs_from_R.md) |
-| ES_BIO1a   | Species richness adjusted by intactness           | ✅      | ✅    do        | to do     | https://www.unep-wcmc.org  or http://dx.doi.org/10.5519/0009936. Accessed through www.resourcewatch.org. |
+| ES_DEG1    | Water quality of freshwater bodies                | ?    | ?      | ✅    | update source |
+| ES_DEG2    | Groundwater quality                               | ✅      | ✅         | ✅    | update source |
+| ES_DEG2_GTD    | Groundwater Table depletion                 | ✅     | ✅         | ✅    | WRI aqueduct       |
+| ES_DEG2_642_WS   | Freshwater scarcity= Baseline water stress                   | ✅      | ✅          | ✅    | [aqueduct](https://www.wri.org/data/aqueduct-water-risk-atlas) or[unep-wcmc](https://www.unep-wcmc.org) |                                 |
+| ES_DEG6    | Soil organic carbon (matter)                      | ✅     | ✅   do         | ✅    | https://www.soilgrids.org or FAO GSP and ITPS, 2019. Global Soil Organic Carbon Map (GSOC map) http://54.229.242.119/GSOCmap/                    |
+| ES_DEG9    | Cation exchange capacity                          | ✅     | ✅    do          | ✅    | [soilgrids.org](https://git.wur.nl/isric/soilgrids/soilgrids.notebooks/-/blob/master/markdown/wcs_from_R.md) |
+| ES_BIO1a   | Species richness adjusted by intactness           | ✅      | ✅    do        | ✅      | https://www.unep-wcmc.org  or http://dx.doi.org/10.5519/0009936. Accessed through www.resourcewatch.org. |
 
 Additionnal 
 | indicator  | description                                       | Vietnam | Bangladesh | India | data source |
@@ -131,16 +140,16 @@ Additionnal
 
 | indicator | description                                                    | Vietnam | India | Bangladesh | data source |
 | --------- | -------------------------------------------------------------- | ------- | ---------- | ----- | ----------- |
-| ER_CON1512   | Forest area protected, conservation of biodiversity (%)      | ✅      | ✅         | to do   | http://www.wri.org https://www.protectedplanet.net |
-| ER_RES2   | Percentage of forest area restored (%) GFC  = forest gain       | ✅      | ✅        | to do   | [GFC](https://www.globalforestwatch.org/map/), https://glad.umd.edu/, https://doi.org/10.3389/frsen.2022.856903 |
-| ER_POL2   | Policies supporting biodiversity conservation (National)       | ✅      | ✅        | to do   | https://www.cbd.int/  |
-| ER_POL_1521   |  15.2.1 Progress towards sustainable forest management    | ✅      | ✅        | to do   |http://www.wri.org https://www.protectedplanet.net https://www.cbd.int/  |
-| ER_FUN2   | Donor aid for adaptation (local)                               | to do   | ✅         | to do   | http://aiddata.org/gis - to do                     |
-| ER_TRE1   | Participation in treaties - CBD, CITES, CMS, RAMSAR (National) | ✅      | ✅        | to do   |  |
-| ER_ECO1   | Ecosystem Functionality Index (EFI)                            | ✅      | ✅         | to do   |  to do  |
-ER_ECO2_FLII | Forest landscape Integrity Index | to do     | to do        | to do   |  ✅   | https://www.forestlandscapeintegrity.com/ |
-ER_ECO3 | Road less area | to do  | to do     | to do   | (http://www.roadless.online/data/) |        
-| ER_BIO2   | Mean Species Abundance (MSA)                                   | ✅     | ✅         | to do   | http://www.globio.info |
+| ER_CON1512   | Forest area protected, conservation of biodiversity (%)      | ✅      | ✅         | ✅    | http://www.wri.org https://www.protectedplanet.net |
+| ER_RES2   | Percentage of forest area restored (%) GFC  = forest gain       | ✅      | ✅        | ✅    | [GFC](https://www.globalforestwatch.org/map/), https://glad.umd.edu/, https://doi.org/10.3389/frsen.2022.856903 |
+| ER_POL2   | Policies supporting biodiversity conservation (National)       | ✅      | ✅        | ✅    | https://www.cbd.int/  |
+| ER_POL_1521   |  15.2.1 Progress towards sustainable forest management    | ✅      | ✅        | ✅   |http://www.wri.org https://www.protectedplanet.net https://www.cbd.int/  |
+| ER_FUN2   | Donor aid for adaptation (local)                               | ✅    | ✅         | ✅   | http://aiddata.org/gis - to do                     |
+| ER_TRE1   | Participation in treaties - CBD, CITES, CMS, RAMSAR (National) | ✅      | ✅        | ✅    |  |
+| ER_ECO1   | Ecosystem Functionality Index (EFI)                            | ✅      | ✅         | ✅   |  to do  |
+ER_ECO2_FLII | Forest landscape Integrity Index | ✅     | ✅       | ✅   | https://www.forestlandscapeintegrity.com/ |
+ER_ECO3 | Road less area | ✅   | ✅    | ✅    | (http://www.roadless.online/data/) |        
+| ER_BIO2   | Mean Species Abundance (MSA)                                   | ✅     | ✅         | ✅   | http://www.globio.info |
 
 
 - TODO: Need data sources
@@ -151,16 +160,16 @@ ER_ECO3 | Road less area | to do  | to do     | to do   | (http://www.roadless.o
 
 | indicator | description                                                                     | Vietnam | India | Bangladesh | data source                                |
 | --------- | ------------------------------------------------------------------------------- | ------- | ---------- | ----- | ------------------------------------------ |
-| C_EWS1   | Access to telecommunications: TV, Radio, internet, mobile phone, other (EWS)     | ✅      | ✅        | to do   | Census or UNISDR - http://www.preventionweb.net    or https://data.apps.fao.org/catalog/dataset/6943b543-12b5-4722-b38d-0415ab0adac0
-| C_EWS2    | Existence of early warning systems (EWS)                                        | ✅      | ✅         | to do   | UNISDR - http://www.preventionweb.net      |
-| C_SHE1    | Access to shelter: Density of schools km2 / 100k inhab.                         | ✅      | ✅        | to do   | http://www.openstreetmap.org               |
-| C_TRA1    | Access to transportation network: roads, waterways / 100k inhab.                | ✅      | ✅        | to do   | http://www.openstreetmap.org               |
-| C_TRA2    | Percentage of households without individual car or motorcycle (%)               | ✅      | ✅         | to do   |                       
+| C_EWS1   | Access to telecommunications: TV, Radio, internet, mobile phone, other (EWS)     | ✅      | ✅        | ✅    | Census or UNISDR - http://www.preventionweb.net    or https://data.apps.fao.org/catalog/dataset/6943b543-12b5-4722-b38d-0415ab0adac0
+| C_EWS2    | Existence of early warning systems (EWS)                                        | ✅      | ✅         | ✅    | UNISDR - http://www.preventionweb.net      |
+| C_SHE1    | Access to shelter: Density of schools km2 / 100k inhab.                         | ✅      | ✅        | ✅    | http://www.openstreetmap.org               |
+| C_TRA1    | Access to transportation network: roads, waterways / 100k inhab.                | ✅      | ✅        | ✅    | http://www.openstreetmap.org               |
+| C_TRA2    | Percentage of households without individual car or motorcycle (%)               | ✅      | ✅         | ✅    |                       
 | C_GOV1    | Poor governance: Corruption Perception Index (CPI)(National)                    | ✅      | ✅         |  ✅    | http://www.transparency.org |
-| C_GOV2    | Access to emergency services: hospitals, fire brigades, police                  | ✅      | ✅         | to do   | http://www.openstreetmap.org   |
-| C_GOV3    | to donational food reserves available (binary) (National?)                      | To do   | ✅       | to do   | projects.worldbank.org / foodgrainsbank.ca |
-| A_GOV4    | Foreign Direct Investment (FDI) (National)                                      | ✅      | ✅        | to do   | http://data.worldbank.org                  |
-| A_GOV6    | Donor aid for adaptation (local)                                                | To do   | to do        | to do   | http://aiddata.org/gis                     |
+| C_GOV2    | Access to emergency services: hospitals, fire brigades, police                  | ✅      | ✅         | ✅   | http://www.openstreetmap.org   |
+| C_GOV3    | to donational food reserves available (binary) (National?)                      | ✅   | ✅       | ✅  | projects.worldbank.org / foodgrainsbank.ca |
+| A_GOV4    | Foreign Direct Investment (FDI) (National)                                      | ✅      | ✅        | ✅    | http://data.worldbank.org                  |
+| A_GOV6    | Donor aid for adaptation (local)                                                | ✅   | ✅         | ✅    | http://aiddata.org/gis                     |
 | C_HEA1    | Number of hospital beds per 1,000 inhabitants                                   | To do   | to do        | to do   | bbs.gov.bd / wbhealth.gov.in / gso.gov.vn  |
 | C_HEA3    | Public health expenditure (% of GDP)                                            | To do   | to do        | to do   | http://data.worldbank.org/                 |
 | C_HEA4    | Private health expenditure (% of GDP)                                           | To do   | to do        | to do   | http://data.worldbank.org/                 |
@@ -175,18 +184,18 @@ ER_ECO3 | Road less area | to do  | to do     | to do   | (http://www.roadless.o
 | indicator           | description                                                | Vietnam | India | Bangladesh | data source |
 | ------------------- | ---------------------------------------------------------- | ------- | ---------- | ----- | ---- |
 | S_ECO1              | Population below national poverty line (%)                 | To do   | to do        | to do   | For bangladesh: http://www.worldbank.org/en/news/feature/2014/09/30/poverty-maps |
-| S_ECO2              | Dependency ratio (%) below 15 and above 64 years old       | ✅      | ✅       | to do   | ipums census                                             |
-| S_ECO4              | GINI index (national level?)                               | ✅       | ✅        | to do   | [UNDP](http://hdr.undp.org) or http://data.worldbank.org/indicator/SI.POV.GINI |
-| S_OCU1              | Dependency on agriculture / forestry / fisheries (%) Part of agricultural sector in the GDP       | ✅      | to do        | to do   |   National level  |
-| S_SOC3              | Percentage female-headed households (%)                    | ✅      | ✅        | to do   | ipums census |
-| S_SOC4              | Travel time to closest city (mins)                         | ✅      | ✅         | to do   | Nelson, Andy (2019) [doi figshare](https://doi.org/10.6084/m9.figshare.7638134.v4) |
-| S_SOC5              | Percentage of population with disabilities (%)             | ✅      | ✅        | to do   | ipums census |
-| S_SOC8              | Percentage of illiterate population (%)                    | ✅      | ✅         | to do   | ipums census |
-| S_INF1 / S_INF1_621 | Population without access to (improved) sanitation (%)     | ✅      | ✅         | to do   | ipums census - https://www.wri.org/data/aqueduct-water-risk-atlas |
-| S_INF2 / S_INF2_611 | Population without access to clean water (%)               | ✅      | ✅         | to do   | ipums census - https://www.wri.org/data/aqueduct-water-risk-atlas |
+| S_ECO2              | Dependency ratio (%) below 15 and above 64 years old       | ✅      | ✅       | ✅    | ipums census                                             |
+| S_ECO4              | GINI index (national level?)                               | ✅       | ✅        | ✅   | [UNDP](http://hdr.undp.org) or http://data.worldbank.org/indicator/SI.POV.GINI |
+| S_OCU1              | Dependency on agriculture / forestry / fisheries (%) Part of agricultural sector in the GDP       | ✅      | ✅        | ✅  do   |   National level  |
+| S_SOC3              | Percentage female-headed households (%)                    | ✅      | ✅        | ✅    | ipums census |
+| S_SOC4              | Travel time to closest city (mins)                         | ✅      | ✅         | ✅   | Nelson, Andy (2019) [doi figshare](https://doi.org/10.6084/m9.figshare.7638134.v4) |
+| S_SOC5              | Percentage of population with disabilities (%)             | ✅      | ✅        | ✅    | ipums census |
+| S_SOC8              | Percentage of illiterate population (%)                    | ✅      | ✅         | ✅    | ipums census |
+| S_INF1 / S_INF1_621 | Population without access to (improved) sanitation (%)     | ✅      | ✅         | ✅   | ipums census - https://www.wri.org/data/aqueduct-water-risk-atlas |
+| S_INF2 / S_INF2_611 | Population without access to clean water (%)               | ✅      | ✅         | ✅    | ipums census - https://www.wri.org/data/aqueduct-water-risk-atlas |
 | S_INF1_631          | Proportion of wastewater flows safely treated              | ✅    | ✅    | WRI AQUEDUCT - https://www.wri.org/data/aqueduct-water-risk-atlas |
-| S_INF3              | Population without access to electricity (%)               | ✅      | ✅         | to do   | ipums census |
-| C_EWS1              | Percentage of households without access to information (%) | ✅      | ✅         | to do   | ipums census | S
+| S_INF3              | Population without access to electricity (%)               | ✅      | ✅         | ✅    | ipums census |
+| C_EWS1              | Percentage of households without access to information (%) | ✅      | ✅         | ✅   | ipums census | S
 |S_STA1              | Prevalence of violence (%): Homicides per 100k inhab.      | ✅      | ✅        |  ✅   |  who.int (National)          |
 |S_GOV1 | Bribe      | ✅    |  tod| to do   | homicide.igarape.org.br / visionofhumanity.org           |
 Additional
