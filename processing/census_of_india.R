@@ -331,6 +331,9 @@ census_ind_2011$geo_id <- paste(
     append = FALSE
   )
 
+# TODO: add common columns
+# CNTRY_NAME
+# country_iso3
 
 # --------------------------------------------------
 # SOCIAL SUSCEPTIBILITY
