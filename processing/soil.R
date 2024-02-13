@@ -36,3 +36,38 @@ ES_DEGx <- function(locations, ...) {
     return(locations)
 }
 
+# ES_DEGw Soil Workability (HWSD)
+# Harmonized World Soil Database Version 1.2 February 2012
+# Workability soil quality SQ7
+# Only classes 1 to 4 are corresponding to an assessment of soil limitations for plant growth
+"
+Note that the classes used in the Soil Quality evaluation are:
+1: No or slight limitations
+2: Moderate limitations
+3: Sever limitations
+4: Very severe limitations
+5: Mainly non-soil
+6: Permafrost area
+7: Water bodies
+"
+# https://data.apps.fao.org/map/catalog/srv/eng/catalog.search?id=12691#/metadata/f1d5ecdd-c078-475e-9ced-0451892381aee
+# https://storage.googleapis.com/fao-maps-catalog-data/geonetwork/gsoc/SQ/sq7.tif
+ES_DEGw <- function(locations, ...) {
+    soil_quality <- terra::rast("data/Soil/Quality/sq7.tif")
+    soil_workability <- extract_classes(
+        soil_quality,
+        c(0.9, 1.1, 1,
+        1.1, 2.1, 2,
+        2.1, 3.1, 3,
+        3.1, 4.1, 4)
+    )
+    # terra::writeRaster(
+    #     soil_workability,
+    #     "data/Soil/Quality/q.tif",
+    #     overwrite = TRUE
+    # )
+    locations$cnt <- exact_extract(
+        soil_workability, locations, "sum", progress = TRUE
+    )
+    locations$val <- locations$cnt / locations$area
+}
