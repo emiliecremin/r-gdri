@@ -78,7 +78,7 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 | E_EXP_CYC | ecosystem exposed to cyclones     | ✅           | ✅           | ✅   | cyclones / ecosystem in esa world cover|
 | E_EXP_DRO | ecosystem exposed to drought      | ✅           | ✅           | ✅    | drought / ecosystems in esa world cover|
 | E_EXP_FLO | ecosystem exposed to floods       | ✅           | ✅           | ✅   | floods / ecosystem in esa world cover|
-| E_EXP_SLR | ecosystem exposed to SLR +0.5     | todo | to do        | to do   | salinity / ecosystem in esa world cover|
+| E_EXP_SLR | ecosystem exposed to SLR +0.5m     | todo | to do        | to do   | [climatecentral.org](https://sealevel.climatecentral.org/) |
 
 
 ### Agrosystem Exposure
@@ -89,7 +89,7 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 | A_EXP_CYC | agrosystem exposed to cyclones     | ✅           | ✅        | ✅    | cyclones/ crop area in esa world cover |
 | A_EXP_DRO | agrosystem exposed to drought      | ✅           | ✅        | ✅    | drought / crop area in esa world cover |
 | A_EXP_FLO | agrosystem exposed to floods       | ✅           | ✅        | ✅   | floods / crop area in esa world cover |
-| A_EXP_SLR | agrosystem exposed to SLR +0.5     | todo | to do        | to do   | salinity / crop area in esa world cover |
+| A_EXP_SLR | agrosystem exposed to SLR +0.5m     | todo | to do        | to do   | [climatecentral.org](https://sealevel.climatecentral.org/) |
 
 ### Aquaculture or Water
 
@@ -99,7 +99,7 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 | W_EXP_CYC | aquaculture exposed to cyclones     | ✅           | ✅        | ✅    | cyclones/ crop area in esa world cover |
 | W_EXP_DRO | aquaculture exposed to drought      | ✅           | ✅        | ✅   | drought / crop area in esa world cover |
 | W_EXP_FLO | aquaculture exposed to floods       | ✅           | ✅        | ✅   | floods / crop area in esa world cover |
-| W_EXP_SLR | aquaculture exposed to SLR +0.5     | todo | to do        | to do   | salinity / crop area in esa world cover |
+| W_EXP_SLR | aquaculture exposed to SLR +0.5m     | todo | to do        | to do   | [climatecentral.org](https://sealevel.climatecentral.org/) |
 
 Additional  
 | indicator | description | Vietnam | Bangladesh | India |
