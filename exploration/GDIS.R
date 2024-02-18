@@ -5,6 +5,8 @@
 library(dplyr)
 library(sf)
 
+locations <- bgd
+
 ## ____________________________________________________________________________________ ##
 ## Load GDIS data (rdata or other format)
 load("./data/Disasters/pend-gdis-1960-2018-disasterlocations-rdata/pend-gdis-1960-2018-disasterlocations.rdata")
@@ -21,18 +23,64 @@ emdat <- disasterlist%>%
   mutate(disasterno=substr(`Dis.No`,1,nchar(`Dis.No`)-4))
 
 ## Filter countries of interest (VNM, BGD, IND)
-iso_countries <- c("VNM", "BGD", "IND")
+iso_countries <- unique(locations$country_iso3)
 emdat_filtered <- filter(emdat, ISO %in% iso_countries)
-GDIS_disasterlocations_filtered <- filter(GDIS_disasterlocations, iso3 %in% iso_countries)
+
+disasterlocations_filtered <- GDIS_disasterlocations %>%
+  filter(iso3 %in% iso_countries)
 
 ## Join GDIS and EM-DAT by disasterno
-disasterdata <- left_join(GDIS_disasterlocations_filtered, emdat_filtered)
+colnames(emdat_filtered)
+disasterdata_since2000 <- left_join(
+    disasterlocations_filtered,
+    emdat_filtered,
+    relationship = "many-to-many",
+    by = "disasterno"
+  ) %>%
+  filter(Year >= 2000) %>%
+  dplyr::select(-c(geo_id, Location, Country))
 
-## ____________________________________________________________________________________ ##
-## Remove geography to ease data operations
-disasterlocations <- GDIS_disasterlocations_filtered %>% 
-  as_tibble() %>% 
-  select(-geometry) %>%
-  as.data.frame()
+## Intersect with ADMIN locations
+sp_join <- st_intersection(st_centroid(disasterdata_since2000), locations) %>%
+  group_by(disasterno, geo_id) %>%
+  mutate(dupe = n() > 1) %>%
+  filter(dupe == FALSE)
+unique(sp_join$disastertype)
+unique(sp_join$Disaster.Subtype)
 
+# Cyclones: "Tropical cyclone", "Convective storm"
+# Floods: "Flash flood", "Riverine flood"
+# Coastal floods: "Coastal flood"
+# ignore earthquakes: "Tsunami", "Ground movement"
 
+keep_cols <- c(
+  "disasterno",
+  "geo_id",
+  "Total.Deaths",
+  "Total.Affected",
+  "Total.Damages...000.US..",
+  "Total.Damages..Adjusted...000.US.."
+)
+joint_codes <- sp_join[, keep_cols]
+
+deaths <- st_drop_geometry(joint_codes) %>%
+  group_by(geo_id) %>%
+  summarise(deaths = sum(Total.Deaths, na.rm = TRUE))
+
+locations %>% left_join(deaths, by = "geo_id")
+
+affected <- st_drop_geometry(joint_codes) %>%
+  group_by(geo_id) %>%
+  summarise(affected = sum(Total.Affected, na.rm = TRUE))
+
+locations %>% left_join(affected, by = "geo_id")
+
+# damages <- st_drop_geometry(joint_codes) %>%
+#   group_by(geo_id) %>%
+#   summarise(affected = sum(Total.Damages...000.US.., na.rm = TRUE))
+
+damages <- st_drop_geometry(joint_codes) %>%
+  group_by(geo_id) %>%
+  summarise(damages = sum(Total.Damages..Adjusted...000.US.., na.rm = TRUE))
+
+locations %>% left_join(damages, by = "geo_id")
