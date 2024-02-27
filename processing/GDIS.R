@@ -69,25 +69,16 @@ get_emdat <- function(locations) {
   return(joint_codes)
 }
 
-joint_codes <- get_emdat(locations)
 
-# S_EXP_MH_151_A
-deaths <- st_drop_geometry(joint_codes) %>%
-  group_by(geo_id) %>%
-  summarise(deaths = sum(Total.Deaths, na.rm = TRUE))
+get_emdat_indicator_per_hazards <- function(locations, indicator, hazards) {
+    joint_codes <- get_emdat(locations) %>% filter(Disaster.Subtype %in% hazards)
 
-locations %>% left_join(deaths, by = "geo_id")
+    idx <- st_drop_geometry(joint_codes) %>%
+    group_by(geo_id) %>%
+    summarise(idx = sum(eval(as.name(indicator)), na.rm = TRUE))
 
-# S_EXP_MH_151_B
-affected <- st_drop_geometry(joint_codes) %>%
-  group_by(geo_id) %>%
-  summarise(affected = sum(Total.Affected, na.rm = TRUE))
+    locations <- locations %>% left_join(idx, by = "geo_id")
+    return(locations)
+}
 
-locations %>% left_join(affected, by = "geo_id")
 
-# S_EXP_MH_152
-damages <- st_drop_geometry(joint_codes) %>%
-  group_by(geo_id) %>%
-  summarise(damages = sum(Total.Damages..Adjusted...000.US.., na.rm = TRUE))
-
-locations %>% left_join(damages, by = "geo_id")
