@@ -1,5 +1,5 @@
 # Source: ESA Landcover
-ES_DES_1511 <- function(locations, ...) {
+ER_FOR_1511 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
     forests <- rast(glue::glue("data/ESA_Landcover/{country_iso3}_forests.tif"))
     locations$cnt <- exact_extract(
