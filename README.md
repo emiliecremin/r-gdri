@@ -116,32 +116,30 @@ Other data can be extracted from GDIS + EM-DAT
 
 | indicator  | description                                       | Vietnam | India | Bangladesh | data source |
 | ---------- | ------------------------------------------------- | ------- | ---------- | ----- | ----------------- |
-| ES_DES1511   |   Forest cover        | ✅      | ✅       | ✅      | [GFC](https://www.globalforestwatch.org/map/) |
 | ES_DES3    | Forest loss (%)                        | ✅      | ✅         | ✅   | [GFC](https://www.globalforestwatch.org/map/)  https://glad.umd.edu/dataset/global-2010-tree-cover-30-m      |
 | ES_DES1411    |   Eutrophication                     | ✅      | ✅        | ✅    | [GFC](https://www.globalforestwatch.org/map/)  https://glad.umd.edu/dataset/global-2010-tree-cover-30-m      |
 | ES_DEG1    | Water quality of freshwater bodies                | ?    | ?      | ✅    | update source |
-| ES_DEG2    | Groundwater quality                               | ✅      | ✅         | ✅    | update source |
-| ES_DEG2_GTD    | Groundwater Table depletion                 | ✅     | ✅         | ✅    | WRI aqueduct       |
-| ES_DEG2_642_WS   | Freshwater scarcity= Baseline water stress                   | ✅      | ✅          | ✅    | [aqueduct](https://www.wri.org/data/aqueduct-water-risk-atlas) or[unep-wcmc](https://www.unep-wcmc.org) |                                 |
+| ES_DEG2    | Groundwater Table decline                 | ✅     | ✅         | ✅    | [aqueduct](https://www.wri.org/data/aqueduct-water-risk-atlas)  |
+| ES_DEG5_642   | Baseline water stress                   | ✅      | ✅          | ✅    | [aqueduct](https://www.wri.org/data/aqueduct-water-risk-atlas) |
 | ES_DEG6    | Soil organic carbon (matter)                      | ✅     | ✅   do         | ✅    | https://www.soilgrids.org or FAO GSP and ITPS, 2019. Global Soil Organic Carbon Map (GSOC map) http://54.229.242.119/GSOCmap/                    |
 | ES_DEG7 | Soil Workability (HWSD 1.2)    | ✅ | ✅        | ✅   | | [FAO](https://data.apps.fao.org/map/catalog/srv/eng/catalog.search?id=12691#/metadata/f1d5ecdd-c078-475e-9ced-0451892381aee)
 | ES_DEG8 | Soil salinity    | ✅ | ✅        | ✅   | | [Global Soil Salinity Map](https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512)
 | ES_DEG9    | Cation exchange capacity                          | ✅     | ✅    do          | ✅    | [soilgrids.org](https://git.wur.nl/isric/soilgrids/soilgrids.notebooks/-/blob/master/markdown/wcs_from_R.md) |
-| ES_BIO1a   | Species richness adjusted by intactness           | ✅      | ✅    do        | ✅      | https://www.unep-wcmc.org  or http://dx.doi.org/10.5519/0009936. Accessed through www.resourcewatch.org. |
+| ES_DEG10   | Baseline water depletion              | ✅      | ✅          | ✅    | [aqueduct](https://www.wri.org/data/aqueduct-water-risk-atlas) |
+| ES_BIO1a   | Biodiversity Intactness Index  | ✅      | ✅   | ✅      | [nhm.ac.uk](https://doi.org/10.5519/0009936) |
+| ES_FRA2    | River connectivity (Connectivity Status Index)            | ✅   | ✅        | ✅   | [Free Flowing Rivers](https://www.nature.com/articles/s41586-019-1111-9#data-availability) |
 
 Additionnal 
 | indicator  | description                                       | Vietnam | Bangladesh | India | data source |
 | ---------- | ------------------------------------------------- | ------- | ---------- | ----- | ----------------- |
-| ES_FRA2    | River connectivity (River basin scale)            | to do   | to do        | to do   |            |
-| ES_FRA3    | Forest connectivity GFC | to do      | to do        | to do   | https://github.com/VeroL/BioFrag  |
 | ES_FRG1    | Percentage of area covered by “problem soils” (%) | to do    | to do        | to do   |           |
-| ES_BIO2   |           | ✅      | to do        | to do     | https://www.unep-wcmc.org  or http://dx.doi.org/10.5519/0009936. Accessed through www.resourcewatch.org. |
 
 ### Ecosystem robustness
 
 | indicator | description                                                    | Vietnam | India | Bangladesh | data source |
 | --------- | -------------------------------------------------------------- | ------- | ---------- | ----- | ----------- |
-| ER_CON1512   | Forest area protected, conservation of biodiversity (%)      | ✅      | ✅         | ✅    | http://www.wri.org https://www.protectedplanet.net |
+| ER_FOR_1511   |   Forest cover        | ✅      | ✅       | ✅      | [ESA](https://worldcover2020.esa.int/downloader) |
+| ER_CON_1512   | Forest area protected, conservation of biodiversity (%)      | ✅      | ✅         | ✅    | http://www.wri.org https://www.protectedplanet.net |
 | ER_RES2   | Percentage of forest area restored (%) GFC  = forest gain       | ✅      | ✅        | ✅    | [GFC](https://www.globalforestwatch.org/map/), https://glad.umd.edu/, https://doi.org/10.3389/frsen.2022.856903 |
 | ER_POL2   | Policies supporting biodiversity conservation (National)       | ✅      | ✅        | ✅    | https://www.cbd.int/  |
 | ER_POL_1521   |  15.2.1 Progress towards sustainable forest management    | ✅      | ✅        | ✅   |http://www.wri.org https://www.protectedplanet.net https://www.cbd.int/  |
@@ -150,7 +148,7 @@ Additionnal
 | ER_ECO1   | Ecosystem Functionality Index (EFI)                            | ✅      | ✅         | ✅   |  to do  |
 ER_ECO2_FLII | Forest landscape Integrity Index | ✅     | ✅       | ✅   | https://www.forestlandscapeintegrity.com/ |
 ER_ECO3 | Road less area | ✅   | ✅    | ✅    | (http://www.roadless.online/data/) |        
-| ER_BIO2   | Mean Species Abundance (MSA)                                   | ✅     | ✅         | ✅   | http://www.globio.info |
+| ER_BIO2   | Mean Species Abundance (MSA)                                   | ✅     | ✅         | ✅   | [Globio](http://www.globio.info) |
 
 
 - TODO: Need data sources
