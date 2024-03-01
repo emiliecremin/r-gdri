@@ -21,14 +21,14 @@ bgd <- st_read("data/ADMIN/admin_bgd.gpkg")
 # INDICATORS PER DATA SOURCE
 # ---------------------------------------------------------------
 source("processing/aqueduct.R")
-source("processing/social.R")
-source("processing/osm.R")
-source("processing/world_bank.R")
-source("processing/forest.R")
 source("processing/biodiversity.R")
 source("processing/conservation.R")
+source("processing/forest.R")
 source("processing/free_flowing_rivers.R")
+source("processing/osm.R")
+source("processing/social.R")
 source("processing/travel_time.R")
+source("processing/world_bank.R")
 
 # ---------------------------------------------------------------
 # SOCIAL SUSCEPTIBILITY
