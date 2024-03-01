@@ -2,11 +2,6 @@
 # https://sedac.ciesin.columbia.edu/data/set/pend-gdis-1960-2018/data-download
 # https://public.emdat.be/data
 
-library(dplyr)
-library(sf)
-
-locations <- bgd
-
 ## ____________________________________________________________________________________ ##
 ## Load GDIS data (rdata or other format)
 load("./data/Disasters/pend-gdis-1960-2018-disasterlocations-rdata/pend-gdis-1960-2018-disasterlocations.rdata")

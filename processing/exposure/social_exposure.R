@@ -6,63 +6,54 @@
 source("processing/GDIS.R")
 
 S_EXP_COF_151_A <- function(locations, ...) {
-    locations <- bgd
     locations <- get_emdat_indicator_per_hazards(locations, "Total.Deaths", c("Coastal flood"))
     locations$val <- locations$idx / locations$pop
     return(locations)
 }
 
 S_EXP_CYC_151_A <- function(locations, ...) {
-    locations <- bgd
     locations <- get_emdat_indicator_per_hazards(locations, "Total.Deaths", c("Tropical cyclone", "Convective storm"))
     locations$val <- locations$idx / locations$pop
     return(locations)
 }
 
 S_EXP_FLO_151_A <- function(locations, ...) {
-    locations <- bgd
     locations <- get_emdat_indicator_per_hazards(locations, "Total.Deaths", c("Flash flood", "Riverine flood"))
     locations$val <- locations$idx / locations$pop
     return(locations)
 }
 
 S_EXP_COF_151_B <- function(locations, ...) {
-    locations <- bgd
     locations <- get_emdat_indicator_per_hazards(locations, "Total.Affected", c("Coastal flood"))
     locations$val <- locations$idx / locations$pop
     return(locations)
 }
 
 S_EXP_CYC_151_B <- function(locations, ...) {
-    locations <- bgd
     locations <- get_emdat_indicator_per_hazards(locations, "Total.Affected", c("Tropical cyclone", "Convective storm"))
     locations$val <- locations$idx / locations$pop
     return(locations)
 }
 
 S_EXP_FLO_151_B <- function(locations, ...) {
-    locations <- bgd
     locations <- get_emdat_indicator_per_hazards(locations, "Total.Affected", c("Flash flood", "Riverine flood"))
     locations$val <- locations$idx / locations$pop
     return(locations)
 }
 
 S_EXP_COF_152 <- function(locations, ...) {
-    locations <- bgd
     locations <- get_emdat_indicator_per_hazards(locations, "Total.Damages..Adjusted...000.US..", c("Coastal flood"))
     locations$val <- locations$idx
     return(locations)
 }
 
 S_EXP_CYC_152 <- function(locations, ...) {
-    locations <- bgd
     locations <- get_emdat_indicator_per_hazards(locations, "Total.Damages..Adjusted...000.US..", c("Tropical cyclone", "Convective storm"))
     locations$val <- locations$idx
     return(locations)
 }
 
 S_EXP_FLO_152 <- function(locations, ...) {
-    locations <- bgd
     locations <- get_emdat_indicator_per_hazards(locations, "Total.Damages..Adjusted...000.US..", c("Flash flood", "Riverine flood"))
     locations$val <- locations$idx
     return(locations)
