@@ -36,8 +36,16 @@ ES_DEG8 <- function(locations, ...) {
     return(locations)
 }
 
+# Other data sources
+# Excess Salts (FAO HWSD v1.2)
+# https://data.apps.fao.org/map/catalog/srv/eng/catalog.search?id=12691#/metadata/40db0008-f365-43ca-953d-cabdcadc24a5
+# Soil Toxicities (HWSD)
+# https://data.apps.fao.org/map/catalog/srv/eng/catalog.search?id=12691#/metadata/ec81aff5-2b00-4534-a780-78178288d21d
+
+
 # ES_DEG7 Soil Workability (HWSD 1.2)
 # Harmonized World Soil Database Version 1.2 February 2012
+# Fischer, G., F. Nachtergaele, S. Prieler, H.T. van Velthuizen, L. Verelst, D. Wiberg, 2008. Global Agro-ecological Zones Assessment for Agriculture (GAEZ 2008). IIASA, Laxenburg, Austria and FAO, Rome, Italy. 
 # Workability soil quality SQ7
 # Only classes 1 to 4 are corresponding to an assessment of soil limitations for plant growth
 "
@@ -71,3 +79,9 @@ ES_DEG7 <- function(locations, ...) {
     )
     locations$val <- locations$cnt / locations$area
 }
+
+# FAO - Harmonized World Soil Database v2.0
+# https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/
+# doc: https://www.fao.org/3/cc3823en/cc3823en.pdf
+# https://data.isric.org/geonetwork/srv/all/catalog.search#/metadata/54aebf11-ec73-4ff8-bf6c-ecff4b0725ea
+# GEE: https://gee-community-catalog.org/projects/hwsd/
