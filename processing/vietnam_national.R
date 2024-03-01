@@ -43,6 +43,12 @@ C_GOV3 <- function(locations, ...) {
     return(locations)
 }
 
+# Hospital beds (per 1,000 people)
+# https://data.worldbank.org/indicator/SH.MED.BEDS.ZS
+C_HEA1 <- function(locations, ...) {
+    locations$val <- 2.6 # year 2014
+    return(locations)
+}
 
 # early_warning_systems
 C_EWS2 <- function(locations, ...) {

@@ -18,7 +18,7 @@ S_OCU1 <- function(locations, ...) {
 # Homicide rate per 100,000 inhabitants in 2019
 # https://www.who.int/data/gho/data/indicators/indicator-details/GHO/estimates-of-rates-of-homicides-per-100-000-population
 S_STA1 <- function(locations, ...) {
-    locations$val <- 2.8
+    locations$val <- 2.4
     return(locations)
 }
 
@@ -37,6 +37,13 @@ C_GOV1 <- function(locations, ...) {
 # No national food reserves available (binary) (National?)
 C_GOV3 <- function(locations, ...) {
     locations$val <- 1
+    return(locations)
+}
+
+# Hospital beds (per 1,000 people)
+# https://data.worldbank.org/indicator/SH.MED.BEDS.ZS
+C_HEA1 <- function(locations, ...) {
+    locations$val <- 0.79 # year 2016
     return(locations)
 }
 

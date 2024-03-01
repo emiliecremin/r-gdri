@@ -77,7 +77,7 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 | S_EXP_COF_152 | Cost of damages in adjusted USD due to Costal Floods |  ✅  |  ✅  |   ✅  |  (EM-DAT + GDIS)[https://www.nature.com/articles/s41597-021-00846-6] |
 | S_EXP_CYC_152 | Cost of damages in adjusted USD due to Cyclones |  ✅  |  ✅  |   ✅  |  (EM-DAT + GDIS)[https://www.nature.com/articles/s41597-021-00846-6] |
 | S_EXP_FLO_152 | Cost of damages in adjusted USD due to Floods |  ✅  |  ✅  |   ✅  |  (EM-DAT + GDIS)[https://www.nature.com/articles/s41597-021-00846-6] |
-| S_EXP_SLR | pop exposed to SLR +0.5m      | to do        | to do        | to do   | [climatecentral.org](https://sealevel.climatecentral.org/) |
+| S_EXP_SLR | pop exposed to SLR +0.5m    | to do        | to do        | to do   | [climatecentral.org](https://sealevel.climatecentral.org/) |
 
 ### Ecosystem Exposure
 
@@ -87,28 +87,28 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 | E_EXP_CYC | ecosystem exposed to cyclones     | ✅           | ✅           | ✅   | cyclones / ecosystem in esa world cover|
 | E_EXP_DRO | ecosystem exposed to drought      | ✅           | ✅           | ✅    | drought / ecosystems in esa world cover|
 | E_EXP_FLO | ecosystem exposed to floods       | ✅           | ✅           | ✅   | floods / ecosystem in esa world cover|
-| E_EXP_SAL | ecosystem exposed to salinity     | todo | to do        | to do   | salinity / ecosystem in esa world cover|
+| E_EXP_SLR | ecosystem exposed to SLR +0.5m     | todo | to do        | to do   | [climatecentral.org](https://sealevel.climatecentral.org/) |
 
 
 ### Agrosystem Exposure
 
 | indicator | description                       | Vietnam      | India | Bangladesh | source |
 | --------- | --------------------------------- | ------------ | ---------- | ----- | ------ |
-| A_EXP_COF | ecosystem exposed to storm surges | ✅           | ✅      | ✅    | [worldcover2020](https://worldcover2020.esa.int/downloader) and [energydata.info](https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c) |
-| A_EXP_CYC | ecosystem exposed to cyclones     | ✅           | ✅        | ✅    | cyclones/ crop area in esa world cover |
-| A_EXP_DRO | ecosystem exposed to drought      | ✅           | ✅        | ✅    | drought / crop area in esa world cover |
-| A_EXP_FLO | ecosystem exposed to floods       | ✅           | ✅        | ✅   | floods / crop area in esa world cover |
-| A_EXP_SAL | ecosystem exposed to salinity     | todo | to do        | to do   | salinity / crop area in esa world cover |
+| A_EXP_COF | agrosystem exposed to storm surges | ✅           | ✅      | ✅    | [worldcover2020](https://worldcover2020.esa.int/downloader) and [energydata.info](https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c) |
+| A_EXP_CYC | agrosystem exposed to cyclones     | ✅           | ✅        | ✅    | cyclones/ crop area in esa world cover |
+| A_EXP_DRO | agrosystem exposed to drought      | ✅           | ✅        | ✅    | drought / crop area in esa world cover |
+| A_EXP_FLO | agrosystem exposed to floods       | ✅           | ✅        | ✅   | floods / crop area in esa world cover |
+| A_EXP_SLR | agrosystem exposed to SLR +0.5m     | todo | to do        | to do   | [climatecentral.org](https://sealevel.climatecentral.org/) |
 
 ### Aquaculture or Water
 
 | indicator | description                       | Vietnam      | India | Bangladesh | source |
 | --------- | --------------------------------- | ------------ | ---------- | ----- | ------ |
-| W_EXP_COF | ecosystem exposed to storm surges | ✅           | ✅      | ✅   | [worldcover2020](https://worldcover2020.esa.int/downloader) and [energydata.info](https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c) |
-| W_EXP_CYC | ecosystem exposed to cyclones     | ✅           | ✅        | ✅    | cyclones/ crop area in esa world cover |
-| W_EXP_DRO | ecosystem exposed to drought      | ✅           | ✅        | ✅   | drought / crop area in esa world cover |
-| W_EXP_FLO | ecosystem exposed to floods       | ✅           | ✅        | ✅   | floods / crop area in esa world cover |
-| W_EXP_SAL | ecosystem exposed to salinity     | todo | to do        | to do   | salinity / crop area in esa world cover |
+| W_EXP_COF | aquaculture exposed to storm surges | ✅           | ✅      | ✅   | [worldcover2020](https://worldcover2020.esa.int/downloader) and [energydata.info](https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c) |
+| W_EXP_CYC | aquaculture exposed to cyclones     | ✅           | ✅        | ✅    | cyclones/ crop area in esa world cover |
+| W_EXP_DRO | aquaculture exposed to drought      | ✅           | ✅        | ✅   | drought / crop area in esa world cover |
+| W_EXP_FLO | aquaculture exposed to floods       | ✅           | ✅        | ✅   | floods / crop area in esa world cover |
+| W_EXP_SLR | aquaculture exposed to SLR +0.5m     | todo | to do        | to do   | [climatecentral.org](https://sealevel.climatecentral.org/) |
 
 Additional  
 | indicator | description | Vietnam | Bangladesh | India |
@@ -131,7 +131,9 @@ Other hazards can be extracted from the results of INVEST model
 | ES_DEG2    | Groundwater quality                               | ✅      | ✅         | ✅    | update source |
 | ES_DEG2_GTD    | Groundwater Table depletion                 | ✅     | ✅         | ✅    | WRI aqueduct       |
 | ES_DEG2_642_WS   | Freshwater scarcity= Baseline water stress                   | ✅      | ✅          | ✅    | [aqueduct](https://www.wri.org/data/aqueduct-water-risk-atlas) or[unep-wcmc](https://www.unep-wcmc.org) |                                 |
-| ES_DEG6    | Soil organic carbon (matter)                      | ✅     | ✅   do         | ✅    | https://www.soilgrids.org or FAO GSP and ITPS, 2019. Global Soil Organic Carbon Map (GSOC map) http://54.229.242.119/GSOCmap/                    |
+| ES_DEG6    | Soil organic carbon (matter)                      | ✅     | ✅   do         | ✅    | https://www.soilgrids.org or FAO GSP and ITPS, 2019. Global Soil Organic Carbon Map (GSOC map) http://54.229.242.119/GSOCmap/ |
+| ES_DEG7 | Soil Workability (HWSD 1.2)    | ✅ | ✅        | ✅   | [FAO](https://data.apps.fao.org/map/catalog/srv/eng/catalog.search?id=12691#/metadata/f1d5ecdd-c078-475e-9ced-0451892381aee) |
+| ES_DEG8 | Soil salinity    | ✅ | ✅        | ✅   | [Global Soil Salinity Map](https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512) |
 | ES_DEG9    | Cation exchange capacity                          | ✅     | ✅    do          | ✅    | [soilgrids.org](https://git.wur.nl/isric/soilgrids/soilgrids.notebooks/-/blob/master/markdown/wcs_from_R.md) |
 | ES_BIO1a   | Species richness adjusted by intactness           | ✅      | ✅    do        | ✅      | https://www.unep-wcmc.org  or http://dx.doi.org/10.5519/0009936. Accessed through www.resourcewatch.org. |
 
@@ -177,7 +179,7 @@ ER_ECO3 | Road less area | ✅   | ✅    | ✅    | (http://www.roadless.online
 | C_GOV3    | to donational food reserves available (binary) (National?)                      | ✅   | ✅       | ✅  | projects.worldbank.org / foodgrainsbank.ca |
 | A_GOV4    | Foreign Direct Investment (FDI) (National)                                      | ✅      | ✅        | ✅    | http://data.worldbank.org                  |
 | A_GOV6    | Donor aid for adaptation (local)                                                | ✅   | ✅         | ✅    | http://aiddata.org/gis                     |
-| C_HEA1    | Number of hospital beds per 1,000 inhabitants                                   | To do   | to do        | to do   | bbs.gov.bd / wbhealth.gov.in / gso.gov.vn  |
+| C_HEA1    | Number of hospital beds per 1,000 people                                  | ✅   | ✅        | ✅   | https://data.worldbank.org/indicator/SH.MED.BEDS.ZS  |
 | C_HEA3    | Public health expenditure (% of GDP)                                            | To do   | to do        | to do   | http://data.worldbank.org/                 |
 | C_HEA4    | Private health expenditure (% of GDP)                                           | To do   | to do        | to do   | http://data.worldbank.org/                 |
 | C_SAV1    | Percentage of households without gross savings (%)                              | To do   | to do        | to do   | http://datatopics.worldbank.org            |
