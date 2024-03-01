@@ -9,7 +9,6 @@ load_social_data <- function(country_iso3) {
     cat("Social data for", country_iso3, "loading...\n")
     if (country_iso3 == "VNM") {
         source("processing/ipums.R")
-        source("processing/vietnam_national.R")
         # social <- ipums_data %>% dplyr::filter(COUNTRY == 704)
         f <- "objects/vnm_ipums.rds"
         if (file.exists(f) == TRUE) {
@@ -24,7 +23,6 @@ load_social_data <- function(country_iso3) {
 
     if (country_iso3 == "BGD") {
         source("processing/ipums.R")
-        source("processing/bangladesh_national.R")
         f <- "objects/bgd_ipums.rds"
         if (file.exists(f) == TRUE) {
             social <- readRDS(f)
@@ -40,7 +38,6 @@ load_social_data <- function(country_iso3) {
         # TODO: this is not ready yet
         colnames(social)
         source("processing/census_of_india.R")
-        source("processing/india_national.R")
     }
 
     return(social)

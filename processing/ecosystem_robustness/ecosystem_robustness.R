@@ -2,6 +2,7 @@ source("common/helpers.R")
 
 # Data sources: ipums, open street map, world bank, and national indicators
 ecosystem_robustness_indicators <- c(
+    "ER_FOR_1511", # Percentage of Forest Area - ESA Landuse
     "ER_CON_1512", # Conservation areas - conservation.R - protectedplanet.net
     "ER_RES2", # Forest gain - forest.R - GFC
     "ER_ECO2_FLII", # Forest Landscape Integrity Index - forest.R - forestintegrity.com

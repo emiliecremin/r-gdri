@@ -2,22 +2,17 @@ source("common/helpers.R")
 
 # Data sources: ipums, open street map, world bank, and national indicators
 ecosystem_sensitivity_indicators <- c(
-    "ES_DES_1511", # Forest Area - ESA Landuse
     "ES_DEG_1411", # Eutrophication - aqueduct
-    "ES_DES2", # Freshwater scarcity = Baseline water depletion - aqueduct
-    "ES_WS_642", # Baseline water stress - aqueduct
+    "ES_DEG5_642", # Baseline water stress - aqueduct
     "ES_DEG2", # Groundwater quality = gtd: Groundwater table decline - aqueduct
     "ES_BIO1a", # Biodiversity Intactness Index - nhm.ac.uk
     "ES_DEG6", # Soil organic matter
     "ES_DEG7", # Soil workability (FAO HWSD 1.2 SQ7)
     "ES_DEG8", # Soil salinity (Global Soil Salinity Map)
     #"ES_DEG9", # Cation exchange capacity
-    "ES_FRA2", # National - River connectivity (River basin scale)
+    "ES_DEG10", # Baseline water depletion - aqueduct
+    "ES_FRA2", # Connectivity Status Index - Free FLowing Rivers
     "ES_DES3" # Percentage of deforested area - GFC
-
-    # TODO: ES_FRA3 Forest connectivity
-    # TODO: ES_FRG1 Percentage of area covered by “problem soils” (%)
-    # TODO: ES_DEG4 Return Flow Ratio
 )
 
 ecosystem_sensitivity <- function(locations) {
