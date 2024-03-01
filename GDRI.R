@@ -36,10 +36,15 @@ source("processing/world_bank.R")
 
 source("processing/social_susceptibility/social_susceptibility.R")
 
+source("processing/vietnam_national.R")
 soc_sus_vnm <- social_susceptibility(vnm)
 saveRDS(soc_sus_vnm, "output/social_susceptibility/social_susceptibility_VNM.rds")
+
+source("processing/bangladesh_national.R")
 soc_sus_bgd <- social_susceptibility(bgd)
 saveRDS(soc_sus_bgd, "output/social_susceptibility/social_susceptibility_BGD.rds")
+
+# source("processing/india_national.R")
 # soc_sus_ind <- social_susceptibility(gdri, ind, "India")
 # saveRDS(soc_sus_ind, "output/social_susceptibility/social_susceptibility_IND.rds")
 soc_sus <- rbind(soc_sus_vnm, soc_sus_bgd) # , soc_sus_ind)
@@ -59,10 +64,13 @@ st_write(soc_sus_norm, "output/social_susceptibility/social_susceptibility.gpkg"
 
 source("processing/adaptation_capacities/adaptation_capacities.R")
 
+source("processing/vietnam_national.R")
 cop_adapt_vnm <- adaptation_capacities(vnm)
 saveRDS(cop_adapt_vnm, "output/adaptation_capacities/adaptation_capacities_VNM.rds")
+source("processing/bangladesh_national.R")
 cop_adapt_bgd <- adaptation_capacities(bgd)
 saveRDS(cop_adapt_bgd, "output/adaptation_capacities/adaptation_capacities_BGD.rds")
+# source("processing/india_national.R")
 # cop_adapt_ind <- adaptation_capacities(gdri, ind, "India")
 # saveRDS(cop_adapt_ind, "output/adaptation_capacities/adaptation_capacities_IND.rds")
 cop_adapt <- rbind(cop_adapt_vnm, cop_adapt_bgd) # , cop_adapt_ind)
@@ -84,10 +92,13 @@ st_write(cop_adapt_norm, "output/adaptation_capacities/adaptation_capacities.gpk
 
 source("processing/ecosystem_sensitivity/ecosystem_sensitivity.R")
 
+source("processing/vietnam_national.R")
 eco_sensitivity_vnm <- ecosystem_sensitivity(vnm)
 saveRDS(eco_sensitivity_vnm, "output/ecosystem_sensitivity/ecosystem_sensitivity_VNM.rds")
+source("processing/bangladesh_national.R")
 eco_sensitivity_bgd <- ecosystem_sensitivity(bgd)
 saveRDS(eco_sensitivity_bgd, "output/ecosystem_sensitivity/ecosystem_sensitivity_BGD.rds")
+# source("processing/india_national.R")
 # eco_sensitivity_ind <- ecosystem_sensitivity(gdri, ind, "India")
 # saveRDS(eco_sensitivity_ind, "output/ecosystem_sensitivity/ecosystem_sensitivity_IND.rds")
 eco_sensitivity <- rbind(eco_sensitivity_vnm, eco_sensitivity_bgd) # , eco_sensitivity_ind)
@@ -99,20 +110,19 @@ eco_sensitivity_norm$ES_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(eco_sensitivity_norm, "output/ecosystem_sensitivity/ecosystem_sensitivity.rds")
 st_write(eco_sensitivity_norm, "output/ecosystem_sensitivity/ecosystem_sensitivity.gpkg", append = FALSE)
 
-# TODO: ES_FRA3 Forest connectivity
-# TODO: ES_DEG4 Return Flow Ratio
-# TODO: ES_FRG1 Percentage of area covered by “problem soils” (%)
-
 # ---------------------------------------------------------------
 # ECOSYSTEM ROBUSTNESS
 # ---------------------------------------------------------------
 
 source("processing/ecosystem_robustness/ecosystem_robustness.R")
 
+source("processing/vietnam_national.R")
 eco_robustness_vnm <- ecosystem_robustness(vnm)
 saveRDS(eco_robustness_vnm, "output/ecosystem_robustness/ecosystem_robustness_VNM.rds")
+source("processing/bangladesh_national.R")
 eco_robustness_bgd <- ecosystem_robustness(bgd)
 saveRDS(eco_robustness_bgd, "output/ecosystem_robustness/ecosystem_robustness_BGD.rds")
+# source("processing/india_national.R")
 # eco_robustness_ind <- ecosystem_robustness(gdri, ind, "India")
 # saveRDS(eco_robustness_ind, "output/ecosystem_robustness/ecosystem_robustness_IND.rds")
 eco_robustness <- rbind(eco_robustness_vnm, eco_robustness_bgd) # , eco_robustness_ind)
