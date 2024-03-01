@@ -68,8 +68,16 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 | S_EXP_CYC | pop exposed to cyclones     | ✅           | ✅         | ✅    | [unep](https://datacore.unepgrid.ch/) |
 | S_EXP_DRO | pop exposed to drought      | ✅           | ✅         | ✅   |  [aqueduct30](https://github.com/wri/aqueduct30_data_download/blob/master/metadata.md) |
 | S_EXP_FLO | pop exposed to floods       | ✅           | ✅       | ✅    | [unep](https://wesr.unepgrid.ch/static.html?views=MX-JXZXA-MFZNN-LTXZ8&zoomToViews=true) |
+| S_EXP_COF_151_A | Deaths due to Costal Floods |  ✅  |  ✅  |   ✅  |  (EM-DAT + GDIS)[https://www.nature.com/articles/s41597-021-00846-6] |
+| S_EXP_CYC_151_A | Deaths due to Cyclones |  ✅  |  ✅  |   ✅  |  (EM-DAT + GDIS)[https://www.nature.com/articles/s41597-021-00846-6] |
+| S_EXP_FLO_151_A | Deaths due to Floods |  ✅  |  ✅  |   ✅  |  (EM-DAT + GDIS)[https://www.nature.com/articles/s41597-021-00846-6] |
+| S_EXP_COF_151_B | People affected by Costal Floods |  ✅  |  ✅  |   ✅  |  (EM-DAT + GDIS)[https://www.nature.com/articles/s41597-021-00846-6] |
+| S_EXP_CYC_151_B | People affected by Cyclones |  ✅  |  ✅  |   ✅  |  (EM-DAT + GDIS)[https://www.nature.com/articles/s41597-021-00846-6] |
+| S_EXP_FLO_151_B | People affected by Floods |  ✅  |  ✅  |   ✅  |  (EM-DAT + GDIS)[https://www.nature.com/articles/s41597-021-00846-6] |
+| S_EXP_COF_152 | Cost of damages in adjusted USD due to Costal Floods |  ✅  |  ✅  |   ✅  |  (EM-DAT + GDIS)[https://www.nature.com/articles/s41597-021-00846-6] |
+| S_EXP_CYC_152 | Cost of damages in adjusted USD due to Cyclones |  ✅  |  ✅  |   ✅  |  (EM-DAT + GDIS)[https://www.nature.com/articles/s41597-021-00846-6] |
+| S_EXP_FLO_152 | Cost of damages in adjusted USD due to Floods |  ✅  |  ✅  |   ✅  |  (EM-DAT + GDIS)[https://www.nature.com/articles/s41597-021-00846-6] |
 | S_EXP_SLR | pop exposed to SLR +0.5m      | to do        | to do        | to do   | [climatecentral.org](https://sealevel.climatecentral.org/) |
-| S_EXP_SAL | pop exposed to salinity     | to do | to do        | to do   | | [FAO](https://data.apps.fao.org/catalog/iso/40db0008-f365-43ca-953d-cabdcadc24a5)
 
 ### Ecosystem Exposure
 
@@ -109,7 +117,6 @@ Additional
 | S_EXP_SUB | pop exposed to subisdence | to do| to do| to do|
 
 Other hazards can be extracted from the results of INVEST model
-Other data can be extracted from GDIS + EM-DAT
 
 ## ECOSYSTEM
 
