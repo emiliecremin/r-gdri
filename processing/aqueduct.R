@@ -68,19 +68,19 @@ ES_DEG_1411 <- function(locations, ...) {
     return(map_aqueduct(locations, "cep"))
 }
 
-# ES_DES2 Freshwater scarcity
-ES_DES2 <- function(locations, ...) {
+# ES_DEG10 Baseline water depletion
+ES_DEG10 <- function(locations, ...) {
     # bwd: Baseline water depletion
     return(map_aqueduct(locations, "bwd"))
 }
 
-# ES_WS_642 Baseline water stress
-ES_WS_642 <- function(locations, ...) {
+# ES_DEG5_642 Baseline water stress
+ES_DEG5_642 <- function(locations, ...) {
     # bws: Baseline water stress
     return(map_aqueduct(locations, "bws"))
 }
 
-# ES_DEG2 Groundwater quality proxy Groundwater table decline
+# ES_DEG2 Groundwater table decline
 ES_DEG2 <- function(locations, ...) {
     # gtd: Groundwater table decline
     return(map_aqueduct(locations, "gtd"))
