@@ -27,6 +27,7 @@ source("processing/world_bank.R")
 source("processing/forest.R")
 source("processing/biodiversity.R")
 source("processing/conservation.R")
+source("processing/free_flowing_rivers.R")
 source("processing/travel_time.R")
 
 # ---------------------------------------------------------------

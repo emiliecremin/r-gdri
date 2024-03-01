@@ -112,11 +112,6 @@ A_IIR1 <- function(locations, ...) {
 # Ecosystem Sensitivity
 # -------------------------------------------
 
-# River connectivity (River basin scale)
-ES_FRA2 <- function(locations, ...) {
-    locations$val <- 0.5
-    return(locations)
-}
 
 
 # -------------------------------------------

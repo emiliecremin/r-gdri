@@ -1,4 +1,4 @@
-# Connectivity Status. Index from 0 to 100%;
+# Connectivity Status Index from 0 to 100%;
 # 100% = full connectivity; 0% = no connectivity.
 # FFR assessment (Grill et al., 2019)
 # Grill, G., Lehner, B., Thieme, M. et al. Mapping the world’s free-flowing rivers. Nature 569, 215–221 (2019). https://doi.org/10.1038/s41586-019-1111-9
