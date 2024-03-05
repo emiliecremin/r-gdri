@@ -11,8 +11,25 @@ ES_DEG6 <- function(locations, ...) {
 }
 
 # ES_DEG9 Cation_exchange_capacity
+# datasource: soilgrids-isric
+# Google Earth Engine (GEE) to export it with the following code
+# https://code.earthengine.google.com/21df6671fc3d2c2ea7bad15d3b878268?noload=true
+# var cec = ee.Image("projects/soilgrids-isric/cec_mean")
+#           .select("cec_60-100cm_mean")
+#           .clip(roi_boundary.geometry().bounds())
+# Export.image.toDrive({
+#   image: cec,
+#   description: 'cec_60-100cm_mean',
+#   folder: 'GEE',
+#   region: roi_boundary.geometry().bounds(),
+#   scale: 250, // Soilgrids offers 250m resolution
+#   fileFormat: 'GeoTIFF',
+#   maxPixels: 1e13,
+# });
 ES_DEG9 <- function(locations, ...) {
-    cec <- rast("data/Soil/Cation_exchange_capacity.tif") # nolint
+    country_iso3 <- unique(locations$country_iso3)[1]
+    cec <- terra::rast(glue::glue("data/Soil/CationExchangeCapacity/{country_iso3}_cec_60-100cm_mean.tif"))
+    cec <- terra::project(cec, crs(locations))
     locations$cnt <- exact_extract(cec, locations, "sum", progress = TRUE)
     locations$val <- locations$cnt / locations$area
     return(locations)
