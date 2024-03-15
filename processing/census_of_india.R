@@ -339,7 +339,8 @@ census_ind_2011$geo_id <- paste(
 # SOCIAL SUSCEPTIBILITY
 # --------------------------------------------------
 
-clean_column <- function(data, col) {
+clean_column <- function(locations, col) {
+  data <- locations %>% st_drop_geometry()
   if (!is.numeric(data[[col]])) {
     data[[col]] <- as.numeric(
       sub(",", ".", data[[col]], fixed = TRUE)
@@ -362,7 +363,8 @@ clean_column <- function(data, col) {
 
 # What about Gender Inequality as weight?
 # http://hdr.undp.org/en/content/gender-inequality-index-gii
-S_SOC3 <- function(data, ...) {
+S_SOC3 <- function(locations, ...) {
+  data <- locations %>% st_drop_geometry()
   female_hh <- read_excel(
     "data/ADMIN/INDIA/CENSUS-2011/PC11_PCA-FH/PCA-0000.xlsx"
   ) %>%
@@ -414,7 +416,8 @@ S_SOC3 <- function(data, ...) {
 # Percentage of population with disabilities (%)
 # https://censusindia.gov.in/nada/index.php/catalog/43388
 # https://censusindia.gov.in/nada/index.php/catalog/43388/download/47092/DDW-C20-1900.xlsx
-S_SOC5 <- function(data, ...) {
+S_SOC5 <- function(locations, ...) {
+  data <- locations %>% st_drop_geometry()
    disabilities <- read_excel("data/ADMIN/INDIA/CENSUS-2011/DDW-C20-1900.xlsx", skip = 1) %>% 
     dplyr::filter(
       `State Code` == "19",
@@ -466,7 +469,8 @@ S_SOC5 <- function(data, ...) {
 
 # S_SOC8
 # Percentage of illiterate population (%)
-S_SOC8 <- function(data, ...) {
+S_SOC8 <- function(locations, ...) {
+  data <- locations %>% st_drop_geometry()
   data$S_SOC8 <- data$P_ILL / (data$TOT_P - data$P_06)
   return(clean_column(data, "S_SOC8"))
 }
@@ -487,7 +491,8 @@ Person who did not ‘work’ at all during the reference period (code 4).
 They will include students, persons engaged in household duties,
 dependents, pensioners, beggars, etc.
 "
-S_ECO2 <- function(data, ...) {
+S_ECO2 <- function(locations, ...) {
+  data <- locations %>% st_drop_geometry()
   data$S_ECO2 <- data$NON_WORK_P / data$TOT_P
   return(clean_column(data, "S_ECO2"))
 }
@@ -496,7 +501,8 @@ S_ECO2 <- function(data, ...) {
 # Percentage of population without access to (improved) sanitation (%)
 # PC11_HL14-19
 # Number of households not having latrine facility within the premises (col 100)
-S_INF1 <- function(data, ...) {
+S_INF1 <- function(locations, ...) {
+  data <- locations %>% st_drop_geometry()
   data$S_INF1 <- data$`Number of households not having latrine facility within the premises`
   return(clean_column(data, "S_INF1"))
 }
@@ -520,14 +526,16 @@ S_INF1 <- function(data, ...) {
 # 81 Other sources
 # --------------------
 # We consider 72 (Tap water from treated source) and 78 (Spring) as clean water
-S_INF2 <- function(data, ...) {
+S_INF2 <- function(locations, ...) {
+  data <- locations %>% st_drop_geometry()
   data$S_INF2 <- data$`Main Source of Drinking Water: Tapwater from treated source` + data$`Main Source of Drinking Water: Spring`
   return(clean_column(data, "S_INF2"))
 }
 
 # S_INF3
 # Percentage of population without access to electricity (%)
-S_INF3 <- function(data, ...) {
+S_INF3 <- function(locations, ...) {
+  data <- locations %>% st_drop_geometry()
   data$S_INF3 <- data$`Main Source of lighting: Electricity`
   return(clean_column(data, "S_INF3"))
 }
@@ -540,7 +548,8 @@ S_INF3 <- function(data, ...) {
 # Percentage of households without access to information (%)
 # Proxy: Percentage of households without radio or TV (%)
 # Availability of assets: None of the assets specified in col. 10 to 19: TV - Computer/Laptop - Telephone/mobile phone - Scooter/Car
-C_EWS1 <- function(data, ...) {
+C_EWS1 <- function(locations, ...) {
+  data <- locations %>% st_drop_geometry()
   data$C_EWS1 <- data$`Availability of assets: None of the assets specified in col. 10 to 19`
   return(clean_column(data, "C_EWS1"))
 }
