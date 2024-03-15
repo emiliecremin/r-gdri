@@ -137,7 +137,7 @@ process_indicators <- function(locations, indicators, output) {
     country_iso3 <- unique(locations$country_iso3)[1]
     output <- str_glue("{output}/{country_iso3}")
     mkdirs(output)
-    social <- load_social_data(country_iso3)
+    locations <- load_social_data(locations)
 
     i <- 1
     for (indicator_code in indicators) {
@@ -147,7 +147,7 @@ process_indicators <- function(locations, indicators, output) {
         )
         indicator <- do.call(
             get(indicator_code),
-            list(locations = locations, data = social)
+            list(locations = locations)
         )
         format_indicator(
             indicator_code, indicator, locations,
