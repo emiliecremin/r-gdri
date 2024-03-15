@@ -23,6 +23,27 @@ admin_vnm <- dplyr::left_join(x = admin_vnm, y = pop_vnm, by = "GEOLEV2")
 # TODO: keep only useful columns
 st_write(admin_vnm, "data/ADMIN/admin_vnm.gpkg", append = FALSE)
 
+# VNM Admin 3
+# https://purl.stanford.edu/dk039bc2779
+# https://stacks.stanford.edu/file/druid:dk039bc2779/data.zip?download=true
+
+vnm_adm3 <- st_read(
+  "data/ADMIN/VNM_adm3/VNM_adm3.shp"
+) %>% st_transform(4326)
+vnm_adm3$shapeID <- glue::glue("{vnm_adm3$ID_1}-{vnm_adm3$ID_2}-{vnm_adm3$ID_3}")
+vnm_i <- st_intersection(st_centroid(vnm_adm3), vnm)
+st_write(vnm_i, "data/ADMIN/vnm_i.gpkg", append = FALSE)
+keep_cols <- c("shapeID", "geo_id")
+joint_codes <- vnm_i[, keep_cols] %>% st_drop_geometry()
+vnm_villages <- vnm_adm3 %>%
+  left_join(joint_codes, by = "shapeID") %>%
+  left_join(st_drop_geometry(vnm), by = "geo_id")
+vnm_villages$area <- units::set_units(st_area(vnm_villages), km^2)
+
+# TODO: geo_id must be at ADM4 level / keep GEOLEV2 for IPUMS
+
+st_write(vnm_villages, "data/ADMIN/vnm_villages.gpkg", append = FALSE)
+
 admin_vnm_with_buffer <- create_buffer(admin_vnm, "geo_id")
 st_write(
   admin_vnm_with_buffer,
@@ -56,6 +77,28 @@ st_write(
   "data/ADMIN/admin_bgd_with_buffer.gpkg",
   append = FALSE
 )
+
+# BGD Admin 4
+# https://www.geoboundaries.org/
+# Runfola D, Anderson A, Baier H, Crittenden M, Dowker E, Fuhrig S, et al. (2020) 
+# geoBoundaries: A global database of political administrative boundaries. 
+# PLoS ONE 15(4): e0231866. https://doi.org/10.1371/journal.pone.0231866. 
+# https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/9469f09592ced973a3448cf66b6100b741b64c0d/releaseData/gbOpen/BGD/ADM4/geoBoundaries-BGD-ADM4-all.zip
+bgd_adm4 <- st_read(
+  "data/ADMIN/geoBoundaries-BGD-ADM4-all/geoBoundaries-BGD-ADM4.shp"
+) %>% st_transform(4326)
+
+bgd_i <- st_intersection(st_centroid(bgd_adm4), bgd)
+keep_cols <- c("shapeID", "geo_id")
+joint_codes <- bgd_i[, keep_cols] %>% st_drop_geometry()
+bgd_villages <- bgd_adm4 %>%
+  left_join(joint_codes, by = "shapeID") %>%
+  left_join(st_drop_geometry(bgd), by = "geo_id")
+bgd_villages$area <- units::set_units(st_area(bgd_villages), km^2)
+
+# TODO: geo_id must be at ADM4 level / keep GEOLEV2 for IPUMS
+
+st_write(bgd_villages, "data/ADMIN/bgd_villages.gpkg", append = FALSE)
 
 # un_shp <- read_sf("data/ADMIN/vnm_adm_gov_20201027_shp/vnm_admbnda_adm2_gov_20201027.shp")
 # join_shp <- st_centroid(ipums_shp) %>% st_join(un_shp)
