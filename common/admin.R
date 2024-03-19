@@ -100,23 +100,5 @@ st_write(bgd_villages, "data/ADMIN/villages_bgd.gpkg", append = FALSE)
 # other source: https://data.apps.fao.org/catalog/organization/fao-region-mapping
 
 # India - IND -----------------------------------------------------------------
-admin_ind <- st_read(
-  "data/ADMIN/India-village-boundaries/India-village-boundaries-AOI.shp"
-) %>% st_make_valid()
-admin_ind$country_iso3 <- "IND"
-admin_ind$geo_id <- admin_ind$C_CODE01
-admin_ind$pop <- as.numeric(admin_ind$TOT_P)
-admin_ind$area <- units::set_units(st_area(admin_ind), km^2)
-admin_ind$density <- admin_ind$pop / as.numeric(admin_ind$area)
-
-# TODO: keep only useful columns
-st_write(admin_ind, "data/ADMIN/admin_ind.gpkg", append = FALSE)
-
-# Buffer is missing some features, not very accurate for this roi
-admin_ind_with_buffer <- create_buffer(admin_ind, "UID")
-st_write(
-  admin_ind_with_buffer,
-  "data/ADMIN/admin_ind_with_buffer.gpkg",
-  append = FALSE
-)
+source("common/admin_india.R")
 # mapPlot(admin_ind, "pop", "persons", "Total Population")
