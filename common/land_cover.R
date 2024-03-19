@@ -94,11 +94,11 @@ create_landcover <- function(landcover, roi, region_name) {
 }
 
 
-roi <- terra::vect("data/ADMIN/admin_vnm_with_buffer.gpkg")
+roi <- terra::vect("data/ADMIN/villages_vnm.gpkg")
 create_landcover(landcover, roi, "VNM")
 
-roi <- terra::vect("data/ADMIN/admin_ind.gpkg")
+roi <- terra::vect("data/ADMIN/villages_bgd.gpkg")
 create_landcover(landcover, roi, "IND")
 
-roi <- terra::vect("data/ADMIN/admin_bgd_with_buffer.gpkg")
+roi <- terra::vect("data/ADMIN/villages_ind.gpkg")
 create_landcover(landcover, roi, "BGD")
