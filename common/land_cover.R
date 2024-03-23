@@ -65,7 +65,7 @@ create_landcover <- function(landcover, roi, region_name) {
 
     # TODO: rbind(c(10, 1), c(95, 1))
     forests <- extract_classes(landcover_roi, c(9, 11, 1, 94, 96, 1))
-    # plot(forests)
+    #  plot(forests)
     terra::writeRaster(
         forests,
         filename = str_glue("data/ESA_Landcover/{region_name}_forests.tif"),
@@ -92,13 +92,26 @@ create_landcover <- function(landcover, roi, region_name) {
         overwrite = TRUE
     )
 }
-
-
-roi <- terra::vect("data/ADMIN/villages_vnm.gpkg")
+if (!exists("vnm_villages")) {
+    roi <- terra::vect("data/ADMIN/villages_vnm.gpkg")
+} else {
+    roi <- terra::vect(vnm_villages)
+}
 create_landcover(landcover, roi, "VNM")
 
-roi <- terra::vect("data/ADMIN/villages_bgd.gpkg")
+if (!exists("bgd_villages")) {
+    roi <- terra::vect("data/ADMIN/villages_bgd.gpkg")
+} else {
+    roi <- terra::vect(bgd_villages)
+}
+create_landcover(landcover, roi, "BGD")
+
+if (!exists("ind_villages")) {
+    roi <- terra::vect("data/ADMIN/villages_ind.gpkg")
+} else {
+    roi <- terra::vect(ind_villages)
+}
 create_landcover(landcover, roi, "IND")
 
-roi <- terra::vect("data/ADMIN/villages_ind.gpkg")
-create_landcover(landcover, roi, "BGD")
+rm(roi)
+rm(landcover)
