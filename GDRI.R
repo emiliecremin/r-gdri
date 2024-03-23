@@ -32,7 +32,6 @@ source("processing/conservation.R")
 source("processing/forest.R")
 source("processing/free_flowing_rivers.R")
 source("processing/osm.R")
-source("processing/social.R")
 source("processing/travel_time.R")
 source("processing/world_bank.R")
 
