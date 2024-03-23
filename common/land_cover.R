@@ -20,7 +20,7 @@ https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v100#
 # https://worldcover2020.esa.int/downloader
 # direct link for Asia:
 # https://worldcover2020.esa.int/data/archive/ESA_WorldCover_10m_2020_v100_60deg_macrotile_S30E060.zip
-dir <- "data/ESA_Landcover/ESA_WorldCover_10m_2020_v100_60deg_macrotile_S30E060"
+dir <- "data/Landcover/ESA_Landcover/ESA_WorldCover_10m_2020_v100_60deg_macrotile_S30E060"
 raster_files <- list.files(
     normalizePath(dir),
     pattern = "\\.(tif|tiff)$",
@@ -29,14 +29,14 @@ raster_files <- list.files(
 )
 
 landcover <- terra::vrt(raster_files,
-    filename = "data/ESA_Landcover/Asia.vrt",
+    filename = "data/Landcover/ESA_Landcover/Asia.vrt",
     overwrite = TRUE
 )
 
 create_landcover <- function(landcover, roi, region_name) {
     # roi <- terra::vect("data/ADMIN/admin_ind.gpkg")
     # region_name <- "IND"
-    # landcover_roi <- terra::rast(str_glue("data/ESA_Landcover/{region_name}_roi.tif"))
+    # landcover_roi <- terra::rast(str_glue("data/Landcover/ESA_Landcover/{region_name}_roi.tif"))
 
     roi <- roi %>%
         terra::aggregate()
@@ -45,7 +45,7 @@ create_landcover <- function(landcover, roi, region_name) {
     # plot(landcover_roi)
     terra::writeRaster(
         landcover_roi,
-        filename = str_glue("data/ESA_Landcover/{region_name}_roi.tif"),
+        filename = str_glue("data/Landcover/ESA_Landcover/{region_name}_roi.tif"),
         overwrite = TRUE
     )
 
@@ -54,7 +54,7 @@ create_landcover <- function(landcover, roi, region_name) {
     # plot(ecosystems)
     terra::writeRaster(
         ecosystems,
-        filename = str_glue("data/ESA_Landcover/{region_name}_ecosystems.tif"),
+        filename = str_glue("data/Landcover/ESA_Landcover/{region_name}_ecosystems.tif"),
         overwrite = TRUE
     )
 
@@ -68,7 +68,7 @@ create_landcover <- function(landcover, roi, region_name) {
     #  plot(forests)
     terra::writeRaster(
         forests,
-        filename = str_glue("data/ESA_Landcover/{region_name}_forests.tif"),
+        filename = str_glue("data/Landcover/ESA_Landcover/{region_name}_forests.tif"),
         overwrite = TRUE
     )
 
@@ -78,7 +78,7 @@ create_landcover <- function(landcover, roi, region_name) {
     # plot(agriculture)
     terra::writeRaster(
         agriculture,
-        filename = str_glue("data/ESA_Landcover/{region_name}_agriculture.tif"),
+        filename = str_glue("data/Landcover/ESA_Landcover/{region_name}_agriculture.tif"),
         overwrite = TRUE
     )
 
@@ -88,7 +88,7 @@ create_landcover <- function(landcover, roi, region_name) {
     # plot(waterscape)
     terra::writeRaster(
         waterscape,
-        filename = str_glue("data/ESA_Landcover/{region_name}_waterscape.tif"),
+        filename = str_glue("data/Landcover/ESA_Landcover/{region_name}_waterscape.tif"),
         overwrite = TRUE
     )
 }
