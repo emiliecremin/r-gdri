@@ -48,14 +48,28 @@ create_gfc <- function(roi, region_name, output, forest_threshold = 20) {
 output <- "data/Forests/GFC"
 mkdirs(output)
 
-roi <- terra::vect("data/ADMIN/villages_vnm.gpkg")
+if (!exists("vnm_villages")) {
+  roi <- terra::vect("data/ADMIN/villages_vnm.gpkg")
+} else {
+  roi <- terra::vect(vnm_villages)
+}
 create_gfc(roi, "VNM", output)
 
-roi <- terra::vect("data/ADMIN/villages_bgd.gpkg")
+if (!exists("bgd_villages")) {
+  roi <- terra::vect("data/ADMIN/villages_bgd.gpkg")
+} else {
+  roi <- terra::vect(bgd_villages)
+}
 create_gfc(roi, "BGD", output)
 
-roi <- terra::vect("data/ADMIN/villages_ind.gpkg")
+if (!exists("ind_villages")) {
+  roi <- terra::vect("data/ADMIN/villages_ind.gpkg")
+} else {
+  roi <- terra::vect(ind_villages)
+}
 create_gfc(roi, "IND", output)
+
+rm(roi)
 
 ###############################################################################
 # Make visualization of forest change
