@@ -1,13 +1,13 @@
 # Source: ESA Landcover
 ER_FOR_1511 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
-    forests <- rast(glue::glue("data/ESA_Landcover/{country_iso3}_forests.tif"))
+    forests <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_forests.tif"))
     locations$cnt <- exact_extract(
         forests, st_as_sf(locations),
         "sum",
-        default_value=0,
+        default_value = 0,
         progress = TRUE
-        )
+    )
     locations$val <- locations$cnt / locations$area
     return(locations)
 }
