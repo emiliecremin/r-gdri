@@ -10,6 +10,7 @@ options(timeout = 1800) # set the timeout to 30 minutes
 # TODO: keep only useful columns in admin.R
 source("common/admin.R")
 source("common/land_cover.R")
+source("common/aquaculture.R")
 source("common/GFC.R")
 # ---------------------------------------------------------------
 
@@ -211,15 +212,36 @@ saveRDS(water_exposure_norm, "output/exposure/waterscape_exposure.rds")
 st_write(water_exposure_norm, "output/exposure/waterscape_exposure.gpkg", append = FALSE)
 
 
+# ---------------------------------------------------------------
+# AQUACULTURE EXPOSURE
+# ---------------------------------------------------------------
+
+source("processing/exposure/aquaculture_exposure.R")
+
+aquaculture_exposure_vnm <- aquaculture_exposure(vnm)
+aquaculture_exposure_bgd <- aquaculture_exposure(bgd)
+# aquaculture_exposure_ind <- aquaculture_exposure(gdri, ind, "India")
+aquaculture_exposure <- rbind(aquaculture_exposure_vnm, aquaculture_exposure_bgd) # , aquaculture_exposure_ind)
+
+aquaculture_exposure_norm <- normalize(aquaculture_exposure)
+
+n <- dplyr::select(st_drop_geometry(aquaculture_exposure_norm), ends_with("_norm"))
+aquaculture_exposure_norm$W_EXP_MH <- rowMeans(n, na.rm = TRUE)
+saveRDS(aquaculture_exposure_norm, "output/exposure/aquaculture_exposure.rds")
+st_write(aquaculture_exposure_norm, "output/exposure/aquaculture_exposure.gpkg", append = FALSE)
+
+
+
 gdri <- cbind(
-    soc_sus_norm, 
-    cop_adapt_norm, 
-    eco_sensitivity_norm, 
-    eco_robustness_norm, 
+    soc_sus_norm,
+    cop_adapt_norm,
+    eco_sensitivity_norm,
+    eco_robustness_norm,
     soc_exposure_norm,
     eco_exposure_norm,
     agri_exposure_norm,
-    water_exposure_norm
+    water_exposure_norm,
+    aquaculture_exposure_norm
     )
 gdri <- gdri[!duplicated(as.list(gdri))]
 
