@@ -15,7 +15,7 @@ load_social_data <- function(locations) {
         if (file.exists(f) == TRUE) {
             social <- readRDS(f)
         } else {
-            social <- read.csv(file = "data/Vietnam/vietnam_2009.csv")
+            social <- read.csv(file = "data/IPUMS/vietnam_2009.csv")
             saveRDS(social, f)
         }
         cat("Join with spatial data\n")
@@ -34,7 +34,7 @@ load_social_data <- function(locations) {
         if (file.exists(f) == TRUE) {
             social <- readRDS(f)
         } else {
-            social <- read.csv(file = "data/Bangladesh/bangladesh_2011.csv")
+            social <- read.csv(file = "data/IPUMS/bangladesh_2011.csv")
             saveRDS(social, f)
         }
         cat("Join with spatial data\n")

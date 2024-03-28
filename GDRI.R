@@ -7,16 +7,15 @@ options(timeout = 1800) # set the timeout to 30 minutes
 # ---------------------------------------------------------------
 # DATA PREPARATION: run once to generate admin layers
 # ---------------------------------------------------------------
-# TODO: keep only useful columns in admin.R
 source("common/admin.R")
 source("common/land_cover.R")
 source("common/aquaculture.R")
 source("common/GFC.R")
 # ---------------------------------------------------------------
 
-vnm <- st_read("data/ADMIN/admin_vnm.gpkg")
-bgd <- st_read("data/ADMIN/admin_bgd.gpkg")
-# ind <- st_read("data/ADMIN/admin_ind.gpkg")
+vnm_villages <- st_read("data/ADMIN/villages_vnm.gpkg")
+bgd_villages <- st_read("data/ADMIN/villages_bgd.gpkg")
+ind_villages <- st_read("data/ADMIN/villages_ind.gpkg")
 
 # ---------------------------------------------------------------
 # INDICATORS PER DATA SOURCE
@@ -38,17 +37,17 @@ source("processing/world_bank.R")
 source("processing/social_susceptibility/social_susceptibility.R")
 
 source("processing/vietnam_national.R")
-soc_sus_vnm <- social_susceptibility(vnm)
+soc_sus_vnm <- social_susceptibility(vnm_villages)
 saveRDS(soc_sus_vnm, "output/social_susceptibility/social_susceptibility_VNM.rds")
 
 source("processing/bangladesh_national.R")
-soc_sus_bgd <- social_susceptibility(bgd)
+soc_sus_bgd <- social_susceptibility(bgd_villages)
 saveRDS(soc_sus_bgd, "output/social_susceptibility/social_susceptibility_BGD.rds")
 
-# source("processing/india_national.R")
-# soc_sus_ind <- social_susceptibility(gdri, ind, "India")
-# saveRDS(soc_sus_ind, "output/social_susceptibility/social_susceptibility_IND.rds")
-soc_sus <- rbind(soc_sus_vnm, soc_sus_bgd) # , soc_sus_ind)
+source("processing/india_national.R")
+soc_sus_ind <- social_susceptibility(ind_villages)
+saveRDS(soc_sus_ind, "output/social_susceptibility/social_susceptibility_IND.rds")
+soc_sus <- rbind(soc_sus_vnm, soc_sus_bgd, soc_sus_ind)
 
 soc_sus_norm <- normalize(soc_sus)
 
@@ -66,15 +65,15 @@ st_write(soc_sus_norm, "output/social_susceptibility/social_susceptibility.gpkg"
 source("processing/adaptation_capacities/adaptation_capacities.R")
 
 source("processing/vietnam_national.R")
-cop_adapt_vnm <- adaptation_capacities(vnm)
+cop_adapt_vnm <- adaptation_capacities(vnm_villages)
 saveRDS(cop_adapt_vnm, "output/adaptation_capacities/adaptation_capacities_VNM.rds")
 source("processing/bangladesh_national.R")
-cop_adapt_bgd <- adaptation_capacities(bgd)
+cop_adapt_bgd <- adaptation_capacities(bgd_villages)
 saveRDS(cop_adapt_bgd, "output/adaptation_capacities/adaptation_capacities_BGD.rds")
-# source("processing/india_national.R")
-# cop_adapt_ind <- adaptation_capacities(gdri, ind, "India")
-# saveRDS(cop_adapt_ind, "output/adaptation_capacities/adaptation_capacities_IND.rds")
-cop_adapt <- rbind(cop_adapt_vnm, cop_adapt_bgd) # , cop_adapt_ind)
+source("processing/india_national.R")
+cop_adapt_ind <- adaptation_capacities(ind_villages)
+saveRDS(cop_adapt_ind, "output/adaptation_capacities/adaptation_capacities_IND.rds")
+cop_adapt <- rbind(cop_adapt_vnm, cop_adapt_bgd, cop_adapt_ind)
 
 cop_adapt_norm <- normalize(cop_adapt)
 
@@ -94,15 +93,15 @@ st_write(cop_adapt_norm, "output/adaptation_capacities/adaptation_capacities.gpk
 source("processing/ecosystem_sensitivity/ecosystem_sensitivity.R")
 
 source("processing/vietnam_national.R")
-eco_sensitivity_vnm <- ecosystem_sensitivity(vnm)
+eco_sensitivity_vnm <- ecosystem_sensitivity(vnm_villages)
 saveRDS(eco_sensitivity_vnm, "output/ecosystem_sensitivity/ecosystem_sensitivity_VNM.rds")
 source("processing/bangladesh_national.R")
-eco_sensitivity_bgd <- ecosystem_sensitivity(bgd)
+eco_sensitivity_bgd <- ecosystem_sensitivity(bgd_villages)
 saveRDS(eco_sensitivity_bgd, "output/ecosystem_sensitivity/ecosystem_sensitivity_BGD.rds")
-# source("processing/india_national.R")
-# eco_sensitivity_ind <- ecosystem_sensitivity(gdri, ind, "India")
-# saveRDS(eco_sensitivity_ind, "output/ecosystem_sensitivity/ecosystem_sensitivity_IND.rds")
-eco_sensitivity <- rbind(eco_sensitivity_vnm, eco_sensitivity_bgd) # , eco_sensitivity_ind)
+source("processing/india_national.R")
+eco_sensitivity_ind <- ecosystem_sensitivity(ind_villages)
+saveRDS(eco_sensitivity_ind, "output/ecosystem_sensitivity/ecosystem_sensitivity_IND.rds")
+eco_sensitivity <- rbind(eco_sensitivity_vnm, eco_sensitivity_bgd, eco_sensitivity_ind)
 
 eco_sensitivity_norm <- normalize(eco_sensitivity)
 
@@ -118,15 +117,15 @@ st_write(eco_sensitivity_norm, "output/ecosystem_sensitivity/ecosystem_sensitivi
 source("processing/ecosystem_robustness/ecosystem_robustness.R")
 
 source("processing/vietnam_national.R")
-eco_robustness_vnm <- ecosystem_robustness(vnm)
+eco_robustness_vnm <- ecosystem_robustness(vnm_villages)
 saveRDS(eco_robustness_vnm, "output/ecosystem_robustness/ecosystem_robustness_VNM.rds")
 source("processing/bangladesh_national.R")
-eco_robustness_bgd <- ecosystem_robustness(bgd)
+eco_robustness_bgd <- ecosystem_robustness(bgd_villages)
 saveRDS(eco_robustness_bgd, "output/ecosystem_robustness/ecosystem_robustness_BGD.rds")
-# source("processing/india_national.R")
-# eco_robustness_ind <- ecosystem_robustness(gdri, ind, "India")
-# saveRDS(eco_robustness_ind, "output/ecosystem_robustness/ecosystem_robustness_IND.rds")
-eco_robustness <- rbind(eco_robustness_vnm, eco_robustness_bgd) # , eco_robustness_ind)
+source("processing/india_national.R")
+eco_robustness_ind <- ecosystem_robustness(ind_villages)
+saveRDS(eco_robustness_ind, "output/ecosystem_robustness/ecosystem_robustness_IND.rds")
+eco_robustness <- rbind(eco_robustness_vnm, eco_robustness_bgd, eco_robustness_ind)
 
 eco_robustness_norm <- normalize(eco_robustness)
 
@@ -145,10 +144,10 @@ ER_FUN2 Donor aid for adaptation
 
 source("processing/exposure/ecosystem_exposure.R")
 
-eco_exposure_vnm <- ecosystem_exposure(vnm)
-eco_exposure_bgd <- ecosystem_exposure(bgd)
-# eco_exposure_ind <- ecosystem_exposure(gdri, ind, "India")
-eco_exposure <- rbind(eco_exposure_vnm, eco_exposure_bgd) # , eco_exposure_ind)
+eco_exposure_vnm <- ecosystem_exposure(vnm_villages)
+o_exposure_bgd <- ecosystem_exposure(bgd_villages)
+eco_exposure_ind <- ecosystem_exposure(ind_villages)
+o_exposure <- rbind(eco_exposure_vnm, eco_exposure_bgd, eco_exposure_ind)
 
 eco_exposure_norm <- normalize(eco_exposure)
 
@@ -163,10 +162,10 @@ st_write(eco_exposure_norm, "output/exposure/ecosystem_exposure.gpkg", append = 
 
 source("processing/exposure/social_exposure.R")
 
-soc_exposure_vnm <- social_exposure(vnm)
-soc_exposure_bgd <- social_exposure(bgd)
-# soc_exposure_ind <- social_exposure(gdri, ind, "India")
-soc_exposure <- rbind(soc_exposure_vnm, soc_exposure_bgd) # , soc_exposure_ind)
+soc_exposure_vnm <- social_exposure(vnm_villages)
+c_exposure_bgd <- social_exposure(bgd_villages)
+soc_exposure_ind <- social_exposure(ind_villages)
+c_exposure <- rbind(soc_exposure_vnm, soc_exposure_bgd, soc_exposure_ind)
 
 soc_exposure_norm <- normalize(soc_exposure)
 
@@ -181,10 +180,10 @@ st_write(soc_exposure_norm, "output/exposure/social_exposure.gpkg", append = FAL
 
 source("processing/exposure/agriculture_exposure.R")
 
-agri_exposure_vnm <- agriculture_exposure(vnm)
-agri_exposure_bgd <- agriculture_exposure(bgd)
-# agri_exposure_ind <- agriculture_exposure(gdri, ind, "India")
-agri_exposure <- rbind(agri_exposure_vnm, agri_exposure_bgd) # , agri_exposure_ind)
+agri_exposure_vnm <- agriculture_exposure(vnm_villages)
+ri_exposure_bgd <- agriculture_exposure(bgd_villages)
+agri_exposure_ind <- agriculture_exposure(ind_villages)
+ri_exposure <- rbind(agri_exposure_vnm, agri_exposure_bgd, agri_exposure_ind)
 
 agri_exposure_norm <- normalize(agri_exposure)
 
@@ -199,10 +198,10 @@ st_write(agri_exposure_norm, "output/exposure/agriculture_exposure.gpkg", append
 
 source("processing/exposure/waterscape_exposure.R")
 
-water_exposure_vnm <- waterscape_exposure(vnm)
-water_exposure_bgd <- waterscape_exposure(bgd)
-# water_exposure_ind <- waterscape_exposure(gdri, ind, "India")
-water_exposure <- rbind(water_exposure_vnm, water_exposure_bgd) # , water_exposure_ind)
+water_exposure_vnm <- waterscape_exposure(vnm_villages)
+ter_exposure_bgd <- waterscape_exposure(bgd_villages)
+water_exposure_ind <- waterscape_exposure(ind_villages)
+ter_exposure <- rbind(water_exposure_vnm, water_exposure_bgd, water_exposure_ind)
 
 water_exposure_norm <- normalize(water_exposure)
 

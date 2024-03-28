@@ -125,7 +125,6 @@ process_indicators <- function(locations, indicators, output) {
     country_iso3 <- unique(locations$country_iso3)[1]
     output <- str_glue("{output}/{country_iso3}")
     mkdirs(output)
-    locations <- load_social_data(locations)
 
     i <- 1
     for (indicator_code in indicators) {
