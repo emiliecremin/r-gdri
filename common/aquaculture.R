@@ -8,6 +8,8 @@
 create_aquaculture <- function(country_iso3) {
     dir <- "data/Landcover/aquaculture_sentinel2"
     src_dir <- glue::glue("{dir}/{country_iso3}")
+    output <- "objects/aquaculture_sentinel2"
+    mkdirs(output)
     raster_files <- list.files(
         normalizePath(src_dir),
         pattern = "\\.(tif|tiff)$",
@@ -24,7 +26,7 @@ create_aquaculture <- function(country_iso3) {
     # plot(aquaculture_single)
     terra::writeRaster(
         aquaculture_single,
-        filename = glue::glue("{dir}/{country_iso3}_aquaculture.tif"),
+        filename = glue::glue("{output}/{country_iso3}_aquaculture.tif"),
         overwrite = TRUE
     )
 }

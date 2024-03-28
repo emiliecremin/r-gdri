@@ -37,10 +37,6 @@ landcover <- terra::vrt(raster_files,
 )
 
 create_landcover <- function(landcover, roi, region_name) {
-    # roi <- terra::vect("data/ADMIN/admin_ind.gpkg")
-    # region_name <- "IND"
-    # landcover_roi <- terra::rast(str_glue("data/Landcover/ESA_Landcover/{region_name}_roi.tif"))
-
     roi <- roi %>%
         terra::aggregate()
     pv <- terra::project(roi, landcover)
@@ -96,21 +92,21 @@ create_landcover <- function(landcover, roi, region_name) {
     )
 }
 if (!exists("vnm_villages")) {
-    roi <- terra::vect("data/ADMIN/villages_vnm.gpkg")
+    roi <- terra::vect("objects/ADMIN/villages_vnm.gpkg")
 } else {
     roi <- terra::vect(vnm_villages)
 }
 create_landcover(landcover, roi, "VNM")
 
 if (!exists("bgd_villages")) {
-    roi <- terra::vect("data/ADMIN/villages_bgd.gpkg")
+    roi <- terra::vect("objects/ADMIN/villages_bgd.gpkg")
 } else {
     roi <- terra::vect(bgd_villages)
 }
 create_landcover(landcover, roi, "BGD")
 
 if (!exists("ind_villages")) {
-    roi <- terra::vect("data/ADMIN/villages_ind.gpkg")
+    roi <- terra::vect("objects/ADMIN/villages_ind.gpkg")
 } else {
     roi <- terra::vect(ind_villages)
 }
