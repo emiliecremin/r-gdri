@@ -92,10 +92,12 @@ get_vnm_villages <- function() {
     join_3_2,
     on = "geo_id"
   )
-  vnm_villages <- vnm_villages %>% collapse::join(
-    admin_vnm %>% st_drop_geometry(),
-    on = "GEOLEV2"
-  )
+  vnm_villages <- vnm_villages %>%
+    collapse::join(
+      admin_vnm %>% st_drop_geometry(),
+      on = "GEOLEV2"
+    ) %>%
+    st_as_sf()
   vnm_villages$country_iso3 <- "VNM"
   vnm_villages$adm1_name <- vnm_villages$NAME_1
   vnm_villages$adm2_name <- vnm_villages$NAME_2
@@ -139,6 +141,7 @@ get_bgd_villages <- function() {
   bgd_adm2 <- st_read(
     "data/ADMIN/geoBoundaries-BGD-ADM2-all/geoBoundaries-BGD-ADM2.shp"
   ) %>% st_transform(4326)
+  bgd_adm2$adm1_name <- NA
   bgd_adm2$adm2_name <- bgd_adm2$shapeName
   bgd_adm2$adm2_area <- units::set_units(st_area(bgd_adm2), km^2)
   bgd_adm4 <- st_read(
@@ -146,6 +149,7 @@ get_bgd_villages <- function() {
   ) %>% st_transform(4326)
   # geo_id must be at ADM4 level / keep GEOLEV2 for IPUMS
   bgd_adm4$geo_id <- bgd_adm4$shapeID
+  bgd_adm4$adm3_name <- NA
   bgd_adm4$adm4_name <- bgd_adm4$shapeName
   bgd_adm4$Name <- bgd_adm4$shapeName
   bgd_adm4$adm_level <- "ADM4"
@@ -192,7 +196,8 @@ get_bgd_villages <- function() {
     collapse::join(
       ipums_bgd %>% st_drop_geometry(),
       on = c("adm2_name" = "ADMIN_NAME")
-    )
+    ) %>%
+    st_as_sf()
   bgd_2_4$country_iso3 <- "BGD"
   st_write(bgd_2_4, "objects/ADMIN/villages_bgd.gpkg", append = FALSE)
   return(bgd_2_4)
