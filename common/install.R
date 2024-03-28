@@ -1,3 +1,4 @@
+install.packages("collapse")
 install.packages("data.table")
 install.packages("dplyr")
 install.packages("exactextractr")

@@ -63,18 +63,6 @@ iso <- function(cntry_code) {
   return(ipums_iso[[cntry_code]])
 }
 
-addIpums <- function(df) {
-  # PCODE:  VN  82 005
-  # IPUMS: 704 082 005
-  cntry <- substr(df$ADM2_PCODE, 1, 2)
-  adm1 <- substr(df$ADM2_PCODE, 3, 4)
-  adm2 <- substr(df$ADM2_PCODE, 5, 7)
-  df$GEOLEV2 <- str_replace_all(df$ADM2_PCODE, cntry, sapply(cntry, ipums))
-  df$GEOLEV2 <- str_replace_all(df$GEOLEV2, adm1, str_pad(adm1, 3, pad = "0"))
-  df$GEOLEV2 <- str_replace_all(df$GEOLEV2, adm2, str_pad(adm2, 3, pad = "0"))
-  return(df)
-}
-
 joinOnColumn <- function(df, shp, col) {
   df[[col]] <- as.character(df[[col]])
   shp[[col]] <- as.character(shp[[col]])
@@ -137,7 +125,6 @@ process_indicators <- function(locations, indicators, output) {
     country_iso3 <- unique(locations$country_iso3)[1]
     output <- str_glue("{output}/{country_iso3}")
     mkdirs(output)
-    social <- load_social_data(country_iso3)
 
     i <- 1
     for (indicator_code in indicators) {
@@ -147,7 +134,7 @@ process_indicators <- function(locations, indicators, output) {
         )
         indicator <- do.call(
             get(indicator_code),
-            list(locations = locations, data = social)
+            list(locations = locations)
         )
         format_indicator(
             indicator_code, indicator, locations,
