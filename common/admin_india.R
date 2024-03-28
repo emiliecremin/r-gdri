@@ -3,6 +3,9 @@
 # https://livingatlas-dcdev.opendata.arcgis.com/datasets/esriindia1::india-village-boundary-2021/about
 # https://opendata.arcgis.com/api/v3/datasets/6e48332636074603acbc55e116ab264e_0/downloads/data?format=shp&spatialRefId=4326&where=1%3D1
 #------------------------------------------------------------------------------
+
+mkdirs("objects/ADMIN")
+
 get_ind_villages <- function() {
   print("India_Village_Boundary_2021 is a large data source, loading...")
   esri_wb <- st_read(
@@ -14,6 +17,9 @@ get_ind_villages <- function() {
   max(nchar(as.character(esri_wb$lgd_subdis)), na.rm = TRUE)
   esri_wb$lgd_subdis[is.na(esri_wb$lgd_subdis)] <- 99999
   esri_wb$lgd_subdis <- sprintf("%05s", as.character(esri_wb$lgd_subdis))
+
+  # Fix missing state fields
+  esri_wb$state <- "West Bengal"
 
   # Analysis of duplicates in the shapefile
   nrow(esri_wb)
@@ -111,6 +117,10 @@ get_ind_villages <- function() {
     dplyr::filter(`Town/Village` != 318642), sum_kendra)
 
   keep_cols <- c(
+    "id",
+    "state",
+    "district",
+    "subdistric",
     "censusname",
     "no_hh",
     "censuscode",
@@ -192,6 +202,8 @@ get_ind_villages <- function() {
   # https://censusindia.gov.in/nada/index.php/catalog/9625
   #------------------------------------------------------------------------------
   dir <- "data/ADMIN/INDIA/CENSUS-2011/PC11_HL14"
+  to_be_deleted <- list.files(dir, pattern = "^~")
+  file.remove(glue::glue("{dir}/{to_be_deleted}"))
   hlpca_files <- list.files(
     normalizePath(dir),
     pattern = "\\.(xls|xlsx)$",
@@ -210,7 +222,6 @@ get_ind_villages <- function() {
       )
     hlpca <- rbind(hlpca, tmp)
   }
-  colnames(hlpca)
   cols_hlpca <- read.csv(
     "data/ADMIN/INDIA/CENSUS-2011/PC11_HL14/hlpca-colnames.csv"
   )
@@ -307,14 +318,14 @@ get_ind_villages <- function() {
   no_binding <- no_binding %>% relocate(geometry, .after = last_col())
 
   drop_cols <- setdiff(colnames(no_binding), colnames(hlpca_census_villages))
-  no_binding$`District Code`
-  no_binding$`Tehsil Code`
-  no_binding$`Town Code/Village code`
-  no_binding$`Ward No`
-  no_binding$`Rural/Urban`
+  # no_binding$`District Code`
+  # no_binding$`Tehsil Code`
+  # no_binding$`Town Code/Village code`
+  # no_binding$`Ward No`
+  # no_binding$`Rural/Urban`
   no_binding_drop <- no_binding %>% dplyr::select(-one_of(drop_cols))
-  setdiff(colnames(no_binding_drop), colnames(hlpca_census_villages))
-  rbind(hlpca_census_villages, no_binding_drop)
+  # setdiff(colnames(no_binding_drop), colnames(hlpca_census_villages))
+  # rbind(hlpca_census_villages, no_binding_drop)
   drop_cols <- setdiff(
     colnames(hlpca_census_subdistrict), colnames(hlpca_census_villages)
   )
@@ -333,18 +344,25 @@ get_ind_villages <- function() {
   )
   ind_villages$CNTRY_NAME <- "India"
   ind_villages$country_iso3 <- "IND"
-  ind_villages$geo_id <- paste(
-    ind_villages$lgd_statec,
-    ind_villages$District,
-    ind_villages$lgd_subdis,
-    ind_villages$censusco_1,
-    sep = ""
-  )
+  ind_villages$adm1_name <- ind_villages$state
+  ind_villages$adm2_name <- ind_villages$district
+  ind_villages$adm3_name <- ind_villages$subdistric
+  ind_villages$adm4_name <- ind_villages$Name
+  ind_villages$adm_level <- "ADM4"
+  ind_villages$geo_id <- ind_villages$id
   ind_villages$pop <- as.numeric(ind_villages$TOT_P)
   ind_villages$area <- units::set_units(st_area(ind_villages), km^2)
+  # duplicated columns
+  drop_cols <- c("state", "district")
+  ind_villages <- ind_villages %>%
+    dplyr::select(-one_of(drop_cols)) %>%
+    st_as_sf()
+  ind_villages <- ind_villages %>%
+    st_as_sf() %>%
+    st_cast("MULTIPOLYGON")
   st_write(
     ind_villages,
-    "data/ADMIN/villages_ind.gpkg",
+    "objects/ADMIN/villages_ind.gpkg",
     append = FALSE
   )
   return(ind_villages)
