@@ -147,14 +147,33 @@ process_indicators <- function(locations, social_data, indicators, output) {
   return(result)
 }
 
+keep_common_columns <- function(data) {
+  keep_cols <- c(
+    "geo_id",
+    "val",
+    "country_iso3",
+    "CNTRY_NAME",
+    "adm1_name",
+    "adm2_name",
+    "adm3_name",
+    "adm4_name",
+    "adm_level",
+    "Name",
+    "pop",
+    "area"
+  )
+  data <- data[, (names(data) %in% keep_cols)]
+  return(data)
+}
+
 format_indicator <- function(indicator_name, data, locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
   cat("format_indicator for", indicator_name, "\n")
-  cat("colnames", colnames(data), "\n")
   cat("class", class(data), "\n")
   if (!(is(data, "sf") || is(data, "SpatVector"))) {
     cat("Join data with geometries...\n")
     data <- joinOnColumn(data, locations, "geo_id")
   }
+  data <- keep_common_columns(data)
   if (normalize) {
     cat("normalize", indicator_name, "\n")
     data$norm <- normalize_minmax(data$val, na.rm = TRUE)
