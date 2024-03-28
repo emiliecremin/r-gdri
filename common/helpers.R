@@ -1,9 +1,9 @@
 source("common/libraries.R")
 
 extract_classes <- function(landcover, classes) {
-    rclmat <- matrix(classes, ncol = 3, byrow = TRUE)
-    extracted_classes <- terra::classify(landcover, rclmat, others = NA)
-    return(extracted_classes)
+  rclmat <- matrix(classes, ncol = 3, byrow = TRUE)
+  extracted_classes <- terra::classify(landcover, rclmat, others = NA)
+  return(extracted_classes)
 }
 
 mkdirs <- function(fp) {
@@ -13,11 +13,11 @@ mkdirs <- function(fp) {
   }
 }
 
-rename_geometry <- function(g, name){
-    current = attr(g, "sf_column")
-    names(g)[names(g)==current] = name
-    st_geometry(g)=name
-    g
+rename_geometry <- function(g, name) {
+  current <- attr(g, "sf_column")
+  names(g)[names(g) == current] <- name
+  st_geometry(g) <- name
+  g
 }
 
 # https://stackoverflow.com/a/47051133/6081943
