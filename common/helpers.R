@@ -120,31 +120,31 @@ joinOnPostcode <- function(df, shp) {
   )
 }
 
-process_indicators <- function(locations, indicators, output) {
-    result <- locations
-    country_iso3 <- unique(locations$country_iso3)[1]
-    output <- str_glue("{output}/{country_iso3}")
-    mkdirs(output)
+process_indicators <- function(locations, social_data, indicators, output) {
+  result <- keep_common_columns(locations)
+  country_iso3 <- unique(locations$country_iso3)[1]
+  output <- str_glue("{output}/{country_iso3}")
+  mkdirs(output)
 
-    i <- 1
-    for (indicator_code in indicators) {
-        cat(
-            "Processing indicator:", indicator_code,
-            "(", i, "/", length(indicators), ")\n"
-        )
-        indicator <- do.call(
-            get(indicator_code),
-            list(locations = locations)
-        )
-        format_indicator(
-            indicator_code, indicator, locations,
-            append = FALSE, normalize = FALSE, plot = FALSE,
-            output = output
-        )
-        result <- update_gdri(indicator, result, indicator_code)
-        i <- i + 1
-    }
-    return(result)
+  i <- 1
+  for (indicator_code in indicators) {
+    cat(
+      "Processing indicator:", indicator_code,
+      "(", i, "/", length(indicators), ")\n"
+    )
+    indicator <- do.call(
+      get(indicator_code),
+      list(locations = locations, social_data = social_data)
+    )
+    format_indicator(
+      indicator_code, indicator, locations,
+      append = FALSE, normalize = FALSE, plot = FALSE,
+      output = output
+    )
+    result <- update_gdri(indicator, result, indicator_code)
+    i <- i + 1
+  }
+  return(result)
 }
 
 format_indicator <- function(indicator_name, data, locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
