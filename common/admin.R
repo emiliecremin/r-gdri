@@ -194,6 +194,7 @@ get_bgd_villages <- function() {
     )
   bgd_2_4$country_iso3 <- "BGD"
   st_write(bgd_2_4, "objects/ADMIN/villages_bgd.gpkg", append = FALSE)
+  return(bgd_2_4)
 }
 bgd_villages <- get_bgd_villages()
 # -----------------------------------------------------------------------------
