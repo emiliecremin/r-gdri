@@ -44,7 +44,8 @@ get_vnm_villages <- function() {
     admin_vnm,
     st_centroid(vnm_adm3),
     join = st_contains
-  )
+  ) %>% filter(!NAME_2 == "Tuy Phước")
+  # Tuy Phước special case this is not matched to the right place
   not_contained <- vnm_adm3 %>% filter(!geo_id %in% vnm_adm3_2$geo_id)
 
   # 2. Matching on the ADM2 Name from both sides
