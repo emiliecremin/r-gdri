@@ -13,15 +13,9 @@ source("common/aquaculture.R")
 source("common/GFC.R")
 # ---------------------------------------------------------------
 
-if (!exists("vnm_villages")) {
-    vnm_villages <- st_read("data/ADMIN/villages_vnm.gpkg")
-}
-if (!exists("bgd_villages")) {
-    bgd_villages <- st_read("data/ADMIN/villages_bgd.gpkg")
-}
-if (!exists("ind_villages")) {
-    ind_villages <- st_read("data/ADMIN/villages_ind.gpkg")
-}
+vnm_villages <- st_read("objects/ADMIN/villages_vnm.gpkg")
+bgd_villages <- st_read("objects/ADMIN/villages_bgd.gpkg")
+ind_villages <- st_read("objects/ADMIN/villages_ind.gpkg")
 
 # ---------------------------------------------------------------
 # INDICATORS PER DATA SOURCE
