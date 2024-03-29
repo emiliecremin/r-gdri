@@ -120,12 +120,13 @@ joinOnPostcode <- function(df, shp) {
   )
 }
 
-process_indicators <- function(locations, social_data, indicators, output) {
+process_indicators <- function(locations, social_data, indicators, output = "") {
   result <- keep_common_columns(locations)
   country_iso3 <- unique(locations$country_iso3)[1]
-  output <- str_glue("{output}/{country_iso3}")
-  mkdirs(output)
-
+  if (output != "") {
+    output <- str_glue("{output}/{country_iso3}")
+    mkdirs(output)
+  }
   i <- 1
   for (indicator_code in indicators) {
     cat(
