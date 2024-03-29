@@ -1,4 +1,5 @@
 source("common/helpers.R")
+source("common/social.R")
 
 # Data sources: ipums, aqueduct and national indicators
 soc_susceptibility_indicators <- c(
@@ -7,14 +8,14 @@ soc_susceptibility_indicators <- c(
     "S_SOC5",
     "S_SOC8",
     "S_ECO2",
-    "S_INF1",
-    "S_INF2",
+    "S_INF1", # census / IPUMS = toilets facilities
+    "S_INF2", # census / IPUMS = water supply
     "S_INF3",
     "S_ECO4",
     "S_OCU1",
     "S_STA1",
-    "S_INF1_621",
-    "S_INF2_611"
+    "S_INF1_621", # Aqueduct: without access to (improved) sanitation (%)
+    "S_INF2_611" # Aqueduct: without access to clean driking water (%)
 )
 
 
@@ -27,11 +28,14 @@ soc_susceptibility_indicators <- c(
 
 
 social_susceptibility <- function(locations) {
+    social_data <- get_social_data(locations)
+    load_social_indicators(locations)
     return(
         process_indicators(
             locations,
-            indicators=soc_susceptibility_indicators,
-            output="output/social_susceptibility"
+            social_data,
+            indicators = soc_susceptibility_indicators,
+            # output = "output/social_susceptibility"
         )
     )
 }

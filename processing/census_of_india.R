@@ -7,7 +7,8 @@ clean_column <- function(locations, col) {
       sub(",", ".", data[[col]], fixed = TRUE)
     )
   }
-  col_names <- c("geo_id", col)
+  data$val <- data[[col]]
+  col_names <- c("geo_id", "val")
   return(data %>% dplyr::select(any_of(col_names)))
 }
 
@@ -55,22 +56,22 @@ S_SOC3 <- function(locations, ...) {
     "TRU"
   )
   female_hh_min <- female_hh[, keep_cols]
-  pca11_districts <- dplyr::inner_join(
+  pca11_dist <- dplyr::inner_join(
     female_hh_min, pca11_districts,
     by = c(
       "District" = "District",
       "TRU" = "TRU"
     )
   )
-  pca11_districts$S_SOC3 <- pca11_districts$F_HH / pca11_districts$No_HH
+  pca11_dist$S_SOC3 <- pca11_dist$F_HH / pca11_dist$No_HH * 100
   keep_cols <- c(
     "S_SOC3",
     "District",
     "TRU"
   )
-  pca11_districts <- pca11_districts[, keep_cols]
+  pca11_dist <- pca11_dist[, keep_cols]
   data <- dplyr::inner_join(
-    data, pca11_districts,
+    data, pca11_dist,
     by = c(
       "District" = "District",
       "TRU" = "TRU"
@@ -86,45 +87,43 @@ S_SOC3 <- function(locations, ...) {
 # https://censusindia.gov.in/nada/index.php/catalog/43388/download/47092/DDW-C20-1900.xlsx
 S_SOC5 <- function(locations, ...) {
   data <- locations %>% st_drop_geometry()
-   disabilities <- read_excel("data/ADMIN/INDIA/CENSUS-2011/DDW-C20-1900.xlsx", skip = 1) %>% 
+  disabilities <- read_excel("data/ADMIN/INDIA/CENSUS-2011/DDW-C20-1900.xlsx", skip = 1) %>%
     dplyr::filter(
       `State Code` == "19",
       `Distt.Code` != "000",
       `Age-group` == "Total",
       `Total/Rural/Urban` != "Total"
     )
-    colnames(disabilities)
-    unique(disabilities$`Distt.Code`)
-    disabilities$District <- disabilities$`Distt.Code`
-    disabilities$TRU <- disabilities$`Total/Rural/Urban`
-    disabilities$disabled_persons <- as.integer(disabilities$`Total number of disabled persons`)
-    keep_cols <- c(
-      "District",
-      "TRU",
-      "disabled_persons"
+  disabilities$District <- disabilities$`Distt.Code`
+  disabilities$TRU <- disabilities$`Total/Rural/Urban`
+  disabilities$disabled_persons <- as.integer(disabilities$`Total number of disabled persons`)
+  keep_cols <- c(
+    "District",
+    "TRU",
+    "disabled_persons"
+  )
+  disabilities <- disabilities[, keep_cols]
+  pca11_dist <- dplyr::inner_join(
+    disabilities, pca11_districts,
+    by = c(
+      "District" = "District",
+      "TRU" = "TRU"
     )
-    disabilities <- disabilities[, keep_cols]
-    pca11_districts <- dplyr::inner_join(
-      disabilities, pca11_districts,
-      by = c(
-        "District" = "District",
-        "TRU" = "TRU"
-      )
+  )
+  pca11_dist$S_SOC5 <- pca11_dist$disabled_persons / pca11_dist$TOT_P * 100
+  keep_cols <- c(
+    "S_SOC5",
+    "District",
+    "TRU"
+  )
+  pca11_dist <- pca11_dist[, keep_cols]
+  data <- dplyr::inner_join(
+    data, pca11_dist,
+    by = c(
+      "District" = "District",
+      "TRU" = "TRU"
     )
-    pca11_districts$S_SOC5 <- pca11_districts$disabled_persons / pca11_districts$TOT_P
-    keep_cols <- c(
-      "S_SOC5",
-      "District",
-      "TRU"
-    )
-    pca11_districts <- pca11_districts[, keep_cols]
-    data <- dplyr::inner_join(
-      data, pca11_districts,
-      by = c(
-        "District" = "District",
-        "TRU" = "TRU"
-      )
-    )
+  )
   return(clean_column(data, "S_SOC5"))
 }
 
@@ -132,7 +131,7 @@ S_SOC5 <- function(locations, ...) {
 # Percentage of illiterate population (%)
 S_SOC8 <- function(locations, ...) {
   data <- locations %>% st_drop_geometry()
-  data$S_SOC8 <- data$P_ILL / (data$TOT_P - data$P_06)
+  data$S_SOC8 <- data$P_ILL / (data$TOT_P - data$P_06) * 100
   return(clean_column(data, "S_SOC8"))
 }
 
@@ -154,7 +153,7 @@ dependents, pensioners, beggars, etc.
 "
 S_ECO2 <- function(locations, ...) {
   data <- locations %>% st_drop_geometry()
-  data$S_ECO2 <- data$NON_WORK_P / data$TOT_P
+  data$S_ECO2 <- data$NON_WORK_P / data$TOT_P * 100
   return(clean_column(data, "S_ECO2"))
 }
 
@@ -164,7 +163,8 @@ S_ECO2 <- function(locations, ...) {
 # Number of households not having latrine facility within the premises (col 100)
 S_INF1 <- function(locations, ...) {
   data <- locations %>% st_drop_geometry()
-  data$S_INF1 <- data$`Number of households not having latrine facility within the premises`
+  data$S_INF1 <-
+    data$`Number.of.households.not.having.latrine.facility.within.the.premises`
   return(clean_column(data, "S_INF1"))
 }
 
@@ -189,7 +189,9 @@ S_INF1 <- function(locations, ...) {
 # We consider 72 (Tap water from treated source) and 78 (Spring) as clean water
 S_INF2 <- function(locations, ...) {
   data <- locations %>% st_drop_geometry()
-  data$S_INF2 <- data$`Main Source of Drinking Water: Tapwater from treated source` + data$`Main Source of Drinking Water: Spring`
+  data$S_INF2 <-
+    as.numeric(data$`Main.Source.of.Drinking.Water..Tapwater.from.treated.source`) +
+    as.numeric(data$`Main.Source.of.Drinking.Water..Spring`)
   return(clean_column(data, "S_INF2"))
 }
 
@@ -197,7 +199,7 @@ S_INF2 <- function(locations, ...) {
 # Percentage of population without access to electricity (%)
 S_INF3 <- function(locations, ...) {
   data <- locations %>% st_drop_geometry()
-  data$S_INF3 <- data$`Main Source of lighting: Electricity`
+  data$S_INF3 <- data$`Main.Source.of.lighting..Electricity`
   return(clean_column(data, "S_INF3"))
 }
 
@@ -211,6 +213,6 @@ S_INF3 <- function(locations, ...) {
 # Availability of assets: None of the assets specified in col. 10 to 19: TV - Computer/Laptop - Telephone/mobile phone - Scooter/Car
 C_EWS1 <- function(locations, ...) {
   data <- locations %>% st_drop_geometry()
-  data$C_EWS1 <- data$`Availability of assets: None of the assets specified in col. 10 to 19`
+  data$C_EWS1 <- data$`Availability.of.assets..None.of.the.assets.specified.in.col..10.to.19`
   return(clean_column(data, "C_EWS1"))
 }

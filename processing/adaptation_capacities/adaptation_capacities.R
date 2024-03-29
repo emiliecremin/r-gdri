@@ -1,4 +1,5 @@
 source("common/helpers.R")
+source("common/social.R")
 
 # Data sources: ipums, open street map, world bank, and national indicators
 adaptation_capacities_indicators <- c(
@@ -20,11 +21,14 @@ adaptation_capacities_indicators <- c(
 )
 
 adaptation_capacities <- function(locations) {
+    social_data <- get_social_data(locations)
+    load_social_indicators(locations)
     return(
         process_indicators(
-            locations, 
-            indicators=adaptation_capacities_indicators, 
-            output="output/adaptation_capacities"
+            locations,
+            social_data,
+            indicators = adaptation_capacities_indicators,
+            # output = "output/adaptation_capacities"
         )
     )
 }

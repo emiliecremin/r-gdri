@@ -1,9 +1,9 @@
 source("common/libraries.R")
 
 extract_classes <- function(landcover, classes) {
-    rclmat <- matrix(classes, ncol = 3, byrow = TRUE)
-    extracted_classes <- terra::classify(landcover, rclmat, others = NA)
-    return(extracted_classes)
+  rclmat <- matrix(classes, ncol = 3, byrow = TRUE)
+  extracted_classes <- terra::classify(landcover, rclmat, others = NA)
+  return(extracted_classes)
 }
 
 mkdirs <- function(fp) {
@@ -13,11 +13,11 @@ mkdirs <- function(fp) {
   }
 }
 
-rename_geometry <- function(g, name){
-    current = attr(g, "sf_column")
-    names(g)[names(g)==current] = name
-    st_geometry(g)=name
-    g
+rename_geometry <- function(g, name) {
+  current <- attr(g, "sf_column")
+  names(g)[names(g) == current] <- name
+  st_geometry(g) <- name
+  g
 }
 
 # https://stackoverflow.com/a/47051133/6081943
@@ -120,41 +120,61 @@ joinOnPostcode <- function(df, shp) {
   )
 }
 
-process_indicators <- function(locations, indicators, output) {
-    result <- locations
-    country_iso3 <- unique(locations$country_iso3)[1]
+process_indicators <- function(locations, social_data, indicators, output = "") {
+  result <- keep_common_columns(locations)
+  country_iso3 <- unique(locations$country_iso3)[1]
+  if (output != "") {
     output <- str_glue("{output}/{country_iso3}")
     mkdirs(output)
+  }
+  i <- 1
+  for (indicator_code in indicators) {
+    cat(
+      "Processing indicator:", indicator_code,
+      "(", i, "/", length(indicators), ")\n"
+    )
+    indicator <- do.call(
+      get(indicator_code),
+      list(locations = locations, social_data = social_data)
+    )
+    format_indicator(
+      indicator_code, indicator, locations,
+      append = FALSE, normalize = FALSE, plot = FALSE,
+      output = output
+    )
+    result <- update_gdri(indicator, result, indicator_code)
+    i <- i + 1
+  }
+  return(result)
+}
 
-    i <- 1
-    for (indicator_code in indicators) {
-        cat(
-            "Processing indicator:", indicator_code,
-            "(", i, "/", length(indicators), ")\n"
-        )
-        indicator <- do.call(
-            get(indicator_code),
-            list(locations = locations)
-        )
-        format_indicator(
-            indicator_code, indicator, locations,
-            append = FALSE, normalize = FALSE, plot = FALSE,
-            output = output
-        )
-        result <- update_gdri(indicator, result, indicator_code)
-        i <- i + 1
-    }
-    return(result)
+keep_common_columns <- function(data) {
+  keep_cols <- c(
+    "geo_id",
+    "val",
+    "country_iso3",
+    "CNTRY_NAME",
+    "adm1_name",
+    "adm2_name",
+    "adm3_name",
+    "adm4_name",
+    "adm_level",
+    "Name",
+    "pop",
+    "area"
+  )
+  data <- data[, (names(data) %in% keep_cols)]
+  return(data)
 }
 
 format_indicator <- function(indicator_name, data, locations, append = FALSE, normalize = FALSE, plot = FALSE, output = "") { # nolint
   cat("format_indicator for", indicator_name, "\n")
-  cat("colnames", colnames(data), "\n")
   cat("class", class(data), "\n")
   if (!(is(data, "sf") || is(data, "SpatVector"))) {
     cat("Join data with geometries...\n")
     data <- joinOnColumn(data, locations, "geo_id")
   }
+  data <- keep_common_columns(data)
   if (normalize) {
     cat("normalize", indicator_name, "\n")
     data$norm <- normalize_minmax(data$val, na.rm = TRUE)

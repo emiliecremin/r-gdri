@@ -13,9 +13,9 @@ source("common/aquaculture.R")
 source("common/GFC.R")
 # ---------------------------------------------------------------
 
-vnm_villages <- st_read("data/ADMIN/villages_vnm.gpkg")
-bgd_villages <- st_read("data/ADMIN/villages_bgd.gpkg")
-ind_villages <- st_read("data/ADMIN/villages_ind.gpkg")
+vnm_villages <- st_read("objects/ADMIN/villages_vnm.gpkg")
+bgd_villages <- st_read("objects/ADMIN/villages_bgd.gpkg")
+ind_villages <- st_read("objects/ADMIN/villages_ind.gpkg")
 
 # ---------------------------------------------------------------
 # INDICATORS PER DATA SOURCE
@@ -26,7 +26,6 @@ source("processing/conservation.R")
 source("processing/forest.R")
 source("processing/free_flowing_rivers.R")
 source("processing/osm.R")
-source("processing/social.R")
 source("processing/travel_time.R")
 source("processing/world_bank.R")
 
@@ -241,7 +240,7 @@ gdri <- cbind(
     agri_exposure_norm,
     water_exposure_norm,
     aquaculture_exposure_norm
-    )
+)
 gdri <- gdri[!duplicated(as.list(gdri))]
 
 gdri$SES_SUS_MH <- (gdri$SOC_MH + gdri$ES_MH) / 2

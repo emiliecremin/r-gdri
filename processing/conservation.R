@@ -6,20 +6,37 @@ library(wdpar)
 
 # Note: as of May 2023 - IND shapefile is broken on the protectedplanet server
 # used Google Earth Engine (GEE) to export it with the following code
-# https://code.earthengine.google.com/d481fffa83c655ed0f1de7722ad4a923
-# var dataset = ee.FeatureCollection('WCMC/WDPA/current/polygons').filter("ISO3 == 'IND'")
-# var studyArea = ee.FeatureCollection(dataset)
-# Export.table.toDrive({collection: studyArea, fileFormat: 'SHP', description: "WCMC_WPDA_IND"});
+# https://code.earthengine.google.com/b31f06484c20093b32f911e05137fcdc?noload=true
+# var getPolygons = function(features) {
+#   return features
+#     .map(function (f) {
+#       return ee.Feature(f).set('geometry_type', ee.Feature(f).geometry().type()); })
+#     .filter(ee.Filter.equals('geometry_type', 'Polygon'));
+# }
+
+# var dataset = ee.FeatureCollection('WCMC/WDPA/current/polygons').filter("ISO3 == 'IND'");
+# var studyArea = getPolygons(ee.FeatureCollection(dataset));
+# Export.table.toDrive({collection: studyArea, fileFormat: 'GEO_JSON', description: "WCMC_WPDA_IND"});
+
+# var dataset = ee.FeatureCollection('WCMC/WDPA/current/polygons').filter("ISO3 == 'VNM'");
+# var studyArea = getPolygons(ee.FeatureCollection(dataset));
+# Export.table.toDrive({collection: studyArea, fileFormat: 'GEO_JSON', description: "WCMC_WPDA_VNM"});
+
+# var dataset = ee.FeatureCollection('WCMC/WDPA/current/polygons').filter("ISO3 == 'BGD'");
+# var studyArea = getPolygons(ee.FeatureCollection(dataset));
+# Export.table.toDrive({collection: studyArea, fileFormat: 'GEO_JSON', description: "WCMC_WPDA_BGD"});
+
 
 get_conservation_areas <- function(iso3) {
   objects <- "objects/conservation"
   mkdirs(objects)
-  filename <- glue::glue("{objects}/protectedplanet_{iso3}.gpkg")
+  filename <- glue::glue("{objects}/WCMC_WPDA_{iso3}.geojson")
   if (file.exists(filename) == TRUE) {
     pa_data <- terra::vect(filename)
   } else {
     raw_pa_data <- wdpa_fetch(
-      iso3, wait = TRUE, download_dir = (objects)
+      iso3,
+      wait = TRUE, download_dir = (objects)
     )
     pa_data <- wdpa_clean(raw_pa_data)
     # plot(pa_data)
@@ -45,11 +62,11 @@ ER_CON_1512 <- function(locations, ...) {
   intersect$conservation_area <- units::set_units(st_area(i), km^2)
   df <- sf::st_as_sf(intersect) %>% st_drop_geometry()
   locations <-
-      right_join(df[c("geo_id", "conservation_area")], locations) %>%
-      st_as_sf()
+    right_join(df[c("geo_id", "conservation_area")], locations) %>%
+    st_as_sf()
   locations$conservation_area[is.na(locations$conservation_area)] <- 0
   locations$cnt <- locations$conservation_area
   locations$val <-
-      as.numeric(locations$conservation_area) / as.numeric(locations$area)
+    as.numeric(locations$conservation_area) / as.numeric(locations$area)
   return(locations)
 }
