@@ -177,19 +177,6 @@ C_SAV3 <- function(locations, ...) {
     return(locations)
 }
 
-
-# health_coverage 2014 - Public health expenditure (% of GDP) - http://data.worldbank.org/
-C_HEA3 <- function(locations, ...) {
-    locations$val <- 1.4
-    return(locations)
-}
-
-# health_coverage 2014 - Private health expenditure (% of GDP) - http://www.data.worldbank.org
-C_HEA4 <- function(locations, ...) {
-    locations$val <- 3.3
-    return(locations)
-}
-
 # Insurance 2022 - Percentage of households with insurance – excluding health insurance or Microinsurance penetration (%)
 # https://www.munichre-foundation.org/en/Inclusive_insurance/The_World_Map_of_Microinsurance.html#
 C_INS1 <- function(locations, ...) {

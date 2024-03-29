@@ -175,18 +175,6 @@ C_SAV3 <- function(locations, ...) {
     return(locations)
 }
 
-# health_coverage 2014 - Public health expenditure (% of GDP) - http://data.worldbank.org/
-C_HEA3 <- function(locations, ...) {
-    locations$val <- 3.8
-    return(locations)
-}
-
-# health_coverage 2014 - Private health expenditure (% of GDP) - http://www.data.worldbank.org
-C_HEA4 <- function(locations, ...) {
-    locations$val <- 3.2
-    return(locations)
-}
-
 # Insurance
 C_INS1 <- function(locations, ...) {
     locations$val <- 0.18
