@@ -1,3 +1,4 @@
+library(collapse)
 library(cartomisc)
 library(data.table)
 library(dplyr)

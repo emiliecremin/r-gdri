@@ -13,39 +13,50 @@ osm_query <- function(shape, key, values) {
     return(q)
 }
 
-count_osm_features <- function(location, osm_data, path, counting = "numbers") {
+count_osm_features <- function(location, osm_data, counting = "numbers") {
     cnt <- 0
-    country_iso3 <- location$country_iso3
-    objects <- str_glue("objects/osm/{country_iso3}/{path}")
-    mkdirs(objects)
     geom_type <- unique(st_geometry_type(osm_data))
-    filename <- glue::glue("{objects}/{location$geo_id}_{geom_type}.rds")
-    if (file.exists(filename) == TRUE) {
-        cat(
-            "using cached osm data for", location$geo_id,
-            "in", location$CNTRY_NAME, "\n"
-        )
-        location_osm <- readRDS(filename)
-    } else {
-        cat(
-            "croping osm data for", location$geo_id,
-            "in", location$CNTRY_NAME, "\n"
-        )
-        location_osm <- terra::crop(
-            vect(osm_data), vect(location)
-        )
-        saveRDS(location_osm, filename)
-    }
+    cat(
+        "crop osm data", location$geo_id,
+        "in", location$CNTRY_NAME, "\n"
+    )
+    location_osm <- terra::crop(
+        vect(osm_data), vect(location)
+    )
+    # saveRDS(location_osm, filename)
+    # }
     if (nrow(location_osm) > 0) {
         if (counting == "length") {
             cnt <- as.numeric(
-                    sum(st_length(st_as_sf(location_osm)))
+                sum(st_length(st_as_sf(location_osm)))
             )
         } else {
             cnt <- nrow(as.data.frame(location_osm))
         }
     }
     return(cnt)
+}
+
+osm_analysis <- function(locations,
+                         osm_points = data.frame(),
+                         osm_multipolygons = data.frame(),
+                         osm_lines = data.frame()) {
+    for (i in 1:nrow(locations)) {
+        cat(i, "/", nrow(locations), " ")
+        location <- locations[i, ]
+        cnt <- 0
+        if (nrow(osm_points) > 0) {
+            cnt <- cnt + count_osm_features(location, osm_points)
+        }
+        if (nrow(osm_multipolygons) > 0) {
+            cnt <- cnt + count_osm_features(location, osm_multipolygons)
+        }
+        if (nrow(osm_lines) > 0) {
+            cnt <- cnt + count_osm_features(location, osm_lines, counting = "length")
+        }
+        locations$cnt[i] <- cnt
+    }
+    return(locations)
 }
 # C_SHE1
 # Access to shelter places
@@ -70,19 +81,24 @@ C_SHE1 <- function(locations, ...) {
         query = q,
         extra_tags = education_services
     )
-    for (i in 1:nrow(locations)) {
-        cat(i, "/", nrow(locations), " ")
-        location <- locations[i, ]
-        cnt <- 0
-        if (nrow(osm_points) > 0) {
-            cnt <- cnt + count_osm_features(location, osm_points, "C_SHE1")
-        }
-        if (nrow(osm_multipolygons) > 0) {
-            cnt <- cnt + count_osm_features(location, osm_multipolygons, "C_SHE1")
-        }
-        locations$cnt[i] <- cnt
+    original_loc <- locations
+    area <- "area"
+    if (exists("GEOLEV2", where = locations)) {
+        country_iso3 <- unique(locations$country_iso3)[1]
+        locations <- st_read(glue::glue("data/ADMIN/admin_{country_iso3}.gpkg"))
+        area <- "adm2_area"
     }
-    locations$val <- locations$cnt / as.numeric(locations$area) / locations$pop * 1000
+    locations <- osm_analysis(locations, osm_points, osm_multipolygons)
+    locations$val <- locations$cnt / as.numeric(locations[[area]]) / locations$pop * 1000
+    if (exists("GEOLEV2", where = locations)) {
+        locations <- collapse::join(
+            original_loc,
+            locations,
+            how = "full",
+            on = "GEOLEV2",
+            verbose = 2
+        )
+    }
     return(locations)
 }
 
@@ -108,19 +124,22 @@ C_GOV2 <- function(locations, ...) {
         query = q,
         extra_tags = emergency_services
     )
-    for (i in 1:nrow(locations)) {
-        cat(i, "/", nrow(locations), " ")
-        location <- locations[i, ]
-        cnt <- 0
-        if (nrow(osm_points) > 0) {
-            cnt <- cnt + count_osm_features(location, osm_points, "C_GOV2")
-        }
-        if (nrow(osm_multipolygons) > 0) {
-            cnt <- cnt + count_osm_features(location, osm_multipolygons, "C_GOV2")
-        }
-        locations$cnt[i] <- cnt
+    original_loc <- locations
+    if (exists("GEOLEV2", where = locations)) {
+        country_iso3 <- unique(locations$country_iso3)[1]
+        locations <- st_read(glue::glue("data/ADMIN/admin_{country_iso3}.gpkg"))
     }
+    locations <- osm_analysis(locations, osm_points, osm_multipolygons)
     locations$val <- locations$cnt / locations$pop * 1000
+    if (exists("GEOLEV2", where = locations)) {
+        locations <- collapse::join(
+            original_loc,
+            locations,
+            how = "full",
+            on = "GEOLEV2",
+            verbose = 2
+        )
+    }
     return(locations)
 }
 
@@ -149,16 +168,29 @@ C_TRA1 <- function(locations, ...) {
             OR waterway IN ({waterways_types})
         ")
     )
-    for (i in 1:nrow(locations)) {
-        cat(i, "/", nrow(locations), " ")
-        location <- locations[i, ]
-        cnt <- 0
-        if (nrow(osm_lines) > 0) {
-            cnt <- cnt + count_osm_features(location, osm_lines, "C_TRA1", counting = "length")
-        }
-        locations$cnt[i] <- cnt
+    original_loc <- locations
+    if (exists("GEOLEV2", where = locations)) {
+        country_iso3 <- unique(locations$country_iso3)[1]
+        locations <- st_read(glue::glue("data/ADMIN/admin_{country_iso3}.gpkg"))
     }
+    locations <- osm_analysis(locations, osm_lines = osm_lines)
     locations$val <- locations$cnt / locations$pop * 1000
+    if (exists("GEOLEV2", where = locations)) {
+        keep_cols <- c(
+            "cnt",
+            "val",
+            "GEOLEV2"
+        )
+        data <- locations[, (names(locations) %in% keep_cols)] %>%
+            st_drop_geometry()
+        locations <- collapse::join(
+            original_loc,
+            data,
+            how = "left",
+            on = "GEOLEV2",
+            verbose = 2
+        ) %>% st_as_sf()
+    }
     return(locations)
 }
 

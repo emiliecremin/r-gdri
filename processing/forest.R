@@ -1,13 +1,13 @@
 # Source: ESA Landcover
 ER_FOR_1511 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
-    forests <- rast(glue::glue("data/ESA_Landcover/{country_iso3}_forests.tif"))
+    forests <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_forests.tif"))
     locations$cnt <- exact_extract(
         forests, st_as_sf(locations),
         "sum",
-        default_value=0,
+        default_value = 0,
         progress = TRUE
-        )
+    )
     locations$val <- locations$cnt / locations$area
     return(locations)
 }
@@ -15,11 +15,11 @@ ER_FOR_1511 <- function(locations, ...) {
 # Source: Global Forest Cover - GFC
 ES_DES3 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
-    # gfc_thresholded <- readRDS(glue::glue("data/Forests/GFC/gfc_extract_thresholded_{country_iso3}.rds"))
-    # lossyear <- gfc_thresholded[["lossyear"]]
-    gfc_thresholded <- rast(glue::glue("data/Forests/GFC/gfc_extract_thresholded_{country_iso3}.tif"))
+    gfc_thresholded <- readRDS(glue::glue("objects/Forests/gfc_extract_thresholded_{country_iso3}.rds"))
+    lossyear <- gfc_thresholded[["lossyear"]]
+    # gfc_thresholded <- rast(glue::glue("data/Forests/GFC/gfc_extract_thresholded_{country_iso3}.tif"))
     # https://rdrr.io/cran/gfcanalysis/man/threshold_gfc.html
-    lossyear <- gfc_thresholded[[glue::glue("gfc_extract_thresholded_{country_iso3}_2")]]
+    # lossyear <- gfc_thresholded[[glue::glue("gfc_extract_thresholded_{country_iso3}_2")]]
     # all years from year 2000 values > 0 and < 99 become 1
     loss <- extract_classes(lossyear, c(-1, 1, 0, 0, 100, 1))
     locations$cnt <- exact_extract(loss, locations, "sum", progress = TRUE)
@@ -30,11 +30,11 @@ ES_DES3 <- function(locations, ...) {
 # Source: Global Forest Cover - GFC
 ER_RES2 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
-    # gfc_thresholded <- readRDS(glue::glue("data/Forests/GFC/gfc_extract_thresholded_{country_iso3}.rds"))
-    # gain <- gfc_thresholded[["gain"]]
-    gfc_thresholded <- rast(glue::glue("data/Forests/GFC/gfc_extract_thresholded_{country_iso3}.tif"))
+    gfc_thresholded <- readRDS(glue::glue("data/Forests/GFC/gfc_extract_thresholded_{country_iso3}.rds"))
+    gain <- gfc_thresholded[["gain"]]
+    # gfc_thresholded <- rast(glue::glue("data/Forests/GFC/gfc_extract_thresholded_{country_iso3}.tif"))
     # https://rdrr.io/cran/gfcanalysis/man/threshold_gfc.html
-    gain <- gfc_thresholded[[glue::glue("gfc_extract_thresholded_{country_iso3}_3")]]
+    # gain <- gfc_thresholded[[glue::glue("gfc_extract_thresholded_{country_iso3}_3")]]
     locations$cnt <- exact_extract(gain, locations, "sum", progress = TRUE)
     locations$val <- locations$cnt / locations$area
     return(locations)
