@@ -28,7 +28,7 @@ adaptation_capacities <- function(locations) {
             locations,
             social_data,
             indicators = adaptation_capacities_indicators,
-            output = "output/adaptation_capacities"
+            # output = "output/adaptation_capacities"
         )
     )
 }

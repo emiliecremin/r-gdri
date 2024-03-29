@@ -35,7 +35,7 @@ social_susceptibility <- function(locations) {
             locations,
             social_data,
             indicators = soc_susceptibility_indicators,
-            output = "output/social_susceptibility"
+            # output = "output/social_susceptibility"
         )
     )
 }
