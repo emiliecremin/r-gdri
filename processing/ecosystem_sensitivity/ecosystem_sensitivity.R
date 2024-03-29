@@ -12,7 +12,10 @@ ecosystem_sensitivity_indicators <- c(
     #"ES_DEG9", # Cation exchange capacity
     "ES_DEG10", # Baseline water depletion - aqueduct
     "ES_FRA2", # Connectivity Status Index - Free FLowing Rivers
-    "ES_DES3" # Percentage of deforested area - GFC
+    "ES_DES3", # Percentage of deforested area - GFC
+    "ES_SDG11_Pm25", # National
+    "ES_SDG12_nprod", # National
+    "ES_SDG1551__RLI" # National
 )
 
 ecosystem_sensitivity <- function(locations) {

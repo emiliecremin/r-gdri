@@ -10,8 +10,12 @@ adaptation_capacities_indicators <- c(
     "A_GOV4", #  World Bank
     "C_HEA3", #  World Bank
     "C_HEA4", #  World Bank
+    "A_SDG5a2_OWN", # National
     "C_GOV1", # National
     "C_GOV3", # National
+    "A_GOV4", # National
+    "C_HEA1", # National
+    "C_EWS2", # National
     "C_SAV1", # National
     "C_SAV2", # National
     "C_SAV3", # National
