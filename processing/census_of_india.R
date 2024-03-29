@@ -189,9 +189,9 @@ S_INF1 <- function(locations, ...) {
 # We consider 72 (Tap water from treated source) and 78 (Spring) as clean water
 S_INF2 <- function(locations, ...) {
   data <- locations %>% st_drop_geometry()
-  data$S_INF2 <-
-    as.numeric(data$`Main.Source.of.Drinking.Water..Tapwater.from.treated.source`) +
-    as.numeric(data$`Main.Source.of.Drinking.Water..Spring`)
+  data$S_INF2 <- 100 - as.numeric(
+    data$`Main.Source.of.Drinking.Water..Tapwater.from.treated.source`
+  ) - as.numeric(data$`Main.Source.of.Drinking.Water..Spring`)
   return(clean_column(data, "S_INF2"))
 }
 
@@ -199,7 +199,7 @@ S_INF2 <- function(locations, ...) {
 # Percentage of population without access to electricity (%)
 S_INF3 <- function(locations, ...) {
   data <- locations %>% st_drop_geometry()
-  data$S_INF3 <- data$`Main.Source.of.lighting..Electricity`
+  data$S_INF3 <- 100 - data$`Main.Source.of.lighting..Electricity`
   return(clean_column(data, "S_INF3"))
 }
 
