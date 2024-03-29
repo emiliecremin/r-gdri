@@ -151,7 +151,6 @@ C_GOV2 <- function(locations, ...) {
 # - ferry stations
 # per 1,000 inhabitants
 C_TRA1 <- function(locations, ...) {
-    locations <- bgd_villages %>% filter(GEOLEV2 %in% c(50040004, 50030009))
     all_road_types <- c(
         "motorway", "trunk", "primary", "secondary", "tertiary", "unclassified"
     )
@@ -172,7 +171,7 @@ C_TRA1 <- function(locations, ...) {
     original_loc <- locations
     if (exists("GEOLEV2", where = locations)) {
         country_iso3 <- unique(locations$country_iso3)[1]
-        locations <- st_read(glue::glue("data/ADMIN/admin_{country_iso3}.gpkg")) %>% filter(GEOLEV2 %in% c(50040004, 50030009))
+        locations <- st_read(glue::glue("data/ADMIN/admin_{country_iso3}.gpkg"))
     }
     locations <- osm_analysis(locations, osm_lines = osm_lines)
     locations$val <- locations$cnt / locations$pop * 1000
