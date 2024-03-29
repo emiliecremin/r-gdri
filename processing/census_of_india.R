@@ -137,6 +137,8 @@ S_SOC8 <- function(locations, ...) {
 
 # S_ECO2
 # Dependency ratio (%)
+# Other data source: https://censusindia.gov.in/nada/index.php/catalog/1576
+# DDW-1900C-14.xls
 "
 Main worker:
 Person who had ‘worked’ for 6 months or more
