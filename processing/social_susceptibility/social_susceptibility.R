@@ -7,7 +7,7 @@ soc_susceptibility_indicators <- c(
     "S_SOC4", # travel time to cities
     "S_SOC5",
     "S_SOC8",
-    "S_ECO2",
+    # "S_ECO2", # India = non-working / Ipums = age groups
     "S_INF1", # census / IPUMS = toilets facilities
     "S_INF2", # census / IPUMS = water supply
     "S_INF3",
