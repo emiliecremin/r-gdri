@@ -9,7 +9,7 @@ ecosystem_sensitivity_indicators <- c(
     "ES_DEG6", # Soil organic matter
     "ES_DEG7", # Soil workability (FAO HWSD 1.2 SQ7)
     "ES_DEG8", # Soil salinity (Global Soil Salinity Map)
-    #"ES_DEG9", # Cation exchange capacity
+    "ES_DEG9", # Soil Cation exchange capacity
     "ES_DEG10", # Baseline water depletion - aqueduct
     "ES_FRA2", # Connectivity Status Index - Free FLowing Rivers
     "ES_DES3", # Percentage of deforested area - GFC
@@ -21,9 +21,9 @@ ecosystem_sensitivity_indicators <- c(
 ecosystem_sensitivity <- function(locations) {
     return(
         process_indicators(
-            locations, 
-            indicators=ecosystem_sensitivity_indicators, 
-            output="output/ecosystem_sensitivity"
+            locations,
+            indicators = ecosystem_sensitivity_indicators,
+            # output="output/ecosystem_sensitivity"
         )
     )
 }
