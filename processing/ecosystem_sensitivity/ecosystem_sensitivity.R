@@ -15,7 +15,7 @@ ecosystem_sensitivity_indicators <- c(
     "ES_DES3", # Percentage of deforested area - GFC
     "ES_SDG11_Pm25", # National
     "ES_SDG12_nprod", # National
-    "ES_SDG1551__RLI" # National
+    "ES_SDG1551_RLI" # National
 )
 
 ecosystem_sensitivity <- function(locations) {

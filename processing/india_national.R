@@ -209,7 +209,7 @@ ES_SDG12_nprod <- function(locations, ...) {
 }
 
 # SDG Red List Index - UNDESA database.2021 OECD STAT
-ES_SDG1551__RLI <- function(locations, ...) {
+ES_SDG1551_RLI <- function(locations, ...) {
     locations$val <- 0.671
     return(locations)
 }
