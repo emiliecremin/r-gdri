@@ -26,6 +26,7 @@ source("processing/conservation.R")
 source("processing/forest.R")
 source("processing/free_flowing_rivers.R")
 source("processing/osm.R")
+source("processing/soil.R")
 source("processing/travel_time.R")
 source("processing/world_bank.R")
 
@@ -49,7 +50,6 @@ saveRDS(soc_sus_ind, "output/social_susceptibility/social_susceptibility_IND.rds
 soc_sus <- rbind(soc_sus_vnm, soc_sus_bgd, soc_sus_ind)
 
 soc_sus_norm <- normalize(soc_sus)
-
 n <- dplyr::select(st_drop_geometry(soc_sus_norm), ends_with("_norm"))
 soc_sus_norm$SOC_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(soc_sus_norm, "output/social_susceptibility/social_susceptibility.rds")
@@ -75,7 +75,6 @@ saveRDS(cop_adapt_ind, "output/adaptation_capacities/adaptation_capacities_IND.r
 cop_adapt <- rbind(cop_adapt_vnm, cop_adapt_bgd, cop_adapt_ind)
 
 cop_adapt_norm <- normalize(cop_adapt)
-
 n <- dplyr::select(st_drop_geometry(cop_adapt_norm), ends_with("_norm"))
 cop_adapt_norm$CA_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(cop_adapt_norm, "output/adaptation_capacities/adaptation_capacities.rds")
@@ -88,7 +87,6 @@ st_write(cop_adapt_norm, "output/adaptation_capacities/adaptation_capacities.gpk
 # ---------------------------------------------------------------
 # ECOSYSTEM SENSITIVITY
 # ---------------------------------------------------------------
-
 source("processing/ecosystem_sensitivity/ecosystem_sensitivity.R")
 
 source("processing/vietnam_national.R")
