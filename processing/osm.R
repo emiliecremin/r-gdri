@@ -57,7 +57,7 @@ C_SHE1 <- function(locations, ...) {
     result <- st_drop_geometry(locations) %>%
         group_by(.data[[id_col]], .data[[area]], pop) %>%
         summarize(cnt = n()) %>%
-        summarize(val = cnt / .data[[area]] / pop * 1000)
+        mutate(val = ifelse(pop %in% c(0, NA), 0, cnt / .data[[area]] / pop * 1000))
     if (exists("GEOLEV2", where = locations)) {
         result <- collapse::join(
             original_loc,
@@ -111,7 +111,7 @@ C_GOV2 <- function(locations, ...) {
     result <- st_drop_geometry(locations) %>%
         group_by(.data[[id_col]], pop) %>%
         summarize(cnt = n()) %>%
-        summarize(val = cnt / pop * 1000)
+        mutate(val = ifelse(pop %in% c(0, NA), 0, cnt / pop * 1000))
     if (exists("GEOLEV2", where = locations)) {
         result <- collapse::join(
             original_loc,
@@ -162,11 +162,12 @@ C_TRA1 <- function(locations, ...) {
         st_as_sf() %>%
         st_cast("MULTILINESTRING")
     # st_write(locations, "objects/roads_per_location.gpkg", append = FALSE)
-    locations$road_length <- st_length(locations)
+    locations$road_length <- as.numeric(st_length(locations))
     result <- st_drop_geometry(locations) %>%
         group_by(.data[[id_col]], pop) %>%
         summarize(cnt = sum(road_length)) %>%
-        summarize(val = cnt / pop * 1000)
+        mutate(val = ifelse(pop %in% c(0, NA), 0, cnt / pop * 1000))
+    # summarize(val = cnt / pop * 1000)
     if (exists("GEOLEV2", where = locations)) {
         result <- collapse::join(
             original_loc,
