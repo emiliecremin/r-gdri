@@ -251,4 +251,4 @@ gdri$SES_EXP_MH <- (gdri$S_EXP_MH + gdri$E_EXP_MH + gdri$A_EXP_MH + gdri$W_EXP_M
 gdri$RISK_MH <- gdri$SES_VU_MH * gdri$SES_EXP_MH
 
 st_write(gdri, "gdri.gpkg", append = FALSE)
-write.csv(gdri %>% st_drop_geometry(), "gdri.csv")
+write_xlsx(gdri %>% st_drop_geometry(), path = "output/gdri.xlsx")
