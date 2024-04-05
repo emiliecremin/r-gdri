@@ -137,26 +137,38 @@ S_SOC8 <- function(locations, ...) {
 
 # S_ECO2
 # Dependency ratio (%)
-# Other data source: https://censusindia.gov.in/nada/index.php/catalog/1576
+# C-14: Population in five year age group by residence and sex, West Bengal - 2011
+# source: https://censusindia.gov.in/nada/index.php/catalog/1576
 # DDW-1900C-14.xls
-"
-Main worker:
-Person who had ‘worked’ for 6 months or more
-during the reference period (code 1).
-
-Marginal worker:
-Person who had ‘worked’ for 3 months or more but less than 6 months (code 2).
-Person who had ‘worked’ for less than 3 months (code 3).
-
-Non-worker:
-Person who did not ‘work’ at all during the reference period (code 4).
-They will include students, persons engaged in household duties,
-dependents, pensioners, beggars, etc.
-"
 S_ECO2 <- function(locations, ...) {
-  data <- locations %>% st_drop_geometry()
-  data$S_ECO2 <- data$NON_WORK_P / data$TOT_P * 100
-  return(clean_column(data, "S_ECO2"))
+  # Age groups per district
+  # https://censusindia.gov.in/nada/index.php/catalog/1576/download/4653/DDW-1900C-14.xls
+  age_groups <- read_excel("data/ADMIN/INDIA/CENSUS-2011/DDW-1900C-14.xls", skip = 1) %>%
+    dplyr::filter(
+      `State` == "19",
+      `Distt.` != "000"
+    )
+
+  total_pop <- age_groups %>%
+    dplyr::filter(
+      `Age-group` == "All ages"
+    ) %>%
+    dplyr::select(`Distt.`, Total)
+
+
+  dependents <- age_groups %>%
+    dplyr::filter(
+      `Age-group` %in% c("0-4", "5-9", "10-14", "65-69", "70-74", "75-79", "80+")
+    ) %>%
+    group_by(`Distt.`, `Area Name`) %>%
+    summarise(dependents = sum(as.numeric(Total))) %>%
+    dplyr::select(`Distt.`, dependents)
+
+  dependency <- collapse::join(dependents, total_pop, on = "Distt.") %>%
+    mutate(val = dependents * 100 / as.numeric(Total))
+
+  locations <- collapse::join(locations, dependency, on = c("District" = "Distt."))
+  return(locations)
 }
 
 # S_INF1
@@ -201,7 +213,7 @@ S_INF2 <- function(locations, ...) {
 # Percentage of population without access to electricity (%)
 S_INF3 <- function(locations, ...) {
   data <- locations %>% st_drop_geometry()
-  data$S_INF3 <- 100 - data$`Main.Source.of.lighting..Electricity`
+  data$S_INF3 <- 100 - as.numeric(data$`Main.Source.of.lighting..Electricity`)
   return(clean_column(data, "S_INF3"))
 }
 
