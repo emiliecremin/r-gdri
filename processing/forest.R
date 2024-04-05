@@ -16,7 +16,7 @@ ER_FOR_1511 <- function(locations, ...) {
 ES_DES3 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
     gfc_thresholded <- readRDS(glue::glue("objects/Forests/gfc_extract_thresholded_{country_iso3}.rds"))
-    lossyear <- gfc_thresholded[[glue::glue("gfc_extract_thresholded_{country_iso3}_2")]]
+    lossyear <- gfc_thresholded[["lossyear"]]
     # https://rdrr.io/cran/gfcanalysis/man/threshold_gfc.html
     # all years from year 2000 values > 0 and < 99 become 1
     loss <- extract_classes(lossyear, c(-1, 1, 0, 0, 100, 1))
@@ -28,9 +28,9 @@ ES_DES3 <- function(locations, ...) {
 # Source: Global Forest Cover - GFC
 ER_RES2 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
-    gfc_thresholded <- readRDS(glue::glue("data/Forests/GFC/gfc_extract_thresholded_{country_iso3}.rds"))
+    gfc_thresholded <- readRDS(glue::glue("objects/Forests/gfc_extract_thresholded_{country_iso3}.rds"))
     # https://rdrr.io/cran/gfcanalysis/man/threshold_gfc.html
-    gain <- gfc_thresholded[[glue::glue("gfc_extract_thresholded_{country_iso3}_3")]]
+    gain <- gfc_thresholded[["gain"]]
     locations$cnt <- exact_extract(gain, locations, "sum", progress = TRUE)
     locations$val <- locations$cnt / locations$area
     return(locations)
