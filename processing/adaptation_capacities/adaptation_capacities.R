@@ -14,7 +14,6 @@ adaptation_capacities_indicators <- c(
     "A_SDG5a2_OWN", # National
     "C_GOV1", # National
     "C_GOV3", # National
-    "A_GOV4", # National
     "C_HEA1", # National
     "C_EWS2", # National
     "C_SAV1", # National

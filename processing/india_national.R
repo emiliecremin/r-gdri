@@ -132,12 +132,6 @@ C_GOV3 <- function(locations, ...) {
     return(locations)
 }
 
-# Foreign_Direct_Investment - Net inflow in US$ (% of GDP) 2015
-A_GOV4 <- function(locations, ...) {
-    locations$val <- 2.1
-    return(locations)
-}
-
 # Hospital beds (per 1,000 people)
 # https://data.worldbank.org/indicator/SH.MED.BEDS.ZS
 C_HEA1 <- function(locations, ...) {
