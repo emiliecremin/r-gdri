@@ -65,8 +65,8 @@ aquaculture_exposure <- function(locations) {
     return(
         process_indicators(
             locations,
-            indicators = waterscape_exposure_indicators,
-            output = "output/exposure"
+            indicators = aquaculture_exposure_indicators,
+            # output = "output/exposure"
         )
     )
 }

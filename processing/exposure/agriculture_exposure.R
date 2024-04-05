@@ -64,9 +64,9 @@ agriculture_exposure_indicators <- c(
 agriculture_exposure <- function(locations) {
     return(
         process_indicators(
-            locations, 
-            indicators=agriculture_exposure_indicators, 
-            output="output/exposure"
+            locations,
+            indicators = agriculture_exposure_indicators,
+            # output="output/exposure"
         )
     )
 }

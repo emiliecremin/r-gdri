@@ -20,9 +20,9 @@ ecosystem_robustness_indicators <- c(
 ecosystem_robustness <- function(locations) {
     return(
         process_indicators(
-            locations, 
-            indicators=ecosystem_robustness_indicators, 
-            output="output/ecosystem_robustness"
+            locations,
+            indicators = ecosystem_robustness_indicators,
+            # output="output/ecosystem_robustness"
         )
     )
 }

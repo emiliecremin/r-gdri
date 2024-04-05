@@ -66,7 +66,7 @@ ecosystem_exposure <- function(locations) {
         process_indicators(
             locations,
             indicators = ecosystem_exposure_indicators,
-            output = "output/exposure"
+            # output = "output/exposure"
         )
     )
 }
