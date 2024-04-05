@@ -11,31 +11,19 @@ A_GOV4 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
     FDI <- read.csv(file = "data/WorldBank/FDI/API_BX.KLT.DINV.WD.GD.ZS_DS2_en_csv_v2_3159100.csv", skip = 4)
     A_GOV4 <- dplyr::filter(FDI, Country.Code == country_iso3)
-    locations$val <- A_GOV4$X2009
+    locations$val <- A_GOV4$X2019
     return(locations)
 }
 
 # C_HEA3
 # Indicator: Public health expenditure (% of GDP)
+# Domestic general government health expenditure (% of GDP)
+# https://data.worldbank.org/indicator/SH.XPD.GHED.GD.ZS
 C_HEA3 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
-
-    # Domestic general government health expenditure (% of GDP)
-    # https://data.worldbank.org/indicator/SH.XPD.GHED.GD.ZS
     HEALTH_GOV_EXP <- read.csv(file = "data/WorldBank/HEALTH_GOV_EXP/API_SH.XPD.GHED.GD.ZS_DS2_en_csv_v2_3165532.csv", skip = 4)
     C_HEA3_1 <- dplyr::filter(HEALTH_GOV_EXP, Country.Code == country_iso3)
-
-    # Current health expenditure (% of GDP)
-    # https://data.worldbank.org/indicator/SH.XPD.CHEX.GD.ZS
-    # Level of current health expenditure expressed as a percentage of GDP.
-    # Estimates of current health expenditures include healthcare goods and services consumed during each year.
-    # This indicator does not include capital health expenditures such as buildings, machinery, IT and stocks of vaccines for emergency or outbreaks.
-    # HEALTH_EXP <- read.csv(file = "data/WorldBank/HEALTH_EXP/API_SH.XPD.CHEX.GD.ZS_DS2_en_csv_v2_3158870.csv", skip = 4)
-    # C_HEA3_2 <- dplyr::filter(HEALTH_EXP, Country.Code == country_iso3)
-
-    # locations$val <- C_HEA3_1$X2009 + C_HEA3_2$X2009
-
-    locations$val <- C_HEA3_1$X2009
+    locations$val <- C_HEA3_1$X2018
     return(locations)
 }
 
@@ -50,7 +38,7 @@ C_HEA4 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
     HEALTH_PRIV_EXP <- read.csv(file = "data/WorldBank/HEALTH_PRIV_EXP/API_SH.XPD.PVTD.CH.ZS_DS2_en_csv_v2_3165539.csv", skip = 4)
     C_HEA4 <- dplyr::filter(HEALTH_PRIV_EXP, Country.Code == country_iso3)
-    locations$val <- C_HEA4$X2009
+    locations$val <- C_HEA4$X2018
     return(locations)
 }
 
