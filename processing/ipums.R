@@ -116,26 +116,29 @@ S_INF1 <- function(locations, social_data, ...) {
 # S_INF2
 # Percentage of population without access to clean water (%)
 # count(filter(vnm, WATSUP != 99 & WATSUP != 00))
-# ----------
-# TODO: Verify data and check if we need to reverse the normalisation
-# ----------
+# BGD data from SDG
+source("processing/SDG.R")
 S_INF2 <- function(locations, social_data, ...) {
-  water_not_piped <- social_data %>%
-    st_drop_geometry() %>%
-    dplyr::select(GEOLEV2, WATSUP) %>%
-    filter(WATSUP != 99 & WATSUP != 00) %>%
-    mutate(WATSUP = replace(WATSUP, WATSUP == 18, 10)) %>%
-    group_by(GEOLEV2, WATSUP) %>%
-    summarise(cnt = n()) %>%
-    mutate(val = (cnt / sum(cnt) * 100)) %>%
-    filter(WATSUP == 20)
-  result <- collapse::join(
-    locations,
-    water_not_piped,
-    how = "full",
-    on = "GEOLEV2",
-    verbose = 2
-  )
+  if (unique(locations$country_iso3)[1] == "BGD") {
+    result <- bgd_water_supply(locations)
+  } else {
+    water_not_piped <- social_data %>%
+      st_drop_geometry() %>%
+      dplyr::select(GEOLEV2, WATSUP) %>%
+      filter(WATSUP != 99 & WATSUP != 00) %>%
+      mutate(WATSUP = replace(WATSUP, WATSUP == 18, 10)) %>%
+      group_by(GEOLEV2, WATSUP) %>%
+      summarise(cnt = n()) %>%
+      mutate(val = (cnt / sum(cnt) * 100)) %>%
+      filter(WATSUP == 20)
+    result <- collapse::join(
+      locations,
+      water_not_piped,
+      how = "full",
+      on = "GEOLEV2",
+      verbose = 2
+    )
+  }
   return(result)
 }
 
@@ -164,25 +167,40 @@ S_INF3 <- function(locations, social_data, ...) {
 # COPING AND ADAPTATION CAPACITY
 # --------------------------------------------------
 
+# Bangladesh Bureau of Statistics (BBS)
+# Census 2011
+# http://redatam.bbs.gov.bd/redbin/RpWebEngine.exe/Portal?BASE=HPC2011_long&lang=ENG
+bgd_tv_radio <- function(locations) {
+  bgd_tv_radio <- read_excel("data/ADMIN/BGD/TV-Radio.xls")
+  locations <- locations %>% collapse::join(bgd_tv_radio, on = c("adm2_name" = "Zila"))
+  locations$val <- locations$No * 100 / locations$Household
+  return(locations)
+}
+
+
 # C_EWS1
 # Percentage of households without access to information (%)
 # Proxy: Percentage of households without radio or TV (%)
 C_EWS1 <- function(locations, social_data, ...) {
-  no_tv_radio <- social_data %>%
-    st_drop_geometry() %>%
-    dplyr::select(GEOLEV2, RADIO, TV) %>%
-    filter(RADIO != 9 & RADIO != 0 & TV != 00 & TV != 99) %>%
-    group_by(GEOLEV2, RADIO, TV) %>%
-    summarise(cnt = n()) %>%
-    mutate(val = (cnt / sum(cnt) * 100)) %>%
-    filter(RADIO == 1 & TV == 10)
-  result <- collapse::join(
-    locations,
-    no_tv_radio,
-    how = "full",
-    on = "GEOLEV2",
-    verbose = 2
-  )
+  if (unique(locations$country_iso3)[1] == "BGD") {
+    result <- bgd_tv_radio(locations)
+  } else {
+    no_tv_radio <- social_data %>%
+      st_drop_geometry() %>%
+      dplyr::select(GEOLEV2, RADIO, TV) %>%
+      filter(RADIO != 9 & RADIO != 0 & TV != 00 & TV != 99) %>%
+      group_by(GEOLEV2, RADIO, TV) %>%
+      summarise(cnt = n()) %>%
+      mutate(val = (cnt / sum(cnt) * 100)) %>%
+      filter(RADIO == 1 & TV == 10)
+    result <- collapse::join(
+      locations,
+      no_tv_radio,
+      how = "full",
+      on = "GEOLEV2",
+      verbose = 2
+    )
+  }
   return(result)
 }
 
