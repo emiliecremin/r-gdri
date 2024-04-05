@@ -27,7 +27,6 @@ keep_cols <- c(
 free_flowing_rivers <- free_flowing_rivers[, keep_cols]
 
 ES_FRA2 <- function(locations, ...) {
-    locations <- vnm_villages
     rivers <- free_flowing_rivers %>% dplyr::filter(
         COUNTRY %in% unique(locations$CNTRY_NAME)
     )
