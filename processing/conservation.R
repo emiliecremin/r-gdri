@@ -54,12 +54,13 @@ get_conservation_areas <- function(iso3) {
 ER_CON_1512 <- function(locations, ...) {
   country_iso3 <- unique(locations$country_iso3)[1]
   conservation <- get_conservation_areas(country_iso3)
+  # TODO: fix although coordinates are longitude/latitude, st_union assumes that they are planar
   sf_use_s2(FALSE)
-  conservation <- st_read(glue::glue("objects/conservation/protectedplanet_{country_iso3}.gpkg"))
+  conservation <- st_read(glue::glue("objects/conservation/WCMC_WPDA_{country_iso3}.geojson"))
   intersect <- st_intersection(locations, st_union(st_geometry(conservation)))
   sf_use_s2(TRUE)
-  st_write(intersect, glue::glue("objects/conservation/protectedplanet_intersection_{country_iso3}.gpkg"), append = FALSE)
-  intersect$conservation_area <- units::set_units(st_area(i), km^2)
+  # st_write(intersect, glue::glue("objects/conservation/WCMC_WPDA_intersection_{country_iso3}.geojson"), append = FALSE)
+  intersect$conservation_area <- units::set_units(st_area(intersect), km^2)
   df <- sf::st_as_sf(intersect) %>% st_drop_geometry()
   locations <-
     right_join(df[c("geo_id", "conservation_area")], locations) %>%
