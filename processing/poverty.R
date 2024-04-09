@@ -3,35 +3,29 @@
 # shapefile: blob:https://datacatalog.worldbank.org/0292ac56-c01e-4f00-8f57-6be76a844f5b
 # data: blob:https://datacatalog.worldbank.org/7d7937a6-8476-4473-8bee-32cf112f82f5
 get_gsap <- function(locations) {
-    gsap <- st_read(
-        "data/Poverty/GSAP2/gsap-maps/GSAP2.shp",
-    ) %>% dplyr::filter(code %in% unique(locations$country_iso3))
-    keep_cols <- c(
-        "geo_code2",
-        "GSAP2_samp",
-        "geometry"
-    )
-    gsap_min <- gsap[, keep_cols]
-    sp_join <- st_intersection(st_centroid(locations), gsap_min)
-    # st_write(sp_join, "data/Poverty/GSAP2/sp_join.gpkg", append = FALSE)
-    keep_cols <- c(
-        "geo_code2",
-        "geo_id"
-    )
-    joint_codes <- sp_join[, keep_cols]
+    gsap <- st_read("data/Poverty/GSAP2/gsap-maps/GSAP2.shp",) %>%
+        dplyr::filter(code %in% unique(locations$country_iso3)) %>%
+        dplyr::select("geo_code2","GSAP2_samp","geometry")
+    contained <- st_join(gsap, st_centroid(locations)) %>%
+        st_drop_geometry() %>%
+        dplyr::select(geo_id, geo_code2) %>%
+        filter(!is.na(geo_id))
+    not_contained <- locations %>% filter(!geo_id %in% contained$geo_id)
+    nearest <- st_join(st_centroid(not_contained), gsap, join = st_nearest_feature, left = TRUE) %>%
+        st_drop_geometry() %>% dplyr::select(geo_id, geo_code2)
+    joint_codes <- rbind(contained, nearest)
     full_join <- read_excel(
         "data/Poverty/GSAP2/subnational-poverty-inequality-spid-poverty.xlsx",
         sheet = "Data"
     ) %>%
         dplyr::filter(code %in% unique(locations$country_iso3)) %>%
         dplyr::filter(year == max(year)) %>%
-        dplyr::full_join(
-            y = st_drop_geometry(joint_codes),
+        dplyr::right_join(
+            y = joint_codes,
             by = "geo_code2"
         ) %>%
-        dplyr::full_join(y = locations, by = "geo_id") %>%
+        dplyr::left_join(y = locations, by = "geo_id") %>%
         st_as_sf()
-    # st_write(full_join, "data/Poverty/GSAP2/full_join.gpkg", append = FALSE)
     return(full_join)
 }
 
@@ -45,6 +39,7 @@ get_gsap <- function(locations) {
 S_ECO1 <- function(locations, ...) {
     gsap <- get_gsap(locations)
     locations$val <- gsap$poor215
+    return(locations)
 }
 
 # S_ECO4 GINI Index
@@ -54,4 +49,5 @@ S_ECO1 <- function(locations, ...) {
 S_ECO4 <- function(locations, ...) {
     gsap <- get_gsap(locations)
     locations$val <- gsap$gini
+    return(locations)
 }
