@@ -7,11 +7,12 @@ soc_susceptibility_indicators <- c(
     "S_SOC4", # travel time to cities
     "S_SOC5",
     "S_SOC8",
-    # "S_ECO2", # India = non-working / Ipums = age groups
+    "S_ECO1", # Global Subnational Atlas of Poverty BPL
+    "S_ECO2", # Census / Ipums = age groups dependency ratio
+    "S_ECO4", # Global Subnational Atlas of Poverty GINI index
     "S_INF1", # census / IPUMS = toilets facilities
     "S_INF2", # census / IPUMS = water supply
     "S_INF3",
-    "S_ECO4",
     "S_INF1_621", # Aqueduct: without access to (improved) sanitation (%)
     "S_INF2_611", # Aqueduct: without access to clean driking water (%)
     "S_SDG111_WPC", # National
@@ -22,12 +23,12 @@ soc_susceptibility_indicators <- c(
     "S_SDG3_MRTM", # National
     "S_SDG3_MRT5", # National
     "S_SDG5_EDAT", # National
-    "S_SDG5_IFPR_", # National
-    "S_SDG8_RIG_", # National
-    "S_SDG9_TCOM_", # National
+    "S_SDG5_IFPR", # National
+    "S_SDG8_RIG", # National
+    "S_SDG9_TCOM", # National
     "S_SDG1111_SLUM", # National
     "S_OCU1", # National
-    "S_STA1", # National
+    "S_STA1" # National
 )
 
 

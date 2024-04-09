@@ -7,57 +7,12 @@ osm_query <- function(shape, key, values) {
         )) %>%
         purrr::map_chr(paste0, "\"%'") %>%
         paste(collapse = " OR ")
-    q <- glue::glue("SELECT osm_id, name, other_tags, geometry
+    q <- glue::glue("SELECT osm_id, name as osm_name, other_tags, geometry
     FROM {shape}
     WHERE {cond}")
     return(q)
 }
 
-count_osm_features <- function(location, osm_data, counting = "numbers") {
-    cnt <- 0
-    geom_type <- unique(st_geometry_type(osm_data))
-    cat(
-        "crop osm data", location$geo_id,
-        "in", location$CNTRY_NAME, "\n"
-    )
-    location_osm <- terra::crop(
-        vect(osm_data), vect(location)
-    )
-    # saveRDS(location_osm, filename)
-    # }
-    if (nrow(location_osm) > 0) {
-        if (counting == "length") {
-            cnt <- as.numeric(
-                sum(st_length(st_as_sf(location_osm)))
-            )
-        } else {
-            cnt <- nrow(as.data.frame(location_osm))
-        }
-    }
-    return(cnt)
-}
-
-osm_analysis <- function(locations,
-                         osm_points = data.frame(),
-                         osm_multipolygons = data.frame(),
-                         osm_lines = data.frame()) {
-    for (i in 1:nrow(locations)) {
-        cat(i, "/", nrow(locations), " ")
-        location <- locations[i, ]
-        cnt <- 0
-        if (nrow(osm_points) > 0) {
-            cnt <- cnt + count_osm_features(location, osm_points)
-        }
-        if (nrow(osm_multipolygons) > 0) {
-            cnt <- cnt + count_osm_features(location, osm_multipolygons)
-        }
-        if (nrow(osm_lines) > 0) {
-            cnt <- cnt + count_osm_features(location, osm_lines, counting = "length")
-        }
-        locations$cnt[i] <- cnt
-    }
-    return(locations)
-}
 # C_SHE1
 # Access to shelter places
 # Density of schools km2 per 1,000 inhabitants
@@ -81,25 +36,38 @@ C_SHE1 <- function(locations, ...) {
         query = q,
         extra_tags = education_services
     )
-    original_loc <- locations
-    area <- "area"
     if (exists("GEOLEV2", where = locations)) {
+        original_loc <- locations
         country_iso3 <- unique(locations$country_iso3)[1]
-        locations <- st_read(glue::glue("data/ADMIN/admin_{country_iso3}.gpkg"))
+        locations <- st_read(glue::glue("data/ADMIN/admin_{country_iso3}.gpkg")) %>% st_simplify()
+        id_col <- "GEOLEV2"
         area <- "adm2_area"
+    } else {
+        id_col <- "geo_id"
+        area <- "area"
     }
-    locations <- osm_analysis(locations, osm_points, osm_multipolygons)
-    locations$val <- locations$cnt / as.numeric(locations[[area]]) / locations$pop * 1000
+    if (nrow(osm_multipolygons) > 0) {
+        osm_multipolygons <- st_centroid(osm_multipolygons)
+    }
+    bind_data(osm_points, osm_multipolygons)
+    locations <- st_simplify(locations)
+    locations <- terra::intersect(vect(locations), vect(osm_points)) %>%
+        st_as_sf() %>%
+        st_cast("MULTIPOINT")
+    result <- st_drop_geometry(locations) %>%
+        group_by(.data[[id_col]], .data[[area]], pop) %>%
+        summarize(cnt = n()) %>%
+        mutate(val = ifelse(pop %in% c(0, NA), 0, cnt / .data[[area]] / pop * 1000))
     if (exists("GEOLEV2", where = locations)) {
-        locations <- collapse::join(
+        result <- collapse::join(
             original_loc,
-            locations,
-            how = "full",
+            result,
+            how = "left",
             on = "GEOLEV2",
             verbose = 2
-        )
+        ) %>% st_as_sf()
     }
-    return(locations)
+    return(result)
 }
 
 # C_GOV2
@@ -124,23 +92,36 @@ C_GOV2 <- function(locations, ...) {
         query = q,
         extra_tags = emergency_services
     )
-    original_loc <- locations
     if (exists("GEOLEV2", where = locations)) {
+        original_loc <- locations
         country_iso3 <- unique(locations$country_iso3)[1]
-        locations <- st_read(glue::glue("data/ADMIN/admin_{country_iso3}.gpkg"))
+        locations <- st_read(glue::glue("data/ADMIN/admin_{country_iso3}.gpkg")) %>% st_simplify()
+        id_col <- "GEOLEV2"
+    } else {
+        id_col <- "geo_id"
     }
-    locations <- osm_analysis(locations, osm_points, osm_multipolygons)
-    locations$val <- locations$cnt / locations$pop * 1000
+    if (nrow(osm_multipolygons) > 0) {
+        osm_multipolygons <- st_centroid(osm_multipolygons)
+    }
+    bind_data(osm_points, osm_multipolygons)
+    locations <- st_simplify(locations)
+    locations <- terra::intersect(vect(locations), vect(osm_points)) %>%
+        st_as_sf() %>%
+        st_cast("MULTIPOINT")
+    result <- st_drop_geometry(locations) %>%
+        group_by(.data[[id_col]], pop) %>%
+        summarize(cnt = n()) %>%
+        mutate(val = ifelse(pop %in% c(0, NA), 0, cnt / pop * 1000))
     if (exists("GEOLEV2", where = locations)) {
-        locations <- collapse::join(
+        result <- collapse::join(
             original_loc,
-            locations,
-            how = "full",
+            result,
+            how = "left",
             on = "GEOLEV2",
             verbose = 2
-        )
+        ) %>% st_as_sf()
     }
-    return(locations)
+    return(result)
 }
 
 # C_TRA1
@@ -162,36 +143,41 @@ C_TRA1 <- function(locations, ...) {
         quiet = FALSE,
         layer = "lines",
         query = glue::glue("
-            SELECT osm_id, name, highway, waterway, geometry
+            SELECT osm_id, name as osm_name, highway, waterway, geometry
             FROM 'lines'
             WHERE highway IN ({road_types})
             OR waterway IN ({waterways_types})
         ")
     )
-    original_loc <- locations
     if (exists("GEOLEV2", where = locations)) {
+        original_loc <- locations
         country_iso3 <- unique(locations$country_iso3)[1]
-        locations <- st_read(glue::glue("data/ADMIN/admin_{country_iso3}.gpkg"))
+        locations <- st_read(glue::glue("data/ADMIN/admin_{country_iso3}.gpkg")) %>% st_simplify()
+        id_col <- "GEOLEV2"
+    } else {
+        id_col <- "geo_id"
     }
-    locations <- osm_analysis(locations, osm_lines = osm_lines)
-    locations$val <- locations$cnt / locations$pop * 1000
+    locations <- st_simplify(locations)
+    locations <- terra::intersect(vect(locations), vect(osm_lines)) %>%
+        st_as_sf() %>%
+        st_cast("MULTILINESTRING")
+    # st_write(locations, "objects/roads_per_location.gpkg", append = FALSE)
+    locations$road_length <- as.numeric(st_length(locations))
+    result <- st_drop_geometry(locations) %>%
+        group_by(.data[[id_col]], pop) %>%
+        summarize(cnt = sum(road_length)) %>%
+        mutate(val = ifelse(pop %in% c(0, NA), 0, cnt / pop * 1000))
+    # summarize(val = cnt / pop * 1000)
     if (exists("GEOLEV2", where = locations)) {
-        keep_cols <- c(
-            "cnt",
-            "val",
-            "GEOLEV2"
-        )
-        data <- locations[, (names(locations) %in% keep_cols)] %>%
-            st_drop_geometry()
-        locations <- collapse::join(
+        result <- collapse::join(
             original_loc,
-            data,
+            result,
             how = "left",
             on = "GEOLEV2",
             verbose = 2
         ) %>% st_as_sf()
     }
-    return(locations)
+    return(result)
 }
 
 # highway=trunk, highway=primary, highway=secondary, highway=tertiary, highway=unclassified

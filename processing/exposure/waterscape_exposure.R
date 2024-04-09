@@ -66,7 +66,7 @@ waterscape_exposure <- function(locations) {
         process_indicators(
             locations,
             indicators = waterscape_exposure_indicators,
-            output = "output/exposure"
+            # output = "output/exposure"
         )
     )
 }

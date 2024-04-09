@@ -74,7 +74,7 @@ S_SDG8_RIG <- function(locations, ...) {
 
 # SDG9 Population using the internet (%) 2019
 # https://www.itu.int/en/ITU-D/Statistics/Pages/stat/default.aspx
-S_SDG9_TCOM_ <- function(locations, ...) {
+S_SDG9_TCOM <- function(locations, ...) {
     locations$val <- 69
     return(locations)
 }
@@ -130,13 +130,6 @@ C_GOV3 <- function(locations, ...) {
     locations$val <- 0
     return(locations)
 }
-
-# Foreign_Direct_Investment - Net inflow in US$ (% of GDP) 2015
-A_GOV4 <- function(locations, ...) {
-    locations$val <- 6.1
-    return(locations)
-}
-
 
 # Hospital beds (per 1,000 people)
 # https://data.worldbank.org/indicator/SH.MED.BEDS.ZS

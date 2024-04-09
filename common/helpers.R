@@ -1,6 +1,7 @@
 source("common/libraries.R")
 
 extract_classes <- function(landcover, classes) {
+  landcover <- terra::rast(landcover)
   rclmat <- matrix(classes, ncol = 3, byrow = TRUE)
   extracted_classes <- terra::classify(landcover, rclmat, others = NA)
   return(extracted_classes)
@@ -12,6 +13,14 @@ mkdirs <- function(fp) {
     dir.create(fp)
   }
 }
+
+# Function to bind data frames only if there is data
+bind_data <- function(df_main, df_to_bind) {
+  if (nrow(df_to_bind) > 0) {
+    df_main <<- rbind(df_main, df_to_bind)
+  }
+}
+
 
 rename_geometry <- function(g, name) {
   current <- attr(g, "sf_column")
@@ -120,7 +129,7 @@ joinOnPostcode <- function(df, shp) {
   )
 }
 
-process_indicators <- function(locations, social_data, indicators, output = "") {
+process_indicators <- function(locations, social_data = data.frame(), indicators, output = "") {
   result <- keep_common_columns(locations)
   country_iso3 <- unique(locations$country_iso3)[1]
   if (output != "") {

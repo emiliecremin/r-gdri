@@ -97,7 +97,7 @@ S_EXP_CYC <- function(locations, ...) {
 
 # Drought data source Aqueduct
 S_EXP_DRO <- function(locations, ...) {
-     locations <- locations %>% st_transform(4326)
+    locations <- locations %>% st_transform(4326)
     # drr: Drought risk
     drought <- map_aqueduct(locations, "drr")
     locations$val <- drought$val * locations$pop
@@ -130,15 +130,15 @@ social_exposure_indicators <- c(
     "S_EXP_FLO_151_B", # EM-DAT: People affected by Floods
     "S_EXP_COF_152", # EM-DAT: Cost of damages in adjusted USD due to Costal Floods
     "S_EXP_CYC_152", # EM-DAT: Cost of damages in adjusted USD due to Cyclones
-    "S_EXP_FLO_152"  # EM-DAT: Cost of damages in adjusted USD due to Floods
+    "S_EXP_FLO_152" # EM-DAT: Cost of damages in adjusted USD due to Floods
 )
 
 social_exposure <- function(locations) {
     return(
         process_indicators(
-            locations, 
-            indicators=social_exposure_indicators, 
-            output="output/exposure"
+            locations,
+            indicators = social_exposure_indicators,
+            # output="output/exposure"
         )
     )
 }

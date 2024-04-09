@@ -4,18 +4,19 @@
 
 ## ____________________________________________________________________________________ ##
 ## Load GDIS data (rdata or other format)
+cat("Loading GDIS EMDAT data...\n")
 load("./data/Disasters/pend-gdis-1960-2018-disasterlocations-rdata/pend-gdis-1960-2018-disasterlocations.rdata")
 
 # List all of the variable names in RData:
 # head(filter(GDIS_disasterlocations, country == "Vietnam"))
 
-# Load EM-DAT 
-disasterlist <- read.csv(file="data/Disasters/EM-DAT/emdat_public_2021_11_21_query_uid-p2SG4N.csv")
+# Load EM-DAT
+disasterlist <- read.csv(file = "data/Disasters/EM-DAT/emdat_public_2021_11_21_query_uid-p2SG4N.csv")
 
 ## for versions of EM-DAT data that added the ISO3 country code to the disasterno, use this code to remove the ISO3 code to enable merge with GDIS
 ## rename the variable "Dis No" from EMDAT and remove the three-letter ISO from the disasterno identifier
 emdat <- disasterlist %>%
-  mutate(disasterno=substr(`Dis.No`,1,nchar(`Dis.No`)-4))
+  mutate(disasterno = substr(`Dis.No`, 1, nchar(`Dis.No`) - 4))
 
 get_emdat <- function(locations) {
   ## Filter countries of interest (VNM, BGD, IND)
@@ -27,17 +28,19 @@ get_emdat <- function(locations) {
 
   ## Join GDIS and EM-DAT by disasterno
   colnames(emdat_filtered)
-  disasterdata_since2000 <- left_join(
-      disasterlocations_filtered,
-      emdat_filtered,
-      relationship = "many-to-many",
-      by = "disasterno"
-    ) %>%
+  disasterdata_since2000 <- collapse::join(
+    disasterlocations_filtered,
+    emdat_filtered,
+    on = "disasterno"
+  ) %>%
     filter(Year >= 2000) %>%
     dplyr::select(-c(geo_id, Location, Country))
 
   ## Intersect with ADMIN locations
-  sp_join <- st_intersection(st_centroid(disasterdata_since2000), locations) %>%
+  sp_join <- terra::intersect(
+    vect(st_centroid(disasterdata_since2000)), vect(locations)
+  ) %>%
+    st_as_sf() %>%
     group_by(disasterno, geo_id) %>%
     mutate(dupe = n() > 1) %>%
     filter(dupe == FALSE)
@@ -66,14 +69,14 @@ get_emdat <- function(locations) {
 
 
 get_emdat_indicator_per_hazards <- function(locations, indicator, hazards) {
-    joint_codes <- get_emdat(locations) %>% filter(Disaster.Subtype %in% hazards)
+  joint_codes <- get_emdat(locations) %>% filter(Disaster.Subtype %in% hazards)
 
-    idx <- st_drop_geometry(joint_codes) %>%
+  idx <- st_drop_geometry(joint_codes) %>%
     group_by(geo_id) %>%
     summarise(idx = sum(eval(as.name(indicator)), na.rm = TRUE))
 
-    locations <- locations %>% left_join(idx, by = "geo_id")
-    return(locations)
+  locations <- locations %>%
+    collapse::join(idx, on = "geo_id") %>%
+    st_as_sf()
+  return(locations)
 }
-
-

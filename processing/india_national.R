@@ -59,21 +59,21 @@ S_SDG5_EDAT <- function(locations, ...) {
 
 # SDG5 Ratio of female-to-male labor force participation rate (%)
 # https://databank.worldbank.org/source/gender-statistics/Series/SL.TLF.CACT.FM.ZS
-S_SDG5_IFPR_ <- function(locations, ...) {
+S_SDG5_IFPR <- function(locations, ...) {
     locations$val <- 32
     return(locations)
 }
 
 # SDG8 Rights Fundamental labor rights are effectively guaranteed (worst 0–1 best)
 # https://worldjusticeproject.org/our-work/wjp-rule-law-index
-S_SDG8_RIG_ <- function(locations, ...) {
+S_SDG8_RIG <- function(locations, ...) {
     locations$val <- 0.38
     return(locations)
 }
 
 # SDG9 Population using the internet (%)
 # https://www.itu.int/en/ITU-D/Statistics/Pages/stat/default.aspx
-S_SDG9_TCOM_ <- function(locations, ...) {
+S_SDG9_TCOM <- function(locations, ...) {
     locations$val <- 30
     return(locations)
 }
@@ -129,12 +129,6 @@ C_GOV1 <- function(locations, ...) {
 # http://www.foodgrainsbank.ca
 C_GOV3 <- function(locations, ...) {
     locations$val <- 1
-    return(locations)
-}
-
-# Foreign_Direct_Investment - Net inflow in US$ (% of GDP) 2015
-A_GOV4 <- function(locations, ...) {
-    locations$val <- 2.1
     return(locations)
 }
 
@@ -209,7 +203,7 @@ ES_SDG12_nprod <- function(locations, ...) {
 }
 
 # SDG Red List Index - UNDESA database.2021 OECD STAT
-ES_SDG1551__RLI <- function(locations, ...) {
+ES_SDG1551_RLI <- function(locations, ...) {
     locations$val <- 0.671
     return(locations)
 }

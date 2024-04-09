@@ -187,11 +187,11 @@ get_bgd_villages <- function() {
 
   # 4. Matching on the ADM2 Name from both sides
   # Address mismatching names
-  bgd_2_4[bgd_2_4$adm2_name == "Nawabganj", "adm2_name"] <- "Chapai Nababganj"
-  bgd_2_4[bgd_2_4$adm2_name == "Jhenaidah", "adm2_name"] <- "Jhenaidaha"
-  bgd_2_4[bgd_2_4$adm2_name == "Maulvibazar", "adm2_name"] <- "Maulvi Bazar"
-  bgd_2_4[bgd_2_4$adm2_name == "Netrakona", "adm2_name"] <- "Netrokona"
-  bgd_2_4[bgd_2_4$adm2_name == "Brahamanbaria", "adm2_name"] <- "Brahmanbaria"
+  ipums_bgd[ipums_bgd$ADMIN_NAME == "Chapai Nababganj", "ADMIN_NAME"] <- "Nawabganj"
+  ipums_bgd[ipums_bgd$ADMIN_NAME == "Jhenaidaha", "ADMIN_NAME"] <- "Jhenaidah"
+  ipums_bgd[ipums_bgd$ADMIN_NAME == "Maulvi Bazar", "ADMIN_NAME"] <- "Maulvibazar"
+  ipums_bgd[ipums_bgd$ADMIN_NAME == "Netrokona", "ADMIN_NAME"] <- "Netrakona"
+  ipums_bgd[ipums_bgd$ADMIN_NAME == "Brahmanbaria", "ADMIN_NAME"] <- "Brahamanbaria"
   bgd_2_4 <- bgd_2_4 %>%
     collapse::join(
       ipums_bgd %>% st_drop_geometry(),
