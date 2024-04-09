@@ -26,7 +26,9 @@ source("processing/conservation.R")
 source("processing/forest.R")
 source("processing/free_flowing_rivers.R")
 source("processing/osm.R")
+source("processing/poverty.R")
 source("processing/soil.R")
+source("processing/SDG.R")
 source("processing/travel_time.R")
 source("processing/world_bank.R")
 
@@ -35,6 +37,7 @@ source("processing/world_bank.R")
 # ---------------------------------------------------------------
 
 source("processing/social_susceptibility/social_susceptibility.R")
+mkdirs("output/social_susceptibility")
 
 source("processing/vietnam_national.R")
 soc_sus_vnm <- social_susceptibility(vnm_villages)
@@ -55,24 +58,22 @@ soc_sus_norm$SOC_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(soc_sus_norm, "output/social_susceptibility/social_susceptibility.rds")
 st_write(soc_sus_norm, "output/social_susceptibility/social_susceptibility.gpkg", append = FALSE)
 
-# TODO: S_ECO1 Percentage of population below national poverty line (%) - to do
-
 # ---------------------------------------------------------------
 # COPING AND ADAPTATION CAPACITY
 # ---------------------------------------------------------------
 
 source("processing/adaptation_capacities/adaptation_capacities.R")
+mkdirs("output/adaptation_capacities")
 
 source("processing/vietnam_national.R")
 cop_adapt_vnm <- adaptation_capacities(vnm_villages)
-saveRDS(cop_adapt_vnm, "output/adaptation_capacities/adaptation_capacities_VNM.rds")
+# saveRDS(cop_adapt_vnm, "output/adaptation_capacities/adaptation_capacities_VNM.rds")
 source("processing/bangladesh_national.R")
 cop_adapt_bgd <- adaptation_capacities(bgd_villages)
-saveRDS(cop_adapt_bgd, "output/adaptation_capacities/adaptation_capacities_BGD.rds")
+# saveRDS(cop_adapt_bgd, "output/adaptation_capacities/adaptation_capacities_BGD.rds")
 source("processing/india_national.R")
 cop_adapt_ind <- adaptation_capacities(ind_villages)
-saveRDS(cop_adapt_ind, "output/adaptation_capacities/adaptation_capacities_IND.rds")
-cop_adapt <- rbind(cop_adapt_vnm, cop_adapt_bgd, cop_adapt_ind)
+# saveRDS(cop_adapt_ind, "output/adaptation_capacities/adaptation_capacities_IND.rds")
 
 cop_adapt_norm <- normalize(cop_adapt)
 n <- dplyr::select(st_drop_geometry(cop_adapt_norm), ends_with("_norm"))
@@ -88,6 +89,7 @@ st_write(cop_adapt_norm, "output/adaptation_capacities/adaptation_capacities.gpk
 # ECOSYSTEM SENSITIVITY
 # ---------------------------------------------------------------
 source("processing/ecosystem_sensitivity/ecosystem_sensitivity.R")
+mkdirs("output/ecosystem_sensitivity")
 
 source("processing/vietnam_national.R")
 eco_sensitivity_vnm <- ecosystem_sensitivity(vnm_villages)
@@ -101,7 +103,6 @@ saveRDS(eco_sensitivity_ind, "output/ecosystem_sensitivity/ecosystem_sensitivity
 eco_sensitivity <- rbind(eco_sensitivity_vnm, eco_sensitivity_bgd, eco_sensitivity_ind)
 
 eco_sensitivity_norm <- normalize(eco_sensitivity)
-
 n <- dplyr::select(st_drop_geometry(eco_sensitivity_norm), ends_with("_norm"))
 eco_sensitivity_norm$ES_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(eco_sensitivity_norm, "output/ecosystem_sensitivity/ecosystem_sensitivity.rds")
@@ -112,6 +113,7 @@ st_write(eco_sensitivity_norm, "output/ecosystem_sensitivity/ecosystem_sensitivi
 # ---------------------------------------------------------------
 
 source("processing/ecosystem_robustness/ecosystem_robustness.R")
+mkdirs("output/ecosystem_robustness")
 
 source("processing/vietnam_national.R")
 eco_robustness_vnm <- ecosystem_robustness(vnm_villages)
@@ -125,7 +127,6 @@ saveRDS(eco_robustness_ind, "output/ecosystem_robustness/ecosystem_robustness_IN
 eco_robustness <- rbind(eco_robustness_vnm, eco_robustness_bgd, eco_robustness_ind)
 
 eco_robustness_norm <- normalize(eco_robustness)
-
 n <- dplyr::select(st_drop_geometry(eco_robustness_norm), ends_with("_norm"))
 eco_robustness_norm$ER_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(eco_robustness_norm, "output/ecosystem_robustness/ecosystem_robustness.rds")
@@ -140,11 +141,12 @@ ER_FUN2 Donor aid for adaptation
 # ---------------------------------------------------------------
 
 source("processing/exposure/ecosystem_exposure.R")
+mkdirs("output/exposure")
 
 eco_exposure_vnm <- ecosystem_exposure(vnm_villages)
-o_exposure_bgd <- ecosystem_exposure(bgd_villages)
+eco_exposure_bgd <- ecosystem_exposure(bgd_villages)
 eco_exposure_ind <- ecosystem_exposure(ind_villages)
-o_exposure <- rbind(eco_exposure_vnm, eco_exposure_bgd, eco_exposure_ind)
+eco_exposure <- rbind(eco_exposure_vnm, eco_exposure_bgd, eco_exposure_ind)
 
 eco_exposure_norm <- normalize(eco_exposure)
 
@@ -160,9 +162,9 @@ st_write(eco_exposure_norm, "output/exposure/ecosystem_exposure.gpkg", append = 
 source("processing/exposure/social_exposure.R")
 
 soc_exposure_vnm <- social_exposure(vnm_villages)
-c_exposure_bgd <- social_exposure(bgd_villages)
+soc_exposure_bgd <- social_exposure(bgd_villages)
 soc_exposure_ind <- social_exposure(ind_villages)
-c_exposure <- rbind(soc_exposure_vnm, soc_exposure_bgd, soc_exposure_ind)
+soc_exposure <- rbind(soc_exposure_vnm, soc_exposure_bgd, soc_exposure_ind)
 
 soc_exposure_norm <- normalize(soc_exposure)
 
@@ -178,9 +180,9 @@ st_write(soc_exposure_norm, "output/exposure/social_exposure.gpkg", append = FAL
 source("processing/exposure/agriculture_exposure.R")
 
 agri_exposure_vnm <- agriculture_exposure(vnm_villages)
-ri_exposure_bgd <- agriculture_exposure(bgd_villages)
+agri_exposure_bgd <- agriculture_exposure(bgd_villages)
 agri_exposure_ind <- agriculture_exposure(ind_villages)
-ri_exposure <- rbind(agri_exposure_vnm, agri_exposure_bgd, agri_exposure_ind)
+agri_exposure <- rbind(agri_exposure_vnm, agri_exposure_bgd, agri_exposure_ind)
 
 agri_exposure_norm <- normalize(agri_exposure)
 
@@ -196,9 +198,9 @@ st_write(agri_exposure_norm, "output/exposure/agriculture_exposure.gpkg", append
 source("processing/exposure/waterscape_exposure.R")
 
 water_exposure_vnm <- waterscape_exposure(vnm_villages)
-ter_exposure_bgd <- waterscape_exposure(bgd_villages)
+water_exposure_bgd <- waterscape_exposure(bgd_villages)
 water_exposure_ind <- waterscape_exposure(ind_villages)
-ter_exposure <- rbind(water_exposure_vnm, water_exposure_bgd, water_exposure_ind)
+water_exposure <- rbind(water_exposure_vnm, water_exposure_bgd, water_exposure_ind)
 
 water_exposure_norm <- normalize(water_exposure)
 
@@ -214,19 +216,27 @@ st_write(water_exposure_norm, "output/exposure/waterscape_exposure.gpkg", append
 
 source("processing/exposure/aquaculture_exposure.R")
 
-aquaculture_exposure_vnm <- aquaculture_exposure(vnm)
-aquaculture_exposure_bgd <- aquaculture_exposure(bgd)
-# aquaculture_exposure_ind <- aquaculture_exposure(gdri, ind, "India")
-aquaculture_exposure <- rbind(aquaculture_exposure_vnm, aquaculture_exposure_bgd) # , aquaculture_exposure_ind)
+aquaculture_exposure_vnm <- aquaculture_exposure(vnm_villages)
+aquaculture_exposure_bgd <- aquaculture_exposure(bgd_villages)
+aquaculture_exposure_ind <- aquaculture_exposure(ind_villages)
+aquaculture_exposure <- rbind(aquaculture_exposure_vnm, aquaculture_exposure_bgd, aquaculture_exposure_ind)
 
 aquaculture_exposure_norm <- normalize(aquaculture_exposure)
 
 n <- dplyr::select(st_drop_geometry(aquaculture_exposure_norm), ends_with("_norm"))
-aquaculture_exposure_norm$W_EXP_MH <- rowMeans(n, na.rm = TRUE)
+aquaculture_exposure_norm$AQ_EXP_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(aquaculture_exposure_norm, "output/exposure/aquaculture_exposure.rds")
 st_write(aquaculture_exposure_norm, "output/exposure/aquaculture_exposure.gpkg", append = FALSE)
 
-
+soc_sus_norm <- readRDS("output/social_susceptibility/social_susceptibility.rds")
+cop_adapt_norm <- readRDS("output/adaptation_capacities/adaptation_capacities.rds")
+eco_sensitivity_norm <- readRDS("output/ecosystem_sensitivity/ecosystem_sensitivity.rds")
+eco_robustness_norm <- readRDS("output/ecosystem_robustness/ecosystem_robustness.rds")
+soc_exposure_norm <- readRDS("output/exposure/social_exposure.rds")
+eco_exposure_norm <- readRDS("output/exposure/ecosystem_exposure.rds")
+agri_exposure_norm <- readRDS("output/exposure/agriculture_exposure.rds")
+water_exposure_norm <- readRDS("output/exposure/waterscape_exposure.rds")
+aquaculture_exposure_norm <- readRDS("output/exposure/aquaculture_exposure.rds")
 
 gdri <- cbind(
     soc_sus_norm,
@@ -239,16 +249,16 @@ gdri <- cbind(
     water_exposure_norm,
     aquaculture_exposure_norm
 )
-gdri <- gdri[!duplicated(as.list(gdri))]
+# gdri <- gdri[!duplicated(as.list(gdri))]
 
 gdri$SES_SUS_MH <- (gdri$SOC_MH + gdri$ES_MH) / 2
 gdri$SES_CA_MH <- (gdri$CA_MH + gdri$ER_MH) / 2
 gdri$SES_VU_MH <- (gdri$SES_SUS_MH + gdri$SES_CA_MH) / 2
 # gdri$SES_VU_MH <- rowMeans(subset(gdri, select = c(SES_SUS_MH, SES_CA_MH)), na.rm = TRUE)
 
-gdri$SES_EXP_MH <- (gdri$S_EXP_MH + gdri$E_EXP_MH + gdri$A_EXP_MH + gdri$W_EXP_MH) / 4
+gdri$SES_EXP_MH <- (gdri$S_EXP_MH + gdri$E_EXP_MH + gdri$A_EXP_MH + gdri$W_EXP_MH + gdri$AQ_EXP_MH) / 5
 
 gdri$RISK_MH <- gdri$SES_VU_MH * gdri$SES_EXP_MH
 
-st_write(gdri, "gdri.gpkg", append = FALSE)
-write.csv(gdri %>% st_drop_geometry(), "gdri.csv")
+st_write(gdri, "output/gdri.gpkg", append = FALSE)
+write_xlsx(gdri %>% st_drop_geometry(), path = "output/gdri.xlsx")

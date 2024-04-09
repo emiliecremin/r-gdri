@@ -74,7 +74,7 @@ S_SDG8_RIG <- function(locations, ...) {
 
 # SDG9 Population using the internet (%) 2019
 # https://www.itu.int/en/ITU-D/Statistics/Pages/stat/default.aspx
-S_SDG9_TCOM_ <- function(locations, ...) {
+S_SDG9_TCOM <- function(locations, ...) {
     locations$val <- 69
     return(locations)
 }
