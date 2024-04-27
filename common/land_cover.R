@@ -48,8 +48,8 @@ create_landcover <- function(landcover, roi, region_name) {
         overwrite = TRUE
     )
 
-    # Ecosystem = Shrubland 20 + Grassland 30 + Herbaceous wetland 90 + Mangroves 95
-    ecosystems <- extract_classes(landcover_roi, c(19, 31, 1, 89, 96, 1))
+    # Ecosystems = Forest 10, Shrubland 20 + Grassland 30 + Open Water 80 + Herbaceous wetland 90 + Mangroves 95
+    ecosystems <- extract_classes(landcover_roi, c(9, 31, 1, 79, 96, 1))
     # plot(ecosystems)
     terra::writeRaster(
         ecosystems,
@@ -61,8 +61,6 @@ create_landcover <- function(landcover, roi, region_name) {
     # xv <- rasterize(pv, r, fun=sum)
     # https://rdrr.io/github/rspatial/terra/man/rasterize.html
     # cover= FALSE
-
-    # TODO: rbind(c(10, 1), c(95, 1))
     forests <- extract_classes(landcover_roi, c(9, 11, 1, 94, 96, 1))
     #  plot(forests)
     terra::writeRaster(
@@ -71,23 +69,12 @@ create_landcover <- function(landcover, roi, region_name) {
         overwrite = TRUE
     )
 
-    # TODO: rbind(c(40, 1), c(80, 1))
-    # Agriculture = cropland + agro-forestery = forest 10 (-protected area) + Cropland 40
-    agriculture <- extract_classes(landcover_roi, c(9, 11, 1, 39, 41, 1))
+    # Agriculture = Cropland 40 + bare /sparse vegetation 60
+    agriculture <- extract_classes(landcover_roi, c(39, 41, 1, 59, 61, 1))
     # plot(agriculture)
     terra::writeRaster(
         agriculture,
         filename = str_glue("{output}/{region_name}_agriculture.tif"),
-        overwrite = TRUE
-    )
-
-    # Waterscape = Water bodies 80 + bare /sparse vegetation 60
-    # Can be associated to aquaculture in coastal areas
-    waterscape <- extract_classes(landcover_roi, c(79, 81, 1, 59, 61, 1))
-    # plot(waterscape)
-    terra::writeRaster(
-        waterscape,
-        filename = str_glue("{output}/{region_name}_waterscape.tif"),
         overwrite = TRUE
     )
 }
