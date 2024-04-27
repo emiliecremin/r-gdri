@@ -191,24 +191,6 @@ agri_exposure_norm$A_EXP_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(agri_exposure_norm, "output/exposure/agriculture_exposure.rds")
 st_write(agri_exposure_norm, "output/exposure/agriculture_exposure.gpkg", append = FALSE)
 
-# ---------------------------------------------------------------
-# WATERSCAPE EXPOSURE
-# ---------------------------------------------------------------
-
-source("processing/exposure/waterscape_exposure.R")
-
-water_exposure_vnm <- waterscape_exposure(vnm_villages)
-water_exposure_bgd <- waterscape_exposure(bgd_villages)
-water_exposure_ind <- waterscape_exposure(ind_villages)
-water_exposure <- rbind(water_exposure_vnm, water_exposure_bgd, water_exposure_ind)
-
-water_exposure_norm <- normalize(water_exposure)
-
-n <- dplyr::select(st_drop_geometry(water_exposure_norm), ends_with("_norm"))
-water_exposure_norm$W_EXP_MH <- rowMeans(n, na.rm = TRUE)
-saveRDS(water_exposure_norm, "output/exposure/waterscape_exposure.rds")
-st_write(water_exposure_norm, "output/exposure/waterscape_exposure.gpkg", append = FALSE)
-
 
 # ---------------------------------------------------------------
 # AQUACULTURE EXPOSURE
@@ -235,7 +217,6 @@ eco_robustness_norm <- readRDS("output/ecosystem_robustness/ecosystem_robustness
 soc_exposure_norm <- readRDS("output/exposure/social_exposure.rds")
 eco_exposure_norm <- readRDS("output/exposure/ecosystem_exposure.rds")
 agri_exposure_norm <- readRDS("output/exposure/agriculture_exposure.rds")
-water_exposure_norm <- readRDS("output/exposure/waterscape_exposure.rds")
 aquaculture_exposure_norm <- readRDS("output/exposure/aquaculture_exposure.rds")
 
 gdri <- cbind(
@@ -246,7 +227,6 @@ gdri <- cbind(
     soc_exposure_norm,
     eco_exposure_norm,
     agri_exposure_norm,
-    water_exposure_norm,
     aquaculture_exposure_norm
 )
 # gdri <- gdri[!duplicated(as.list(gdri))]
