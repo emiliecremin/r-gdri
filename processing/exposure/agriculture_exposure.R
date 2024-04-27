@@ -53,12 +53,27 @@ A_EXP_FLO <- function(locations, ...) {
     return(locations)
 }
 
+# Global Soil Salinity Map
+#  https://doi.org/10.1016/j.rse.2019.111260
+#  https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
+A_EXP_SAL <- function(locations, ...) {
+    locations <- locations %>% st_transform(4326)
+    country_iso3 <- unique(locations$country_iso3)[1]
+    salinity <- terra::rast("data/Soil/Salinity/salmap2016.vrt")
+    ecosystems <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif"))
+    salinity_cropped <- crop(salinity, ecosystems)
+    ### zonal statistics using "exactextractr"
+    locations$cnt <- exact_extract(salinity_cropped, locations, "sum", progress = TRUE)
+    locations$val <- locations$cnt / as.numeric(locations$area)
+    return(locations)
+}
 
 agriculture_exposure_indicators <- c(
     "A_EXP_COF", # Costal Floods, storm surges
     "A_EXP_CYC", # Cyclones
     "A_EXP_DRO", # Droughts
-    "A_EXP_FLO" # Floods
+    "A_EXP_FLO", # Floods
+    "A_EXP_SAL" # Salinity
 )
 
 agriculture_exposure <- function(locations) {

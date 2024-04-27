@@ -117,11 +117,25 @@ S_EXP_FLO <- function(locations, ...) {
     return(locations)
 }
 
+# Global Soil Salinity Map
+#  https://doi.org/10.1016/j.rse.2019.111260
+#  https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
+S_EXP_SAL <- function(locations, ...) {
+    locations <- locations %>% st_transform(4326)
+    sal <- terra::rast("data/Soil/Salinity/salmap2016.vrt")
+
+    ### zonal statistics using "exactextractr"
+    locations$cnt <- exact_extract(sal, locations, "mean", progress = TRUE)
+    locations$val <- locations$cnt * locations$pop
+    return(locations)
+}
+
 social_exposure_indicators <- c(
     "S_EXP_COF", # Costal Floods, storm surges
     "S_EXP_CYC", # Cyclones
     "S_EXP_DRO", # Droughts
     "S_EXP_FLO", # Floods
+    "S_EXP_SAL", # Salinity
     "S_EXP_COF_151_A", # EM-DAT: Deaths due to Costal Floods
     "S_EXP_CYC_151_A", # EM-DAT: Deaths due to Cyclones
     "S_EXP_FLO_151_A", # EM-DAT: Deaths due to Floods
