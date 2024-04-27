@@ -8,7 +8,6 @@ ecosystem_sensitivity_indicators <- c(
     "ES_BIO1a", # Biodiversity Intactness Index - nhm.ac.uk
     "ES_DEG6", # Soil organic matter
     "ES_DEG7", # Soil workability (FAO HWSD 1.2 SQ7)
-    "ES_DEG8", # Soil salinity (Global Soil Salinity Map)
     "ES_DEG9", # Soil Cation exchange capacity
     "ES_DEG10", # Baseline water depletion - aqueduct
     "ES_FRA2", # Connectivity Status Index - Free FLowing Rivers

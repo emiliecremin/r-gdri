@@ -35,23 +35,6 @@ ES_DEG9 <- function(locations, ...) {
     return(locations)
 }
 
-# ES_DEG8 Soil salinity
-# Global Soil Salinity Map
-#  https://doi.org/10.1016/j.rse.2019.111260
-#  https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
-ES_DEG8 <- function(locations, ...) {
-    sal <- terra::rast("data/Soil/Salinity/salmap2016.vrt")
-    locations$cnt <- exact_extract(sal, locations, "sum", progress = TRUE)
-    locations$val <- locations$cnt / locations$area
-    # ggplot() +
-    # geom_sf(
-    #     data = locations,
-    #     aes(fill = val)
-    # ) +
-    # scale_fill_viridis_c(option = "C")
-    return(locations)
-}
-
 # Other data sources
 #  Excess Salts (FAO HWSD v1.2)
 # https://data.apps.fao.org/map/catalog/srv/eng/catalog.search?id=12691#/metadata/40db0008-f365-43ca-953d-cabdcadc24a5
