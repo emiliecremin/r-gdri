@@ -4,6 +4,7 @@ source("common/helpers.R")
 ecosystem_robustness_indicators <- c(
     "ER_FOR_1511", # Percentage of Forest Area - ESA Landuse
     "ER_CON_1512", # Conservation areas - conservation.R - protectedplanet.net
+    "ER_CON_1521", # Forest in Conservation areas - ESA Landuse and protectedplanet.net
     "ER_RES2", # Forest gain - forest.R - GFC
     "ER_ECO2_FLII", # Forest Landscape Integrity Index - forest.R - forestintegrity.com
     "ER_ECO1", # Ecosystem Functionality Index - biodiversity.R -

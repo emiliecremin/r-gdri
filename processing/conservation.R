@@ -71,3 +71,24 @@ ER_CON_1512 <- function(locations, ...) {
     as.numeric(locations$conservation_area) / as.numeric(locations$area)
   return(locations)
 }
+
+# Forests within conservation area
+# Forest: ESA Landcover 2020
+# Conservation areas: UNEP-WCMC and IUCN (2023)
+# cite: UNEP-WCMC and IUCN (2023), Protected Planet: The World Database on Protected Areas (WDPA) and World Database on Other Effective Area-based Conservation Measures (WD-OECM) [Online], June 2023, Cambridge, UK: UNEP-WCMC and IUCN. Available at: www.protectedplanet.net.
+# data: https://www.protectedplanet.net/country/VNM
+ER_CON_1521 <- function(locations, ...) {
+  country_iso3 <- unique(locations$country_iso3)[1]
+  forests <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_forests.tif"))
+  conservation <- get_conservation_areas(country_iso3)
+  conservation <- vect(glue::glue("objects/conservation/WCMC_WPDA_{country_iso3}.geojson")) %>% terra::aggregate()
+  forest_in_conservation <- terra::crop(forests, conservation, mask = TRUE)
+  locations$cnt <- exact_extract(
+        forest_in_conservation, st_as_sf(locations),
+        "sum",
+        default_value = 0,
+        progress = TRUE
+    )
+  locations$val <- locations$cnt / locations$area
+  return(locations)
+}
