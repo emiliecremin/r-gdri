@@ -1,3 +1,4 @@
+source("common/install.R")
 source("common/libraries.R")
 source("common/helpers.R")
 
