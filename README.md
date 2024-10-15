@@ -1,3 +1,19 @@
+# Technical requirements
+
+We advise to use the package manager brew: https://brew.sh/
+This works on MacOS but also on Linux and Windows (WSL 2)
+
+## R
+```
+brew install r
+```
+
+## Libraries
+```
+brew install gdal
+brew install udunits
+```
+
 # Administrative boundaries
 
 ## UN OCHA
