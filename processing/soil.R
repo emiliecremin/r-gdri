@@ -3,10 +3,11 @@
 
 # ES_DEG6 Soil_organic_carbone
 # https://data.apps.fao.org/catalog/dataset/7730e747-eb73-49c9-bfe6-84ebae718743
+# GSOCmap: The GSOCmap is a spatial raster file with soil organic carbon stock values in Mg/ha for a depth of 0-30 cm.
 ES_DEG6 <- function(locations, ...) {
     soc <- rast("data/Soil/organic_carbone/GSOCmap1.5.0.tif") # nolint
-    locations$cnt <- exact_extract(soc, locations, "sum", progress = TRUE)
-    locations$val <- locations$cnt / locations$area
+    locations$cnt <- exact_extract(soc, locations, "mean", progress = TRUE)
+    locations$val <- locations$cnt
     return(locations)
 }
 
@@ -26,12 +27,13 @@ ES_DEG6 <- function(locations, ...) {
 #   fileFormat: 'GeoTIFF',
 #   maxPixels: 1e13,
 # });
+# unit: mmol/kg
 ES_DEG9 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
     cec <- terra::rast(glue::glue("data/Soil/CationExchangeCapacity/{country_iso3}_cec_60-100cm_mean.tif"))
     cec <- terra::project(cec, crs(locations))
-    locations$cnt <- exact_extract(cec, locations, "sum", progress = TRUE)
-    locations$val <- locations$cnt / locations$area
+    locations$cnt <- exact_extract(cec, locations, "mean", progress = TRUE)
+    locations$val <- locations$cnt
     return(locations)
 }
 
@@ -76,10 +78,10 @@ ES_DEG7 <- function(locations, ...) {
     #     overwrite = TRUE
     # )
     locations$cnt <- exact_extract(
-        soil_workability, locations, "sum",
+        soil_workability, locations, "mean",
         progress = TRUE
     )
-    locations$val <- locations$cnt / locations$area
+    locations$val <- locations$cnt
     return(locations)
 }
 
