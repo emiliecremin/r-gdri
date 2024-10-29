@@ -1,7 +1,9 @@
 source("common/libraries.R")
 
 extract_classes <- function(landcover, classes) {
-  landcover <- terra::rast(landcover)
+  if (!inherits(raster_var, "SpatRaster")) {
+    landcover <- terra::rast(landcover)
+  }
   rclmat <- matrix(classes, ncol = 3, byrow = TRUE)
   extracted_classes <- terra::classify(landcover, rclmat, others = NA)
   return(extracted_classes)
