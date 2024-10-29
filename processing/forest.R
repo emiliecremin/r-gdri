@@ -32,9 +32,12 @@ ER_RES2 <- function(locations, ...) {
 # Forest landscape Integrity Index
 # Data: https://www.forestintegrity.com/download-data
 # Paper: https://www.nature.com/articles/s41467-020-19493-3
-# TODO: limited to Asia given the raster used, could be improved
+# index from 0 (low integrity) to 10 (high integrity)
 ER_ECO2_FLII <- function(locations, ...) {
+    locations <- bgd_villages
     flii <- rast("data/Forests/Forest_Landscape_Integrity_Index/FLII_Asia.tif") # nolint
-    locations$val <- exact_extract(flii, locations, "mean", progress = TRUE)
+    raster_divided <- flii / 1000
+    raster_divided[raster_divided < 0] <- 0
+    locations$val <- exact_extract(raster_divided, locations, "mean", progress = TRUE)
     return(locations)
 }
