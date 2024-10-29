@@ -5,8 +5,8 @@
 # visual: https://resourcewatch.org/data/explore/bio_014-Biodiversity-Intactness
 ES_BIO1a <- function(locations, ...) {
     bii <- rast("data/Biodiversity/Biodiversity_Intactness_Index/lbii.asc") # nolint
-    locations$cnt <- exact_extract(bii, locations, "sum", progress = TRUE)
-    locations$val <- locations$cnt / locations$area
+    locations$cnt <- exact_extract(bii, locations, "mean", progress = TRUE)
+    locations$val <- locations$cnt
     # my_map(data = aoi, "ADM2_EN", "norm", "ES_BIO1a Biodiversity Intactness", "Greens")
     return(locations)
 }
@@ -16,8 +16,8 @@ ES_BIO1a <- function(locations, ...) {
 # https://dataportaal.pbl.nl/downloads/GLOBIO/Schipper_etal_2020/2015/Globio4_TerrestrialMSA_10sec_2015.zip
 ER_BIO2 <- function(locations, ...) {
     msa <- rast("data/Biodiversity/Globio4_TerrestrialMSA_10sec_2015/TerrestrialMSA_2015_World.tif") # nolint
-    locations$cnt <- exact_extract(msa, locations, "sum", progress = TRUE)
-    locations$val <- locations$cnt / locations$area
+    locations$cnt <- exact_extract(msa, locations, "mean", progress = TRUE)
+    locations$val <- locations$cnt
     return(locations)
 }
 
@@ -27,8 +27,8 @@ ER_BIO2 <- function(locations, ...) {
 # https://catalog.ipbes.net/assessments/200
 ER_ECO1 <- function(locations, ...) {
     efi <- rast("data/Biodiversity/Ecosystem_Functionality_Index/EFI.tif") # nolint
-    locations$cnt <- exact_extract(efi, locations, "sum", progress = TRUE)
-    locations$val <- locations$cnt / locations$area
+    locations$cnt <- exact_extract(efi, locations, "mean", progress = TRUE)
+    locations$val <- locations$cnt
     return(locations)
 }
 
