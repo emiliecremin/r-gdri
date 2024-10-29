@@ -83,12 +83,6 @@ ER_CON_1521 <- function(locations, ...) {
   conservation <- get_conservation_areas(country_iso3)
   conservation <- vect(glue::glue("objects/conservation/WCMC_WPDA_{country_iso3}.geojson")) %>% terra::aggregate()
   forest_in_conservation <- terra::crop(forests, conservation, mask = TRUE)
-  locations$cnt <- exact_extract(
-        forest_in_conservation, st_as_sf(locations),
-        "sum",
-        default_value = 0,
-        progress = TRUE
-    )
-  locations$val <- locations$cnt / locations$area
+  locations <- raster_area_within_polygons(forest_in_conservation, locations)
   return(locations)
 }
