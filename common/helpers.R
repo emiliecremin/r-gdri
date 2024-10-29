@@ -52,7 +52,11 @@ raster_area_within_polygons <- function(rst, polygons) {
   # plot(cell_areas)
 
   # Calculate the area of the raster within each polygon
-  areas_within_polygons <- exact_extract(cell_areas, polygons_projected, 'sum')
+  areas_within_polygons <- exact_extract(
+    cell_areas, polygons_projected, 'sum',
+    default_value = 0,
+    progress = TRUE
+  )
 
   # Add the area results to the polygons data frame
   polygons_projected$area_raster_km2 <- areas_within_polygons
