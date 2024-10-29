@@ -1,5 +1,71 @@
 source("common/libraries.R")
 
+# Function to extract the area of a raster within each polygon
+raster_area_within_polygons <- function(rst, polygons) { 
+  # Ensure the raster has the correct CRS
+  if (is.na(crs(rst)) || crs(rst) == "") {
+    crs(rst) <- "EPSG:4326"  # Assign CRS if it's missing
+  }
+
+  # Ensure the polygons have an area column
+  if (!"area" %in% colnames(polygons)) {
+    cat("Calculating area of polygons...\n")
+    polygons$area <- units::set_units(st_area(polygons), km^2)
+  }
+
+  # Get the bounding box of the shapefile
+  bbox <- st_bbox(polygons)
+
+  # Calculate the median longitude and latitude
+  median_longitude <- (bbox$xmin + bbox$xmax) / 2
+  median_latitude <- (bbox$ymin + bbox$ymax) / 2
+
+  # Determine the UTM zone and hemisphere
+  utm_zone <- floor((median_longitude + 180) / 6) %% 60 + 1
+  hemisphere <- ifelse(median_latitude >= 0, "north", "south")
+
+  # Define the target CRS using EPSG codes
+  if (hemisphere == "north") {
+    target_crs <- paste0("EPSG:", 32600 + utm_zone)  # WGS84 UTM North zones
+  } else {
+    target_crs <- paste0("EPSG:", 32700 + utm_zone)  # WGS84 UTM South zones
+  }
+
+  # Reproject the raster and shapefile
+  # Ensure the raster has valid data
+  if (!all(is.na(values(rst)))) {
+    # Project the raster
+    cat("Projecting the raster...\n")
+    r_projected <- project(rst, target_crs)
+  } else {
+    stop("The raster contains only NA values. Cannot project.")
+  }
+
+  # plot(r_projected)
+
+  # Project the shapefile
+  polygons_projected <- st_transform(polygons, crs = target_crs)
+
+  # Compute the area of each raster cell in square kilometers
+  cat("Calculating the area of each raster cell in square kilometers...\n")
+  cell_areas <- cellSize(r_projected, unit = "km", mask=TRUE)
+  # plot(cell_areas)
+
+  # Calculate the area of the raster within each polygon
+  areas_within_polygons <- exact_extract(cell_areas, polygons_projected, 'sum')
+
+  # Add the area results to the polygons data frame
+  polygons_projected$area_raster_km2 <- areas_within_polygons
+
+  # Transform back to EPSG:4326
+  polygons_final <- st_transform(polygons_projected, crs = 4326)
+
+  # Calculate the area ratio
+  polygons_final$val <- polygons_final$area_raster_km2 / polygons_final$area
+
+  return(polygons_final)
+}
+
 extract_classes <- function(landcover, classes) {
   if (!inherits(raster_var, "SpatRaster")) {
     landcover <- terra::rast(landcover)
