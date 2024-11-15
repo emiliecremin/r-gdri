@@ -1,59 +1,52 @@
 source("common/libraries.R")
 
 # Function to extract the area of a raster within each polygon
-raster_area_within_polygons <- function(rst, polygons) { 
+raster_area_within_polygons <- function(rst, polygons) {
   # Ensure the raster has the correct CRS
+  cat("Setting the CRS of the raster...\n")
   if (is.na(crs(rst)) || crs(rst) == "") {
-    crs(rst) <- "EPSG:4326"  # Assign CRS if it's missing
+    crs(rst) <- "EPSG:4326" # Assign CRS if it's missing
   }
+  # Ensure the polygons are in sf format
+  cat("Converting polygons to sf format...\n")
+  if (!inherits(polygons, "sf")) {
+    polygons <- sf::st_as_sf(polygons)
+  }
+  # Check for invalid geometries
+  cat("Checking for invalid geometries...\n")
+  invalid_geometries <- !st_is_valid(polygons)
 
+  # If any invalid geometries are found, you can attempt to fix them
+  cat("Fixing invalid geometries...\n")
+  if (any(invalid_geometries)) {
+    polygons <- st_make_valid(polygons)
+  }
+  # cat("Simplifying polygons...\n")
+  # polygons <- st_simplify(polygons, dTolerance = 100)
   # Ensure the polygons have an area column
   if (!"area" %in% colnames(polygons)) {
     cat("Calculating area of polygons...\n")
     polygons$area <- units::set_units(st_area(polygons), km^2)
   }
 
-  # Get the bounding box of the shapefile
-  bbox <- st_bbox(polygons)
+  # Define the global equal-area projection (Mollweide)
+  target_crs <- "ESRI:54009" # Mollweide Projection
 
-  # Calculate the median longitude and latitude
-  median_longitude <- (bbox$xmin + bbox$xmax) / 2
-  median_latitude <- (bbox$ymin + bbox$ymax) / 2
-
-  # Determine the UTM zone and hemisphere
-  utm_zone <- floor((median_longitude + 180) / 6) %% 60 + 1
-  hemisphere <- ifelse(median_latitude >= 0, "north", "south")
-
-  # Define the target CRS using EPSG codes
-  if (hemisphere == "north") {
-    target_crs <- paste0("EPSG:", 32600 + utm_zone)  # WGS84 UTM North zones
-  } else {
-    target_crs <- paste0("EPSG:", 32700 + utm_zone)  # WGS84 UTM South zones
-  }
-
-  # Reproject the raster and shapefile
-  # Ensure the raster has valid data
-  if (!all(is.na(values(rst)))) {
-    # Project the raster
-    cat("Projecting the raster...\n")
-    r_projected <- project(rst, target_crs)
-  } else {
-    stop("The raster contains only NA values. Cannot project.")
-  }
-
-  # plot(r_projected)
+  # Project the raster
+  cat("Projecting the raster...\n")
+  r_projected <- project(rst, target_crs)
 
   # Project the shapefile
+  cat("Projecting the shapefile...\n")
   polygons_projected <- st_transform(polygons, crs = target_crs)
 
   # Compute the area of each raster cell in square kilometers
   cat("Calculating the area of each raster cell in square kilometers...\n")
-  cell_areas <- cellSize(r_projected, unit = "km", mask=TRUE)
-  # plot(cell_areas)
+  cell_areas <- cellSize(r_projected, unit = "km", mask = TRUE)
 
   # Calculate the area of the raster within each polygon
   areas_within_polygons <- exact_extract(
-    cell_areas, polygons_projected, 'sum',
+    cell_areas, polygons_projected, "sum",
     default_value = 0,
     progress = TRUE
   )
@@ -71,7 +64,7 @@ raster_area_within_polygons <- function(rst, polygons) {
 }
 
 extract_classes <- function(landcover, classes) {
-  if (!inherits(raster_var, "SpatRaster")) {
+  if (!inherits(landcover, "SpatRaster")) {
     landcover <- terra::rast(landcover)
   }
   rclmat <- matrix(classes, ncol = 3, byrow = TRUE)
