@@ -78,26 +78,66 @@ create_landcover <- function(landcover, roi, region_name) {
         overwrite = TRUE
     )
 }
-if (!exists("vnm_villages")) {
-    roi <- terra::vect("objects/ADMIN/villages_vnm.gpkg")
-} else {
-    roi <- terra::vect(vnm_villages)
+
+calculate_percentages <- function(locations, region_name) {
+    agriculture <- terra::rast(str_glue("{output}/{region_name}_agriculture.tif"))
+    locations <- raster_area_within_polygons(agriculture, locations)
+    locations <- locations %>%
+        dplyr::mutate(agri_km2 = area_raster_km2) %>%
+        dplyr::select(-area_raster_km2) %>%
+        dplyr::mutate(agri_pct = val) %>%
+        dplyr::select(-val)
+    ecosystems <- terra::rast(str_glue("{output}/{region_name}_ecosystems.tif"))
+    locations <- raster_area_within_polygons(ecosystems, locations)
+    locations <- locations %>%
+        dplyr::mutate(ecosys_km2 = area_raster_km2) %>%
+        dplyr::select(-area_raster_km2) %>%
+        dplyr::mutate(ecosys_pct = val) %>%
+        dplyr::select(-val)
+    return(locations)
 }
-create_landcover(landcover, roi, "VNM")
+
+if (!exists("vnm_villages")) {
+    vnm_villages <- terra::vect("objects/ADMIN/villages_vnm.gpkg")
+} else {
+    vnm_villages <- terra::vect(vnm_villages)
+}
+region_name <- "VNM"
+create_landcover(landcover, vnm_villages, region_name)
+locations <- calculate_percentages(vnm_villages, region_name)
+locations <- st_read("objects/ADMIN/villages_vnm.gpkg")
+# plot(locations["agri_km2"])
+# plot(locations["agri_pct"])
+# plot(locations["ecosys_km2"])
+# plot(locations["ecosys_pct"])
+st_write(locations, "objects/ADMIN/villages_vnm.gpkg", append = FALSE)
 
 if (!exists("bgd_villages")) {
-    roi <- terra::vect("objects/ADMIN/villages_bgd.gpkg")
+    bgd_villages <- terra::vect("objects/ADMIN/villages_bgd.gpkg")
 } else {
-    roi <- terra::vect(bgd_villages)
+    bgd_villages <- terra::vect(bgd_villages)
 }
-create_landcover(landcover, roi, "BGD")
+region_name <- "BGD"
+create_landcover(landcover, bgd_villages, region_name)
+locations <- calculate_percentages(bgd_villages, region_name)
+# plot(locations["agri_km2"])
+# plot(locations["agri_pct"])
+# plot(locations["ecosys_km2"])
+# plot(locations["ecosys_pct"])
+st_write(locations, "objects/ADMIN/villages_bgd.gpkg", append = FALSE)
 
 if (!exists("ind_villages")) {
-    roi <- terra::vect("objects/ADMIN/villages_ind.gpkg")
+    ind_villages <- terra::vect("objects/ADMIN/villages_ind.gpkg")
 } else {
-    roi <- terra::vect(ind_villages)
+    ind_villages <- terra::vect(ind_villages)
 }
-create_landcover(landcover, roi, "IND")
+region_name <- "IND"
+create_landcover(landcover, ind_villages, region_name)
+locations <- calculate_percentages(ind_villages, region_name)
+# plot(locations["agri_km2"])
+# plot(locations["agri_pct"])
+# plot(locations["ecosys_km2"])
+# plot(locations["ecosys_pct"])
+st_write(locations, "objects/ADMIN/villages_ind.gpkg", append = FALSE)
 
-rm(roi)
 rm(landcover)
