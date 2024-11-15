@@ -76,22 +76,17 @@ S_EXP_COF <- function(locations, ...) {
     return(locations)
 }
 
+# Coalition for Disaster Resilient Infrastructure (CDRI)
+# https://doi.org/10.59375/biennialreport.ed1
+# https://giri.unepgrid.ch/map?list=explore&view=MX-UG0KA-OIQSJ-FIMNA
+# unit: cyclone wind km/h by pop in the area (for a return period of 100 years)
 S_EXP_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
-    # https://datacore.unepgrid.ch/geoserver/wesr_risk/wcs?service=WCS&Version=2.0.1&request=GetCoverage&coverageId=cy_physexp&outputCRS=EPSG:4326&format=GEOTIFF&compression=DEFLATE
-    # population affected
-    # cyclones <- rast("data/Hazards/Cyclones/cy_physexp.tif")
-
-    # https://datacore.unepgrid.ch/geoserver/wesr_risk/wcs?service=WCS&Version=2.0.1&request=GetCoverage&coverageId=cy_valuency&outputCRS=EPSG:4326&format=GEOTIFF&compression=DEFLATE
-    cyclones <- rast("data/Hazards/Cyclones/cy_frequency.tif")
-
+    cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
 
     ### zonal statistics using "exactextractr"
     locations$cnt <- exact_extract(cyclones, locations, "mean", progress = TRUE)
     locations$val <- locations$cnt * locations$pop
-
-    # Other dataset
-    # https://risk.preventionweb.net/download/Cyclonic%20wind_RT100years_g152.zip
     return(locations)
 }
 

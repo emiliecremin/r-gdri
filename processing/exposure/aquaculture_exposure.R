@@ -19,7 +19,7 @@ AQ_EXP_COF <- function(locations, ...) {
 # Coalition for Disaster Resilient Infrastructure (CDRI)
 # https://doi.org/10.59375/biennialreport.ed1
 # https://giri.unepgrid.ch/map?list=explore&view=MX-UG0KA-OIQSJ-FIMNA
-# unit: cyclone wind km/h by % of ecosystems in the area (for a return period of 100 years)
+# unit: cyclone wind km/h by % of aquaculture in the area (for a return period of 100 years)
 AQ_EXP_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
