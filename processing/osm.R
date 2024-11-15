@@ -13,11 +13,40 @@ osm_query <- function(shape, key, values) {
     return(q)
 }
 
+calculate_nearest <- function(locations, osm_points) {
+    # Find the index of the nearest OSM point for each location
+    nearest_indices <- st_nearest_feature(locations, osm_points)
+
+    # Extract the nearest OSM points
+    nearest_points <- osm_points[nearest_indices, ]
+
+    # Calculate the distances between each location and its nearest OSM point
+    distances <- st_distance(
+        locations,
+        nearest_points,
+        by_element = TRUE # Ensures that distances are calculated between corresponding pairs
+    )
+
+    # Add the distances to the locations data (convert to numeric and units to kilometers if needed)
+    locations$distance_to_nearest_point <- as.numeric(distances) / 1000 # Convert meters to kilometers
+
+    # Identify locations without nearby OSM points
+    missing_indices <- which(is.na(nearest_indices))
+
+    # Assign a default value or handle accordingly
+    if (length(missing_indices) > 0) {
+        locations$distance_to_nearest_point[missing_indices] <- NA
+    }
+    # plot(locations['distance_to_nearest_point'])
+    return(locations)
+}
+
+
 # C_SHE1
 # Access to shelter places
 # Density of schools km2 per 1,000 inhabitants
 # https://wiki.openstreetmap.org/wiki/Tag:amenity%3Dschool
-# density of primary and secondary schools per km2
+# unit: distance to school in km
 C_SHE1 <- function(locations, ...) {
     education_services <- c("school", "college", "university")
     q <- osm_query("points", "amenity", education_services)
@@ -28,53 +57,20 @@ C_SHE1 <- function(locations, ...) {
         query = q,
         extra_tags = education_services
     )
-    q <- osm_query("multipolygons", "amenity", education_services)
-    osm_multipolygons <- oe_get(
-        place = locations[1, ]$CNTRY_NAME,
-        quiet = FALSE,
-        layer = "multipolygons",
-        query = q,
-        extra_tags = education_services
-    )
-    if (exists("GEOLEV2", where = locations)) {
-        original_loc <- locations
-        country_iso3 <- unique(locations$country_iso3)[1]
-        locations <- st_read(glue::glue("data/ADMIN/admin_{country_iso3}.gpkg")) %>% st_simplify()
-        id_col <- "GEOLEV2"
-        area <- "adm2_area"
-    } else {
-        id_col <- "geo_id"
-        area <- "area"
-    }
-    if (nrow(osm_multipolygons) > 0) {
-        osm_multipolygons <- st_centroid(osm_multipolygons)
-    }
-    bind_data(osm_points, osm_multipolygons)
-    locations <- st_simplify(locations)
-    locations <- terra::intersect(vect(locations), vect(osm_points)) %>%
-        st_as_sf() %>%
-        st_cast("MULTIPOINT")
-    result <- st_drop_geometry(locations) %>%
-        group_by(.data[[id_col]], .data[[area]], pop) %>%
-        summarize(cnt = n()) %>%
-        mutate(val = ifelse(pop %in% c(0, NA), 0, cnt / .data[[area]] / pop * 1000))
-    if (exists("GEOLEV2", where = locations)) {
-        result <- collapse::join(
-            original_loc,
-            result,
-            how = "left",
-            on = "GEOLEV2",
-            verbose = 2
-        ) %>% st_as_sf()
-    }
+    osm_points <- st_transform(osm_points, crs(locations))
+    # plot(osm_points["osm_id"])
+    result <- calculate_nearest(locations, osm_points) %>%
+        dplyr::mutate(val = distance_to_nearest_point) %>%
+        dplyr::select(-distance_to_nearest_point)
     return(result)
 }
 
 # C_GOV2
 # Access to emergency services: hospitals, fire brigades, police stations
 # Proxy: Density of  emergency services
-# hospitals, fire brigades, police stations per 1,000 inhabitants
+# unit: distance to emergency services in km
 C_GOV2 <- function(locations, ...) {
+    locations <- st_read("objects/ADMIN/villages_bgd.gpkg")
     emergency_services <- c("hospital", "clinic", "police", "fire_station")
     q <- osm_query("points", "amenity", emergency_services)
     osm_points <- oe_get(
@@ -84,43 +80,11 @@ C_GOV2 <- function(locations, ...) {
         query = q,
         extra_tags = emergency_services
     )
-    q <- osm_query("multipolygons", "amenity", emergency_services)
-    osm_multipolygons <- oe_get(
-        place = locations[1, ]$CNTRY_NAME,
-        quiet = FALSE,
-        layer = "multipolygons",
-        query = q,
-        extra_tags = emergency_services
-    )
-    if (exists("GEOLEV2", where = locations)) {
-        original_loc <- locations
-        country_iso3 <- unique(locations$country_iso3)[1]
-        locations <- st_read(glue::glue("data/ADMIN/admin_{country_iso3}.gpkg")) %>% st_simplify()
-        id_col <- "GEOLEV2"
-    } else {
-        id_col <- "geo_id"
-    }
-    if (nrow(osm_multipolygons) > 0) {
-        osm_multipolygons <- st_centroid(osm_multipolygons)
-    }
-    bind_data(osm_points, osm_multipolygons)
-    locations <- st_simplify(locations)
-    locations <- terra::intersect(vect(locations), vect(osm_points)) %>%
-        st_as_sf() %>%
-        st_cast("MULTIPOINT")
-    result <- st_drop_geometry(locations) %>%
-        group_by(.data[[id_col]], pop) %>%
-        summarize(cnt = n()) %>%
-        mutate(val = ifelse(pop %in% c(0, NA), 0, cnt / pop * 1000))
-    if (exists("GEOLEV2", where = locations)) {
-        result <- collapse::join(
-            original_loc,
-            result,
-            how = "left",
-            on = "GEOLEV2",
-            verbose = 2
-        ) %>% st_as_sf()
-    }
+    osm_points <- st_transform(osm_points, crs(locations))
+    # plot(osm_points["osm_id"])
+    result <- calculate_nearest(locations, osm_points) %>%
+        dplyr::mutate(val = distance_to_nearest_point) %>%
+        dplyr::select(-distance_to_nearest_point)
     return(result)
 }
 
@@ -130,14 +94,13 @@ C_GOV2 <- function(locations, ...) {
 # - roads (highways, trunks, primary / secondary / tertiary),
 # - waterways (rivers / canals / streams),
 # - ferry stations
-# per 1,000 inhabitants
+# unit: road length in km
 C_TRA1 <- function(locations, ...) {
+    locations <- st_read("objects/ADMIN/villages_bgd.gpkg")
     all_road_types <- c(
-        "motorway", "trunk", "primary", "secondary", "tertiary", "unclassified"
+        "motorway", "trunk", "primary", "secondary" # , "tertiary" #, "unclassified"
     )
     road_types <- paste(shQuote(all_road_types), collapse = ", ")
-    waterways_types <- c("river", "canal", "fairway")
-    waterways_types <- paste(shQuote(waterways_types), collapse = ", ")
     osm_lines <- oe_get(
         place = locations[1, ]$CNTRY_NAME,
         quiet = FALSE,
@@ -146,37 +109,39 @@ C_TRA1 <- function(locations, ...) {
             SELECT osm_id, name as osm_name, highway, waterway, geometry
             FROM 'lines'
             WHERE highway IN ({road_types})
-            OR waterway IN ({waterways_types})
         ")
     )
-    if (exists("GEOLEV2", where = locations)) {
-        original_loc <- locations
-        country_iso3 <- unique(locations$country_iso3)[1]
-        locations <- st_read(glue::glue("data/ADMIN/admin_{country_iso3}.gpkg")) %>% st_simplify()
-        id_col <- "GEOLEV2"
-    } else {
-        id_col <- "geo_id"
-    }
-    locations <- st_simplify(locations)
-    locations <- terra::intersect(vect(locations), vect(osm_lines)) %>%
+    osm_points <- st_transform(osm_points, crs(locations))
+    # locations <- st_simplify(locations)
+    locations_intersect <- terra::intersect(vect(locations), vect(osm_lines)) %>%
         st_as_sf() %>%
         st_cast("MULTILINESTRING")
-    # st_write(locations, "objects/roads_per_location.gpkg", append = FALSE)
-    locations$road_length <- as.numeric(st_length(locations))
-    result <- st_drop_geometry(locations) %>%
-        group_by(.data[[id_col]], pop) %>%
-        summarize(cnt = sum(road_length)) %>%
-        mutate(val = ifelse(pop %in% c(0, NA), 0, cnt / pop * 1000))
-    # summarize(val = cnt / pop * 1000)
-    if (exists("GEOLEV2", where = locations)) {
-        result <- collapse::join(
-            original_loc,
-            result,
-            how = "left",
-            on = "GEOLEV2",
-            verbose = 2
-        ) %>% st_as_sf()
-    }
+    locations_intersect$road_length <- as.numeric(st_length(locations_intersect)) / 1000
+    # plot(locations_intersect["road_length"])
+
+    # Aggregate the road lengths by location
+    road_length_per_location <- locations_intersect %>%
+        st_drop_geometry() %>%
+        group_by(.data$geo_id) %>%
+        summarize(total_road_length = sum(road_length)) %>%
+        ungroup()
+
+    locations_with_road_length <- collapse::join(
+        result <- calculate_nearest(locations, osm_points) %>%
+        dplyr::mutate(val = total_road_length) %>%
+        dplyr::select(-total_road_length)
+        locations,
+        road_length_per_location,
+        how = "left",
+        on = "geo_id",
+        verbose = 2
+    ) %>% st_as_sf()
+    # Replace NA values with zero for locations without roads
+    locations_with_road_length$total_road_length[is.na(locations_with_road_length$total_road_length)] <- 0
+    # plot(locations_with_road_length["total_road_length"])
+    result <- locations_with_road_length %>%
+        dplyr::mutate(val = total_road_length) %>%
+        dplyr::select(-total_road_length)
     return(result)
 }
 
