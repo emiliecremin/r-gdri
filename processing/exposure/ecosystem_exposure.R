@@ -16,17 +16,19 @@ E_EXP_COF <- function(locations, ...) {
     return(locations)
 }
 
+# Coalition for Disaster Resilient Infrastructure (CDRI)
+# https://doi.org/10.59375/biennialreport.ed1
+# https://giri.unepgrid.ch/map?list=explore&view=MX-UG0KA-OIQSJ-FIMNA
+# unit: cyclone wind km/h by % of ecosystems in the area (for a return period of 100 years)
 E_EXP_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
-    # data source: UNEP GRID
-    # https://datacore.unepgrid.ch/geoserver/wesr_risk/wcs?service=WCS&Version=2.0.1&request=GetCoverage&coverageId=cy_valuency&outputCRS=EPSG:4326&format=GEOTIFF&compression=DEFLATE
-    cyclones <- rast("data/Hazards/Cyclones/cy_frequency.tif")
+    cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
     ecosystems <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif"))
     cyclones_cropped <- crop(cyclones, ecosystems)
     ### zonal statistics using "exactextractr"
-    locations$cnt <- exact_extract(cyclones_cropped, locations, "sum", progress = TRUE)
-    locations$val <- locations$cnt / as.numeric(locations$area)
+    locations$cnt <- exact_extract(cyclones_cropped, locations, "mean", progress = TRUE)
+    locations$val <- locations$cnt * as.numeric(locations$ecosys_pct)
     return(locations)
 }
 
