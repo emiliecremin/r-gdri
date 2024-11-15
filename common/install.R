@@ -1,4 +1,6 @@
 # brew install gdal
+# https://github.com/r-lib/usethis/issues/1970#issuecomment-2471529856
+# brew install libgit2
 # brew install udunits
 
 install.packages("collapse")
@@ -19,6 +21,7 @@ install.packages("remotes")
 install.packages("sf")
 remotes::install_github("statnmap/cartomisc")
 install.packages("terra")
+install.packages("usethis")
 install.packages("wdpar")
 install.packages("writexl")
 # install.packages("lwgeom")
