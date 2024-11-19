@@ -70,7 +70,6 @@ C_SHE1 <- function(locations, ...) {
 # Proxy: Density of  emergency services
 # unit: distance to emergency services in km
 C_GOV2 <- function(locations, ...) {
-    locations <- st_read("objects/ADMIN/villages_bgd.gpkg")
     emergency_services <- c("hospital", "clinic", "police", "fire_station")
     q <- osm_query("points", "amenity", emergency_services)
     osm_points <- oe_get(

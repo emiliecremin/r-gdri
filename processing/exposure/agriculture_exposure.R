@@ -21,7 +21,6 @@ A_EXP_COF <- function(locations, ...) {
 # https://giri.unepgrid.ch/map?list=explore&view=MX-UG0KA-OIQSJ-FIMNA
 # unit: cyclone wind km/h by % of agriculture in the area (for a return period of 100 years)
 A_EXP_CYC <- function(locations, ...) {
-    locations <- st_read("data/ADMIN/villages_bgd.gpkg")
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
