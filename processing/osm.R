@@ -95,7 +95,6 @@ C_GOV2 <- function(locations, ...) {
 # - ferry stations
 # unit: road length in km
 C_TRA1 <- function(locations, ...) {
-    locations <- st_read("objects/ADMIN/villages_bgd.gpkg")
     all_road_types <- c(
         "motorway", "trunk", "primary", "secondary" # , "tertiary" #, "unclassified"
     )
@@ -126,9 +125,6 @@ C_TRA1 <- function(locations, ...) {
         ungroup()
 
     locations_with_road_length <- collapse::join(
-        result <- calculate_nearest(locations, osm_points) %>%
-        dplyr::mutate(val = total_road_length) %>%
-        dplyr::select(-total_road_length)
         locations,
         road_length_per_location,
         how = "left",
