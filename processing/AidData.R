@@ -36,7 +36,7 @@ A_GOV6 <- function(locations, ...) {
     # ) +
     # scale_fill_viridis_c(option = "C")
 
-    locations$val <- locations$aid_points / locations$area
+    locations$val <- locations$aid_points
     return(locations)
 }
 
@@ -65,7 +65,7 @@ ER_FUN2 <- function(locations, ...) {
     )
     # https://gis.stackexchange.com/a/323706
     locations$aid_points <- lengths(st_intersects(locations, aid_points))
-    locations$val <- locations$aid_points / locations$area
+    locations$val <- locations$aid_points
     return(locations)
 }
 
@@ -90,6 +90,6 @@ A_FUN3 <- function(locations, ...) {
     )
     # https://gis.stackexchange.com/a/323706
     locations$aid_points <- lengths(st_intersects(locations, aid_points))
-    locations$val <- locations$aid_points / locations$area
+    locations$val <- locations$aid_points
     return(locations)
 }
