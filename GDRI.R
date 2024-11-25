@@ -230,16 +230,48 @@ gdri <- cbind(
     agri_exposure_norm,
     aquaculture_exposure_norm
 )
-# gdri <- gdri[!duplicated(as.list(gdri))]
 
 gdri$SES_SUS_MH <- (gdri$SOC_MH + gdri$ES_MH) / 2
 gdri$SES_CA_MH <- (gdri$CA_MH + gdri$ER_MH) / 2
 gdri$SES_VU_MH <- (gdri$SES_SUS_MH + gdri$SES_CA_MH) / 2
 # gdri$SES_VU_MH <- rowMeans(subset(gdri, select = c(SES_SUS_MH, SES_CA_MH)), na.rm = TRUE)
 
-gdri$SES_EXP_MH <- (gdri$S_EXP_MH + gdri$E_EXP_MH + gdri$A_EXP_MH + gdri$W_EXP_MH + gdri$AQ_EXP_MH) / 5
+gdri$SES_EXP_MH <- (gdri$S_EXP_MH + gdri$E_EXP_MH + gdri$A_EXP_MH + gdri$AQ_EXP_MH) / 4
 
 gdri$RISK_MH <- gdri$SES_VU_MH * gdri$SES_EXP_MH
 
-st_write(gdri, "output/gdri.gpkg", append = FALSE)
-write_xlsx(gdri %>% st_drop_geometry(), path = "output/gdri.xlsx")
+target_col_names <- c(
+    "geo_id",
+    "CNTRY_NAME",
+    "country_iso3",
+    "adm1_name",
+    "adm2_name",
+    "adm3_name",
+    "adm4_name",
+    "Name",
+    "adm_level",
+    "pop",
+    "area"
+)
+# Step 1: Get all column names
+all_cols <- names(gdri)
+# Step 2: Identify columns with '.' in their names
+cols_with_dot <- all_cols[grepl("\\.", all_cols)]
+# Step 3: Get the geometry column name
+geom_col <- attr(gdri, "sf_column")
+# Step 4: Exclude geometry column from removal
+cols_to_remove <- setdiff(cols_with_dot, geom_col)
+# Step 5: Remove columns with '.' in their names
+sf_object_clean <- gdri[, !(names(gdri) %in% cols_to_remove)]
+# Exclude geometry column from the reordering process
+non_geom_cols <- setdiff(names(sf_object_clean), geom_col)
+# Columns not in the desired list
+other_cols <- setdiff(non_geom_cols, target_col_names)
+# Combine columns: desired columns first, then other columns, then geometry column
+new_col_order <- c(target_col_names, other_cols, geom_col)
+# Reorder the sf_object using the new column order
+sf_object_reordered <- sf_object_clean[, new_col_order]
+
+st_write(sf_object_reordered, "output/gdri.gpkg", append = FALSE)
+write_xlsx(sf_object_reordered %>% st_drop_geometry(), path = "output/gdri.xlsx")
+
