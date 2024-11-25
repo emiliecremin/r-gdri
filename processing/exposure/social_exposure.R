@@ -3,7 +3,7 @@
 # https://public.emdat.be/data
 
 # Data filtered since year 2000
-source("processing/GDIS.R")
+# source("processing/GDIS.R")
 
 S_EXP_COF_151_A <- function(locations, ...) {
     locations <- get_emdat_indicator_per_hazards(locations, "Total.Deaths", c("Coastal flood"))
@@ -71,8 +71,9 @@ S_EXP_COF <- function(locations, ...) {
     # Mesh Layer QGIS: https://gis.stackexchange.com/questions/357159/cannot-open-netcdf-file-in-qgis
 
     ### zonal statistics using "exactextractr"
+    locations <- pop_density(locations)
     locations$cnt <- exact_extract(storm_surge, locations, "mean", progress = TRUE)
-    locations$val <- locations$cnt * locations$pop
+    locations$val <- locations$cnt * locations$density
     return(locations)
 }
 
@@ -85,8 +86,9 @@ S_EXP_CYC <- function(locations, ...) {
     cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
 
     ### zonal statistics using "exactextractr"
+    locations <- pop_density(locations)
     locations$cnt <- exact_extract(cyclones, locations, "mean", progress = TRUE)
-    locations$val <- locations$cnt * locations$pop
+    locations$val <- locations$cnt * locations$density
     return(locations)
 }
 
@@ -94,8 +96,9 @@ S_EXP_CYC <- function(locations, ...) {
 S_EXP_DRO <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     # drr: Drought risk
+    locations <- pop_density(locations)
     drought <- map_aqueduct(locations, "drr")
-    locations$val <- drought$val * locations$pop
+    locations$val <- drought$val * locations$density
     return(locations)
 }
 
@@ -107,8 +110,9 @@ S_EXP_FLO <- function(locations, ...) {
     floods <- rast("data/Hazards/Floods/fl_hazard_100_yrp.tif")
 
     ### zonal statistics using "exactextractr"
+    locations <- pop_density(locations)
     locations$cnt <- exact_extract(floods, locations, "mean", progress = TRUE)
-    locations$val <- locations$cnt * locations$pop
+    locations$val <- locations$cnt * locations$density
     return(locations)
 }
 
@@ -120,8 +124,9 @@ S_EXP_SAL <- function(locations, ...) {
     sal <- terra::rast("data/Soil/Salinity/salmap2016.vrt")
 
     ### zonal statistics using "exactextractr"
+    locations <- pop_density(locations)
     locations$cnt <- exact_extract(sal, locations, "mean", progress = TRUE)
-    locations$val <- locations$cnt * locations$pop
+    locations$val <- locations$cnt * locations$density
     return(locations)
 }
 
@@ -130,16 +135,16 @@ social_exposure_indicators <- c(
     "S_EXP_CYC", # Cyclones
     "S_EXP_DRO", # Droughts
     "S_EXP_FLO", # Floods
-    "S_EXP_SAL", # Salinity
-    "S_EXP_COF_151_A", # EM-DAT: Deaths due to Costal Floods
-    "S_EXP_CYC_151_A", # EM-DAT: Deaths due to Cyclones
-    "S_EXP_FLO_151_A", # EM-DAT: Deaths due to Floods
-    "S_EXP_COF_151_B", # EM-DAT: People affected by Costal Floods
-    "S_EXP_CYC_151_B", # EM-DAT: People affected by Cyclones
-    "S_EXP_FLO_151_B", # EM-DAT: People affected by Floods
-    "S_EXP_COF_152", # EM-DAT: Cost of damages in adjusted USD due to Costal Floods
-    "S_EXP_CYC_152", # EM-DAT: Cost of damages in adjusted USD due to Cyclones
-    "S_EXP_FLO_152" # EM-DAT: Cost of damages in adjusted USD due to Floods
+    "S_EXP_SAL" # Salinity
+    # "S_EXP_COF_151_A", # EM-DAT: Deaths due to Costal Floods
+    # "S_EXP_CYC_151_A", # EM-DAT: Deaths due to Cyclones
+    # "S_EXP_FLO_151_A", # EM-DAT: Deaths due to Floods
+    # "S_EXP_COF_151_B", # EM-DAT: People affected by Costal Floods
+    # "S_EXP_CYC_151_B", # EM-DAT: People affected by Cyclones
+    # "S_EXP_FLO_151_B", # EM-DAT: People affected by Floods
+    # "S_EXP_COF_152", # EM-DAT: Cost of damages in adjusted USD due to Costal Floods
+    # "S_EXP_CYC_152", # EM-DAT: Cost of damages in adjusted USD due to Cyclones
+    # "S_EXP_FLO_152" # EM-DAT: Cost of damages in adjusted USD due to Floods
 )
 
 social_exposure <- function(locations) {
