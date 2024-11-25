@@ -6,11 +6,14 @@ ER_FOR_1511 <- function(locations, ...) {
     return(locations)
 }
 
-# Source: Global Forest Cover - GFC
+# Source: Global Forest Change - GFC
+# https://developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2023_v1_11
+# https://doi.org/10.1126/science.1244693
+# Forest loss % from 2000 to 2023Ż
 ES_DES3 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
     gfc_thresholded <- rast(glue::glue("objects/Forests/gfc_extract_thresholded_{country_iso3}.tif"))
-    lossyear <- gfc_thresholded[["gfc_extract_thresholded_BGD_2"]]
+    lossyear <- gfc_thresholded[[glue::glue("gfc_extract_thresholded_{country_iso3}_2")]]
     # https://rdrr.io/cran/gfcanalysis/man/threshold_gfc.html
     # all years from year 2000 to 2019 values > 0 and < 20 become 1
     loss <- extract_classes(lossyear, c(0, 20, 1))
@@ -18,12 +21,15 @@ ES_DES3 <- function(locations, ...) {
     return(locations)
 }
 
-# Source: Global Forest Cover - GFC
+# Source: Global Forest Change - GFC
+# https://developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2023_v1_11
+# https://doi.org/10.1126/science.1244693
+# Forest gain % from 2000 to 2023Ż
 ER_RES2 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
     gfc_thresholded <- rast(glue::glue("objects/Forests/gfc_extract_thresholded_{country_iso3}.tif"))
     # https://rdrr.io/cran/gfcanalysis/man/threshold_gfc.html
-    gain <- gfc_thresholded[["gfc_extract_thresholded_BGD_3"]]
+    gain <- gfc_thresholded[[glue::glue("gfc_extract_thresholded_{country_iso3}_3")]]
     gain[gain == 0] <- NA
     locations <- raster_area_within_polygons(gain, locations)
     return(locations)
