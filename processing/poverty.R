@@ -1,7 +1,7 @@
 # Global Subnational Atlas of Poverty (version June 2023) [Data set]. World Bank Group
 # data source: https://datacatalog.worldbank.org/search/dataset/0064796/Subnational-Poverty-and-Inequality-Database--SPID-
-# shapefile: blob:https://datacatalog.worldbank.org/0292ac56-c01e-4f00-8f57-6be76a844f5b
-# data: blob:https://datacatalog.worldbank.org/7d7937a6-8476-4473-8bee-32cf112f82f5
+# shapefile: https://datacatalogfiles.worldbank.org/ddh-published/0042041/DR0052554/gsap-maps.zip
+# data: https://datacatalogfiles.worldbank.org/ddh-published/0042041/DR0052554/gsap-maps.zip
 get_gsap <- function(locations) {
     gsap <- st_read("data/Poverty/GSAP2/gsap-maps/GSAP2.shp",) %>%
         dplyr::filter(code %in% unique(locations$country_iso3)) %>%
