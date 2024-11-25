@@ -109,7 +109,7 @@ C_TRA1 <- function(locations, ...) {
             WHERE highway IN ({road_types})
         ")
     )
-    osm_points <- st_transform(osm_points, crs(locations))
+    osm_lines <- st_transform(osm_lines, crs(locations))
     # locations <- st_simplify(locations)
     locations_intersect <- terra::intersect(vect(locations), vect(osm_lines)) %>%
         st_as_sf() %>%

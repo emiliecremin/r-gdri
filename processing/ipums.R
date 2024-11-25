@@ -171,7 +171,7 @@ S_INF3 <- function(locations, social_data, ...) {
 # Census 2011
 # http://redatam.bbs.gov.bd/redbin/RpWebEngine.exe/Portal?BASE=HPC2011_long&lang=ENG
 bgd_tv_radio <- function(locations) {
-  bgd_tv_radio <- read_excel("data/ADMIN/BGD/TV-Radio.xls")
+  bgd_tv_radio <- read_excel("data/ADMIN/BGD/TV-Radio.xlsx", sheet="tv-radio")
   locations <- locations %>% collapse::join(bgd_tv_radio, on = c("adm2_name" = "Zila"))
   locations$val <- locations$No * 100 / locations$Household
   return(locations)

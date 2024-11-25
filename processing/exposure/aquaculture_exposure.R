@@ -55,7 +55,7 @@ AQ_EXP_FLO <- function(locations, ...) {
     aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
     floods_cropped <- crop(floods, aquaculture)
     ### zonal statistics using "exactextractr"
-    locations$cnt <- exact_extract(floods_cropped, locations, "sum", progress = TRUE)
+    locations$cnt <- exact_extract(floods_cropped, locations, "mean", progress = TRUE)
     locations$val <- locations$cnt * as.numeric(locations$aqua_pct)
     return(locations)
 }
@@ -69,7 +69,7 @@ AQ_EXP_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     salinity <- terra::rast("data/Soil/Salinity/salmap2016.vrt")
-    aquaculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_aquaculture.tif"))
+    aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
     salinity_cropped <- crop(salinity, aquaculture)
     ### zonal statistics using "exactextractr"
     locations$cnt <- exact_extract(salinity_cropped, locations, "mean", progress = TRUE)
