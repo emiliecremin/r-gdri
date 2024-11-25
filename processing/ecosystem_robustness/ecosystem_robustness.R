@@ -9,13 +9,14 @@ ecosystem_robustness_indicators <- c(
     "ER_ECO2_FLII", # Forest Landscape Integrity Index - forest.R - forestintegrity.com
     "ER_ECO1", # Ecosystem Functionality Index - biodiversity.R -
     "ER_BIO2", # Mean Species Abundance (MSA) - biodiversity.R - Globio
-    "ER_SDG14_cpma", # National
-    "ER_SDG1521_FO", # National
-    "ER_TRE1", # National
-    "ER_TRE4", # National
-    "ER_TRE5", # National
-    "ER_TRE7", # National
-    "ER_POL2" # National
+    "ER_FUN2" # AidData - WorldBank
+    # "ER_SDG14_cpma", # National
+    # "ER_SDG1521_FO", # National
+    # "ER_TRE1", # National
+    # "ER_TRE4", # National
+    # "ER_TRE5", # National
+    # "ER_TRE7", # National
+    # "ER_POL2" # National
 )
 
 ecosystem_robustness <- function(locations) {
