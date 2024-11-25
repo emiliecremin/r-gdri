@@ -21,6 +21,7 @@ ind_villages <- st_read("objects/ADMIN/villages_ind.gpkg")
 # ---------------------------------------------------------------
 # INDICATORS PER DATA SOURCE
 # ---------------------------------------------------------------
+source("processing/AidData.R")
 source("processing/aqueduct.R")
 source("processing/biodiversity.R")
 source("processing/conservation.R")
@@ -69,13 +70,16 @@ mkdirs("output/adaptation_capacities")
 source("processing/vietnam_national.R")
 cop_adapt_vnm <- adaptation_capacities(vnm_villages)
 # saveRDS(cop_adapt_vnm, "output/adaptation_capacities/adaptation_capacities_VNM.rds")
+
 source("processing/bangladesh_national.R")
 cop_adapt_bgd <- adaptation_capacities(bgd_villages)
 # saveRDS(cop_adapt_bgd, "output/adaptation_capacities/adaptation_capacities_BGD.rds")
+
 source("processing/india_national.R")
 cop_adapt_ind <- adaptation_capacities(ind_villages)
 # saveRDS(cop_adapt_ind, "output/adaptation_capacities/adaptation_capacities_IND.rds")
 
+cop_adapt <- rbind(cop_adapt_vnm, cop_adapt_bgd, cop_adapt_ind)
 cop_adapt_norm <- normalize(cop_adapt)
 n <- dplyr::select(st_drop_geometry(cop_adapt_norm), ends_with("_norm"))
 cop_adapt_norm$CA_MH <- rowMeans(n, na.rm = TRUE)
@@ -94,13 +98,13 @@ mkdirs("output/ecosystem_sensitivity")
 
 source("processing/vietnam_national.R")
 eco_sensitivity_vnm <- ecosystem_sensitivity(vnm_villages)
-saveRDS(eco_sensitivity_vnm, "output/ecosystem_sensitivity/ecosystem_sensitivity_VNM.rds")
+# saveRDS(eco_sensitivity_vnm, "output/ecosystem_sensitivity/ecosystem_sensitivity_VNM.rds")
 source("processing/bangladesh_national.R")
 eco_sensitivity_bgd <- ecosystem_sensitivity(bgd_villages)
-saveRDS(eco_sensitivity_bgd, "output/ecosystem_sensitivity/ecosystem_sensitivity_BGD.rds")
+# saveRDS(eco_sensitivity_bgd, "output/ecosystem_sensitivity/ecosystem_sensitivity_BGD.rds")
 source("processing/india_national.R")
 eco_sensitivity_ind <- ecosystem_sensitivity(ind_villages)
-saveRDS(eco_sensitivity_ind, "output/ecosystem_sensitivity/ecosystem_sensitivity_IND.rds")
+# saveRDS(eco_sensitivity_ind, "output/ecosystem_sensitivity/ecosystem_sensitivity_IND.rds")
 eco_sensitivity <- rbind(eco_sensitivity_vnm, eco_sensitivity_bgd, eco_sensitivity_ind)
 
 eco_sensitivity_norm <- normalize(eco_sensitivity)
@@ -118,13 +122,13 @@ mkdirs("output/ecosystem_robustness")
 
 source("processing/vietnam_national.R")
 eco_robustness_vnm <- ecosystem_robustness(vnm_villages)
-saveRDS(eco_robustness_vnm, "output/ecosystem_robustness/ecosystem_robustness_VNM.rds")
+# saveRDS(eco_robustness_vnm, "output/ecosystem_robustness/ecosystem_robustness_VNM.rds")
 source("processing/bangladesh_national.R")
 eco_robustness_bgd <- ecosystem_robustness(bgd_villages)
-saveRDS(eco_robustness_bgd, "output/ecosystem_robustness/ecosystem_robustness_BGD.rds")
+# saveRDS(eco_robustness_bgd, "output/ecosystem_robustness/ecosystem_robustness_BGD.rds")
 source("processing/india_national.R")
 eco_robustness_ind <- ecosystem_robustness(ind_villages)
-saveRDS(eco_robustness_ind, "output/ecosystem_robustness/ecosystem_robustness_IND.rds")
+# saveRDS(eco_robustness_ind, "output/ecosystem_robustness/ecosystem_robustness_IND.rds")
 eco_robustness <- rbind(eco_robustness_vnm, eco_robustness_bgd, eco_robustness_ind)
 
 eco_robustness_norm <- normalize(eco_robustness)
@@ -132,10 +136,6 @@ n <- dplyr::select(st_drop_geometry(eco_robustness_norm), ends_with("_norm"))
 eco_robustness_norm$ER_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(eco_robustness_norm, "output/ecosystem_robustness/ecosystem_robustness.rds")
 st_write(eco_robustness_norm, "output/ecosystem_robustness/ecosystem_robustness.gpkg", append = FALSE)
-
-"
-ER_FUN2 Donor aid for adaptation
-"
 
 # ---------------------------------------------------------------
 # ECOSYSTEM EXPOSURE
