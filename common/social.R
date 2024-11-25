@@ -21,6 +21,8 @@ get_social_data <- function(locations) {
                 social <- read.csv(file = "data/IPUMS/vietnam_2009.csv")
                 saveRDS(social, f)
             }
+            social <- social %>%
+                dplyr::filter(GEOLEV2 %in% locations$GEOLEV2)
         }
 
         if (country_iso3 == "BGD") {
@@ -31,6 +33,8 @@ get_social_data <- function(locations) {
                 social <- read.csv(file = "data/IPUMS/bangladesh_2011.csv")
                 saveRDS(social, f)
             }
+            social <- social %>%
+                dplyr::filter(GEOLEV2 %in% locations$GEOLEV2)
         }
     }
     return(social)
