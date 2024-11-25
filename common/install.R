@@ -1,7 +1,24 @@
+# -------------------------------------------------------
+# FOR MAC OS users
+# -------------------------------------------------------
 # brew install gdal
 # https://github.com/r-lib/usethis/issues/1970#issuecomment-2471529856
 # brew install libgit2
 # brew install udunits
+
+# install.packages("sf", configure.args = c(
+#     "--with-proj-include=/opt/homebrew/include",
+#     "--with-proj-lib=/opt/homebrew/lib",
+#     "--with-sqlite3-lib=/opt/homebrew/lib",
+#     "--with-sqlite3-include=/opt/homebrew/include"
+# ))
+# install.packages("terra", configure.args = c(
+#     "--with-proj-include=/opt/homebrew/include",
+#     "--with-proj-lib=/opt/homebrew/lib",
+#     "--with-sqlite3-lib=/opt/homebrew/lib",
+#     "--with-sqlite3-include=/opt/homebrew/include"
+# ))
+# -------------------------------------------------------
 
 install.packages("collapse")
 install.packages("data.table")
