@@ -36,15 +36,17 @@ A_EXP_COF <- function(locations, ...) {
 # Coalition for Disaster Resilient Infrastructure (CDRI)
 # https://doi.org/10.59375/biennialreport.ed1
 # https://giri.unepgrid.ch/map?list=explore&view=MX-UG0KA-OIQSJ-FIMNA
-# unit: cyclone wind km/h (for a return period of 100 years)
+# unit: cyclone wind km/h (wind > 150 km/h for a return period of 100 years)
 A_INT_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
     agriculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif"))
     cyclones_cropped <- crop(cyclones, agriculture)
+    cyclones_filtered <- cyclones_cropped
+    cyclones_filtered[cyclones_filtered < 150] <- NA
     ### zonal statistics using "exactextractr"
-    locations$val <- exact_extract(cyclones_cropped, locations, "mean", progress = TRUE)
+    locations$val <- exact_extract(cyclones_filtered, locations, "mean", progress = TRUE)
     locations$val[is.nan(locations$val)] <- 0
     return(locations)
 }
@@ -53,27 +55,20 @@ A_INT_CYC <- function(locations, ...) {
 # https://doi.org/10.59375/biennialreport.ed1
 # https://giri.unepgrid.ch/map?list=explore&view=MX-UG0KA-OIQSJ-FIMNA
 # unit: cyclone wind km/h (for a return period of 100 years)
-# unit: % of cyclone affected agriculture area on a 100 year return period
+# unit: % of cyclone affected agriculture (wind > 150 km/h) area on a 100 year return period
 # km2 of cyclone affected agriculture / km2 of agriculture in the area
 A_EXP_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     cyclones <- "data/Hazards/Cyclones/Wind_T100.tif"
     agriculture <- glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif")
-    cyclones_masked <- mask_rasters(agriculture, cyclones)
+    cyclones_cropped <- crop(cyclones, agriculture)
+    cyclones_filtered <- cyclones_cropped
+    cyclones_filtered[cyclones_filtered < 150] <- NA
+    cyclones_masked <- mask_rasters(agriculture, cyclones_filtered)
     locations <- raster_area_within_polygons(cyclones_masked, locations)
     locations$cnt <- locations$area_raster_km2
     locations$val <- locations$area_raster_km2 / locations$agri_km2
-    return(locations)
-}
-
-# Drought data source Aqueduct
-# unit: score classification [Low (0.0-0.2), Low-medium (0.2-0.4), Medium (0.4-0.6), Medium-high (0.6-0.8), High (0.8-1.0)]
-A_INT_DRO <- function(locations, ...) {
-    locations <- locations %>% st_transform(4326)
-    # drr: Drought risk
-    drought <- map_aqueduct(locations, "drr")
-    locations$val <- drought$val
     return(locations)
 }
 
@@ -126,16 +121,20 @@ A_INT_SAL <- function(locations, ...) {
 }
 
 # Global Soil Salinity Map
-#  https://doi.org/10.1016/j.rse.2019.111260
-#  https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
-#  https://code.earthengine.google.com/d43e5a92ae1deed32a0929f57b572756
-# unit: soil salinity score 0 to 4 [0: non-saline, 1: slightly, 2: moderately, 3: highly, 4: extremely]
+# https://doi.org/10.1016/j.rse.2019.111260
+# https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
+# https://code.earthengine.google.com/d43e5a92ae1deed32a0929f57b572756
+# soil salinity score 0 to 4 [0: non-saline, 1: slightly, 2: moderately, 3: highly, 4: extremely]
+# unit: % of agriculture area affected by salinity slightly (1) to extremely (4)
 A_EXP_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     salinity <- "data/Soil/Salinity/salmap2016.vrt"
     agriculture <- glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif")
-    salinity_masked <- mask_rasters(agriculture, salinity)
+    salinity_cropped <- crop(salinity, agriculture)
+    salinity_filtered <- salinity_cropped
+    salinity_filtered[salinity_filtered < 1] <- NA
+    salinity_masked <- mask_rasters(agriculture, salinity_filtered)
     locations <- raster_area_within_polygons(salinity_masked, locations)
     locations$cnt <- locations$area_raster_km2
     locations$val <- locations$area_raster_km2 / locations$agri_km2
