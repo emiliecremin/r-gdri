@@ -125,7 +125,7 @@ AQ_INT_SAL <- function(locations, ...) {
 # https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
 # https://code.earthengine.google.com/d43e5a92ae1deed32a0929f57b572756
 # soil salinity score 0 to 4 [0: non-saline, 1: slightly, 2: moderately, 3: highly, 4: extremely]
-# unit: % of ecosystems area affected by salinity slightly (1) to extremely (4)
+# unit: % of aquaculture area affected by salinity slightly (1) to extremely (4)
 AQ_EXP_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
