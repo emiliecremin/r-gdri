@@ -146,8 +146,6 @@ aquaculture_exposure_indicators <- c(
     "AQ_INT_COF", # Costal Floods, storm surges
     "AQ_EXP_CYC", # Cyclones
     "AQ_INT_CYC", # Cyclones
-    "AQ_EXP_DRO", # Droughts
-    "AQ_INT_DRO", # Droughts
     "AQ_EXP_FLO", # Floods
     "AQ_INT_FLO", # Floods
     "AQ_EXP_SAL", # Salinity

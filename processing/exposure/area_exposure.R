@@ -141,7 +141,7 @@ area_exposure_indicators <- c(
     "AREA_INT_COF", # Costal Floods, storm surges
     "AREA_EXP_CYC", # Cyclones
     "AREA_INT_CYC", # Cyclones
-    "AREA_INT_DRO", # Droughts
+    # "AREA_INT_DRO", # Droughts
     "AREA_EXP_FLO", # Floods
     "AREA_INT_FLO", # Floods
     "AREA_EXP_SAL", # Salinity

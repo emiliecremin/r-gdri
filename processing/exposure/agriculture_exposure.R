@@ -146,7 +146,6 @@ agriculture_exposure_indicators <- c(
     "A_INT_COF", # Costal Floods, storm surges
     "A_EXP_CYC", # Cyclones
     "A_INT_CYC", # Cyclones
-    "A_INT_DRO", # Droughts
     "A_EXP_FLO", # Floods
     "A_INT_FLO", # Floods
     "A_EXP_SAL", # Salinity
