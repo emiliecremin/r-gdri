@@ -1,5 +1,44 @@
 source("common/libraries.R")
 
+# Function to safely divide two numbers
+safe_divide <- function(numerator, denominator) {
+  return(ifelse(denominator == 0, NA, numerator / denominator))
+}
+
+mask_rasters <- function(r1, r2, reproj = FALSE) {
+  # Convert a RasterLayer to SpatRaster if needed
+  if (inherits(r1, "SpatRaster")) {
+    r1_terra <- r1
+  } else {
+    r1_terra <- rast(r1)
+  }
+  if (inherits(r2, "SpatRaster")) {
+    r2_terra <- r2
+  } else {
+    r2_terra <- rast(r2)
+  }
+
+
+  cat("1. Crop to the extent of r1 (optional, but often useful) \n")
+  r2_terra <- crop(r2_terra, r1_terra)
+
+  cat("2. Reproject if needed \n")
+  if (reproj && !isTRUE(all.equal(crs(r1_terra), crs(r2_terra)))) {
+    r2_terra <- project(r2_terra, r1_terra)
+    # r2 <- projectRaster(r2, crs = crs(r1))
+  }
+
+  cat("3. Resample if the resolutions don’t match \n")
+  if (!isTRUE(all.equal(res(r1_terra), res(r2_terra)))) {
+    r2_terra <- resample(r2_terra, r1_terra, method = "near")
+  }
+
+  cat("4. Now mask \n")
+  masked_raster <- mask(r1_terra, r2_terra)
+
+  return(masked_raster)
+}
+
 # Function to extract the area of a raster within each polygon
 raster_area_within_polygons <- function(rst, polygons) {
   # Ensure the raster has the correct CRS
@@ -63,6 +102,8 @@ raster_area_within_polygons <- function(rst, polygons) {
   return(polygons_final)
 }
 
+# TODO: use values filtering instead
+# i.e. r_filtered[r_filtered > 5] <- NA
 extract_classes <- function(landcover, classes) {
   if (!inherits(landcover, "SpatRaster")) {
     landcover <- terra::rast(landcover)
@@ -116,11 +157,11 @@ normalize <- function(data, ...) {
 
 update_gdri <- function(df, shp, indicator_code) {
   df <- df %>% st_drop_geometry()
-  cols <- c("geo_id", "val")
+  cols <- c("geo_id", "cnt", "val")
   if ("morm" %in% colnames(df)) {
     cols <- append(cols, "nrom")
   }
-  indicator <- subset(df, select = cols)
+  indicator <- df[, (names(df) %in% cols)]
   indicator <- indicator %>% rename_with(~ paste0(str_glue("{indicator_code}_"), .x), !matches("geo_id"))
   return(joinOnColumn(indicator, shp, "geo_id"))
 }
@@ -225,6 +266,7 @@ process_indicators <- function(locations, social_data = data.frame(), indicators
 keep_common_columns <- function(data) {
   keep_cols <- c(
     "geo_id",
+    "cnt",
     "val",
     "country_iso3",
     "CNTRY_NAME",
