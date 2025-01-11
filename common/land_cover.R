@@ -48,6 +48,15 @@ create_landcover <- function(landcover, roi, region_name) {
         overwrite = TRUE
     )
 
+    # Built-up = 50
+    built_up <- extract_classes(landcover_roi, c(49, 51, 1))
+    # plot(ecosystems)
+    terra::writeRaster(
+        built_up,
+        filename = str_glue("{output}/{region_name}_built.tif"),
+        overwrite = TRUE
+    )
+
     # Ecosystems = Forest 10, Shrubland 20 + Grassland 30 + Open Water 80 + Herbaceous wetland 90 + Mangroves 95
     ecosystems <- extract_classes(landcover_roi, c(9, 31, 1, 79, 96, 1))
     # plot(ecosystems)
@@ -94,6 +103,13 @@ calculate_percentages <- function(locations, region_name) {
         dplyr::select(-area_raster_km2) %>%
         dplyr::mutate(ecosys_pct = val) %>%
         dplyr::select(-val)
+    built_up <- terra::rast(str_glue("{output}/{region_name}_built.tif"))
+    locations <- raster_area_within_polygons(built_up, locations)
+    locations <- locations %>%
+        dplyr::mutate(built_km2 = area_raster_km2) %>%
+        dplyr::select(-area_raster_km2) %>%
+        dplyr::mutate(built_pct = val) %>%
+        dplyr::select(-val)
     return(locations)
 }
 
@@ -105,11 +121,12 @@ if (!exists("vnm_villages")) {
 region_name <- "VNM"
 create_landcover(landcover, vnm_villages, region_name)
 locations <- calculate_percentages(vnm_villages, region_name)
-locations <- st_read("objects/ADMIN/villages_vnm.gpkg")
 # plot(locations["agri_km2"])
 # plot(locations["agri_pct"])
 # plot(locations["ecosys_km2"])
 # plot(locations["ecosys_pct"])
+# plot(locations["built_km2"])
+# plot(locations["built_pct"])
 st_write(locations, "objects/ADMIN/villages_vnm.gpkg", append = FALSE)
 
 if (!exists("bgd_villages")) {
@@ -124,6 +141,8 @@ locations <- calculate_percentages(bgd_villages, region_name)
 # plot(locations["agri_pct"])
 # plot(locations["ecosys_km2"])
 # plot(locations["ecosys_pct"])
+# plot(locations["built_km2"])
+# plot(locations["built_pct"])
 st_write(locations, "objects/ADMIN/villages_bgd.gpkg", append = FALSE)
 
 if (!exists("ind_villages")) {
@@ -138,6 +157,8 @@ locations <- calculate_percentages(ind_villages, region_name)
 # plot(locations["agri_pct"])
 # plot(locations["ecosys_km2"])
 # plot(locations["ecosys_pct"])
+# plot(locations["built_km2"])
+# plot(locations["built_pct"])
 st_write(locations, "objects/ADMIN/villages_ind.gpkg", append = FALSE)
 
 rm(landcover)
