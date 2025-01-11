@@ -28,7 +28,8 @@ E_EXP_COF <- function(locations, ...) {
     ecosystems <- glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif")
     storm_surge_masked <- mask_rasters(ecosystems, storm_surge)
     locations <- raster_area_within_polygons(storm_surge_masked, locations)
-    locations$val <- locations$area_raster_km2
+    locations$cnt <- locations$area_raster_km2
+    locations$val <- locations$area_raster_km2 / locations$ecosys_km2
     return(locations)
 }
 
@@ -66,27 +67,8 @@ E_EXP_CYC <- function(locations, ...) {
     cyclones_filtered[cyclones_filtered < 150] <- NA
     cyclones_masked <- mask_rasters(ecosystems, cyclones_filtered)
     locations <- raster_area_within_polygons(cyclones_masked, locations)
-    locations$val <- locations$area_raster_km2
-    return(locations)
-}
-
-# Drought
-# score classification [Low (0.0-0.2), Low-medium (0.2-0.4), Medium (0.4-0.6), Medium-high (0.6-0.8), High (0.8-1.0)]
-# unit: score by percentage of ecosystems in the area
-E_EXP_DRO <- function(locations, ...) {
-    locations <- locations %>% st_transform(4326)
-    drought <- map_aqueduct(locations, "drr")
-    locations$val <- drought$val * locations$agri_pct
-    return(locations)
-}
-
-# Drought data source Aqueduct
-# unit: score classification [Low (0.0-0.2), Low-medium (0.2-0.4), Medium (0.4-0.6), Medium-high (0.6-0.8), High (0.8-1.0)]
-E_INT_DRO <- function(locations, ...) {
-    locations <- locations %>% st_transform(4326)
-    # drr: Drought risk
-    drought <- map_aqueduct(locations, "drr")
-    locations$val <- drought$val
+    locations$cnt <- locations$area_raster_km2
+    locations$val <- locations$area_raster_km2 / locations$ecosys_km2
     return(locations)
 }
 
@@ -100,9 +82,9 @@ E_EXP_FLO <- function(locations, ...) {
     floods <- "data/Hazards/Floods/fl_hazard_100_yrp.tif"
     ecosystems <- glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif")
     floods_masked <- mask_rasters(ecosystems, floods)
-    plot(floods_masked)
     locations <- raster_area_within_polygons(floods_masked, locations)
-    locations$val <- locations$area_raster_km2
+    locations$cnt <- locations$area_raster_km2
+    locations$val <- locations$area_raster_km2 / locations$ecosys_km2
     return(locations)
 }
 
@@ -154,7 +136,8 @@ E_EXP_SAL <- function(locations, ...) {
     salinity_filtered[salinity_filtered < 1] <- NA
     salinity_masked <- mask_rasters(ecosystems, salinity_filtered)
     locations <- raster_area_within_polygons(salinity_masked, locations)
-    locations$val <- locations$area_raster_km2
+    locations$cnt <- locations$area_raster_km2
+    locations$val <- locations$area_raster_km2 / locations$ecosys_km2
     return(locations)
 }
 
@@ -163,8 +146,6 @@ ecosystems_exposure_indicators <- c(
     "E_INT_COF", # Costal Floods, storm surges
     "E_EXP_CYC", # Cyclones
     "E_INT_CYC", # Cyclones
-    "E_EXP_DRO", # Droughts
-    "E_INT_DRO", # Droughts
     "E_EXP_FLO", # Floods
     "E_INT_FLO", # Floods
     "E_EXP_SAL", # Salinity
