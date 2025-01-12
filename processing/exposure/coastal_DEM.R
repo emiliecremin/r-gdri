@@ -1,9 +1,3 @@
-source("common/libraries.R")
-source("common/helpers.R")
-library(purrr)
-library(sf)
-library(terra)
-
 get_coastal_dem <- function(locations) {
     country_iso3 <- unique(locations$country_iso3)[1]
 
@@ -44,14 +38,3 @@ get_coastal_dem <- function(locations) {
     # plot(coastal_dem_filtered)
     return(coastal_dem_filtered)
 }
-
-coastal_dem_filtered <- get_coastal_dem(locations)
-country_iso3 <- unique(locations$country_iso3)[1]
-agriculture <- glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif")
-
-coastal_dem_masked <- mask_rasters(agriculture, coastal_dem_filtered)
-plot(coastal_dem_masked)
-locations <- raster_area_within_polygons(coastal_dem_masked, locations)
-locations$cnt <- locations$area_raster_km2
-locations$val <- locations$area_raster_km2 / locations$agri_km2
-plot(locations["val"])
