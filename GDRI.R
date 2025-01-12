@@ -25,6 +25,7 @@ source("processing/AidData.R")
 source("processing/aqueduct.R")
 source("processing/biodiversity.R")
 source("processing/conservation.R")
+source("processing/exposure/coastal_DEM.R")
 source("processing/forest.R")
 source("processing/free_flowing_rivers.R")
 source("processing/osm.R")
@@ -137,42 +138,6 @@ eco_robustness_norm$ER_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(eco_robustness_norm, "output/ecosystem_robustness/ecosystem_robustness.rds")
 st_write(eco_robustness_norm, "output/ecosystem_robustness/ecosystem_robustness.gpkg", append = FALSE)
 
-# ---------------------------------------------------------------
-# ECOSYSTEM EXPOSURE
-# ---------------------------------------------------------------
-
-source("processing/exposure/ecosystem_exposure.R")
-mkdirs("output/exposure")
-
-eco_exposure_vnm <- ecosystem_exposure(vnm_villages)
-eco_exposure_bgd <- ecosystem_exposure(bgd_villages)
-eco_exposure_ind <- ecosystem_exposure(ind_villages)
-eco_exposure <- rbind(eco_exposure_vnm, eco_exposure_bgd, eco_exposure_ind)
-
-eco_exposure_norm <- normalize(eco_exposure)
-
-n <- dplyr::select(st_drop_geometry(eco_exposure_norm), ends_with("_norm"))
-eco_exposure_norm$E_EXP_MH <- rowMeans(n, na.rm = TRUE)
-saveRDS(eco_exposure_norm, "output/exposure/ecosystem_exposure.rds")
-st_write(eco_exposure_norm, "output/exposure/ecosystem_exposure.gpkg", append = FALSE)
-
-# ---------------------------------------------------------------
-# SOCIAL EXPOSURE
-# ---------------------------------------------------------------
-
-source("processing/exposure/social_exposure.R")
-
-soc_exposure_vnm <- social_exposure(vnm_villages)
-soc_exposure_bgd <- social_exposure(bgd_villages)
-soc_exposure_ind <- social_exposure(ind_villages)
-soc_exposure <- rbind(soc_exposure_vnm, soc_exposure_bgd, soc_exposure_ind)
-
-soc_exposure_norm <- normalize(soc_exposure)
-
-n <- dplyr::select(st_drop_geometry(soc_exposure_norm), ends_with("_norm"))
-soc_exposure_norm$S_EXP_MH <- rowMeans(n, na.rm = TRUE)
-saveRDS(soc_exposure_norm, "output/exposure/social_exposure.rds")
-st_write(soc_exposure_norm, "output/exposure/social_exposure.gpkg", append = FALSE)
 
 # ---------------------------------------------------------------
 # AGRICULTURE EXPOSURE
@@ -211,24 +176,122 @@ aquaculture_exposure_norm$AQ_EXP_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(aquaculture_exposure_norm, "output/exposure/aquaculture_exposure.rds")
 st_write(aquaculture_exposure_norm, "output/exposure/aquaculture_exposure.gpkg", append = FALSE)
 
+# ---------------------------------------------------------------
+# AREA EXPOSURE
+# ---------------------------------------------------------------
+
+source("processing/exposure/area_exposure.R")
+
+area_exposure_vnm <- area_exposure(vnm_villages)
+area_exposure_bgd <- area_exposure(bgd_villages)
+area_exposure_ind <- area_exposure(ind_villages)
+area_exposure <- rbind(area_exposure_vnm, area_exposure_bgd, area_exposure_ind)
+
+area_exposure_norm <- normalize(area_exposure)
+
+n <- dplyr::select(st_drop_geometry(area_exposure_norm), ends_with("_norm"))
+area_exposure_norm$AREA_EXP_MH <- rowMeans(n, na.rm = TRUE)
+saveRDS(area_exposure_norm, "output/exposure/area_exposure.rds")
+st_write(area_exposure_norm, "output/exposure/area_exposure.gpkg", append = FALSE)
+
+# ---------------------------------------------------------------
+# BUILT UP EXPOSURE
+# ---------------------------------------------------------------
+
+source("processing/exposure/built_exposure.R")
+
+built_exposure_vnm <- built_exposure(vnm_villages)
+built_exposure_bgd <- built_exposure(bgd_villages)
+built_exposure_ind <- built_exposure(ind_villages)
+built_exposure <- rbind(built_exposure_vnm, built_exposure_bgd, built_exposure_ind)
+
+built_exposure_norm <- normalize(built_exposure)
+
+n <- dplyr::select(st_drop_geometry(built_exposure_norm), ends_with("_norm"))
+built_exposure_norm$B_EXP_MH <- rowMeans(n, na.rm = TRUE)
+saveRDS(built_exposure_norm, "output/exposure/built_exposure.rds")
+st_write(built_exposure_norm, "output/exposure/built_exposure.gpkg", append = FALSE)
+
+# ---------------------------------------------------------------
+# ECOSYSTEM EXPOSURE
+# ---------------------------------------------------------------
+
+source("processing/exposure/ecosystem_exposure.R")
+mkdirs("output/exposure")
+
+eco_exposure_vnm <- ecosystem_exposure(vnm_villages)
+eco_exposure_bgd <- ecosystem_exposure(bgd_villages)
+eco_exposure_ind <- ecosystem_exposure(ind_villages)
+eco_exposure <- rbind(eco_exposure_vnm, eco_exposure_bgd, eco_exposure_ind)
+
+eco_exposure_norm <- normalize(eco_exposure)
+
+n <- dplyr::select(st_drop_geometry(eco_exposure_norm), ends_with("_norm"))
+eco_exposure_norm$E_EXP_MH <- rowMeans(n, na.rm = TRUE)
+saveRDS(eco_exposure_norm, "output/exposure/ecosystem_exposure.rds")
+st_write(eco_exposure_norm, "output/exposure/ecosystem_exposure.gpkg", append = FALSE)
+
+# ---------------------------------------------------------------
+# POPULATION EXPOSURE
+# ---------------------------------------------------------------
+
+source("processing/exposure/pop_exposure.R")
+mkdirs("output/exposure")
+
+pop_exposure_vnm <- pop_exposure(vnm_villages)
+pop_exposure_bgd <- pop_exposure(bgd_villages)
+pop_exposure_ind <- pop_exposure(ind_villages)
+pop_exposure <- rbind(pop_exposure_vnm, pop_exposure_bgd, pop_exposure_ind)
+
+pop_exposure_norm <- normalize(pop_exposure)
+
+n <- dplyr::select(st_drop_geometry(pop_exposure_norm), ends_with("_norm"))
+pop_exposure_norm$POP_EXP_MH <- rowMeans(n, na.rm = TRUE)
+saveRDS(pop_exposure_norm, "output/exposure/pop_exposure.rds")
+st_write(pop_exposure_norm, "output/exposure/pop_exposure.gpkg", append = FALSE)
+
+# # ---------------------------------------------------------------
+# # SOCIAL EXPOSURE
+# # ---------------------------------------------------------------
+
+# source("processing/exposure/social_exposure.R")
+
+# soc_exposure_vnm <- social_exposure(vnm_villages)
+# soc_exposure_bgd <- social_exposure(bgd_villages)
+# soc_exposure_ind <- social_exposure(ind_villages)
+# soc_exposure <- rbind(soc_exposure_vnm, soc_exposure_bgd, soc_exposure_ind)
+
+# soc_exposure_norm <- normalize(soc_exposure)
+
+# n <- dplyr::select(st_drop_geometry(soc_exposure_norm), ends_with("_norm"))
+# soc_exposure_norm$S_EXP_MH <- rowMeans(n, na.rm = TRUE)
+# saveRDS(soc_exposure_norm, "output/exposure/social_exposure.rds")
+# st_write(soc_exposure_norm, "output/exposure/social_exposure.gpkg", append = FALSE)
+
 soc_sus_norm <- readRDS("output/social_susceptibility/social_susceptibility.rds")
 cop_adapt_norm <- readRDS("output/adaptation_capacities/adaptation_capacities.rds")
 eco_sensitivity_norm <- readRDS("output/ecosystem_sensitivity/ecosystem_sensitivity.rds")
 eco_robustness_norm <- readRDS("output/ecosystem_robustness/ecosystem_robustness.rds")
-soc_exposure_norm <- readRDS("output/exposure/social_exposure.rds")
-eco_exposure_norm <- readRDS("output/exposure/ecosystem_exposure.rds")
 agri_exposure_norm <- readRDS("output/exposure/agriculture_exposure.rds")
 aquaculture_exposure_norm <- readRDS("output/exposure/aquaculture_exposure.rds")
+area_exposure_norm <- readRDS("output/exposure/area_exposure.rds")
+built_exposure_norm <- readRDS("output/exposure/built_exposure.rds")
+eco_exposure_norm <- readRDS("output/exposure/ecosystem_exposure.rds")
+pop_exposure_norm <- readRDS("output/exposure/pop_exposure.rds")
+# soc_exposure_norm <- readRDS("output/exposure/social_exposure.rds")
 
 gdri <- cbind(
     soc_sus_norm,
     cop_adapt_norm,
     eco_sensitivity_norm,
     eco_robustness_norm,
-    soc_exposure_norm,
-    eco_exposure_norm,
     agri_exposure_norm,
-    aquaculture_exposure_norm
+    aquaculture_exposure_norm,
+    area_exposure_norm,
+    built_exposure_norm,
+    eco_exposure_norm,
+    pop_exposure_norm
+    # soc_exposure_norm
 )
 
 gdri$SES_SUS_MH <- (gdri$SOC_MH + gdri$ES_MH) / 2
@@ -236,9 +299,9 @@ gdri$SES_CA_MH <- (gdri$CA_MH + gdri$ER_MH) / 2
 gdri$SES_VU_MH <- (gdri$SES_SUS_MH + gdri$SES_CA_MH) / 2
 # gdri$SES_VU_MH <- rowMeans(subset(gdri, select = c(SES_SUS_MH, SES_CA_MH)), na.rm = TRUE)
 
-gdri$SES_EXP_MH <- (gdri$S_EXP_MH + gdri$E_EXP_MH + gdri$A_EXP_MH + gdri$AQ_EXP_MH) / 4
+# gdri$SES_EXP_MH <- (gdri$S_EXP_MH + gdri$E_EXP_MH + gdri$A_EXP_MH + gdri$AQ_EXP_MH) / 4
 
-gdri$RISK_MH <- gdri$SES_VU_MH * gdri$SES_EXP_MH
+# gdri$RISK_MH <- gdri$SES_VU_MH * gdri$SES_EXP_MH
 
 target_col_names <- c(
     "geo_id",
@@ -274,4 +337,3 @@ sf_object_reordered <- sf_object_clean[, new_col_order]
 
 st_write(sf_object_reordered, "output/gdri.gpkg", append = FALSE)
 write_xlsx(sf_object_reordered %>% st_drop_geometry(), path = "output/gdri.xlsx")
-

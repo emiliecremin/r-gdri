@@ -3,12 +3,12 @@ get_coastal_dem <- function(locations) {
 
     src_dir <- "data/Landcover/coastaldemv2.1_90m_egm96"
 
-    if(country_iso3 == "VNM") {
-        """
+    if (country_iso3 == "VNM") {
+        "
         Coordinates for Vietnam
         N08 - N21
         E103 - E109
-        """
+        "
         raster_files <- list.files(
             normalizePath(src_dir),
             pattern = "N(0[8-9]|1[0-9]|2[0-2])E(10[3-9])\\.tif$",
@@ -16,11 +16,11 @@ get_coastal_dem <- function(locations) {
             full.names = TRUE
         )
     } else {
-        """
+        "
         Coordinates for Bangladesh and West Bengal
         N20 - N25
         E085 - E094
-        """
+        "
         raster_files <- list.files(
             normalizePath(src_dir),
             pattern = "N(20|2[1-5])E(08[5-9]|09[0-4])\\.tif$",
