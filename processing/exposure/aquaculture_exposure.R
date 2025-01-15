@@ -1,33 +1,16 @@
-# data source: World Bank
-# doi:10.1038/ncomms11969
-# https://www.nature.com/articles/ncomms11969
-# https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c
-# unit: extreme sea levels in meters caused by storm surges and high tides
-AQ_INT_COF <- function(locations, ...) {
-    locations <- locations %>% st_transform(4326)
-    country_iso3 <- unique(locations$country_iso3)[1]
-    storm_surge <- rast("data/Hazards/StormSurge/ss_muis_rp0100m.tif")
-    aquaculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_aquaculture.tif"))
-    storm_surge_cropped <- crop(storm_surge, aquaculture)
-    ### zonal statistics using "exactextractr"
-    locations$val <- exact_extract(storm_surge_cropped, locations, "mean", progress = TRUE)
-    locations$val[is.nan(locations$val)] <- 0
-    return(locations)
-}
-
-# data source: World Bank
-# doi:10.1038/ncomms11969
-# https://www.nature.com/articles/ncomms11969
-# https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c
-# unit: % of storm surge affected aquaculture area on a 100 year return period
-# km2 of storm surge affected aquaculture / km2 of aquaculture in the area
+# data source: Climate Central https://coastal.climatecentral.org/
+# https://doi.org/10.1016/j.rse.2017.12.026
+# https://www.sciencedirect.com/science/article/abs/pii/S0034425717306016?via%3Dihub
+# unit: km2 of storm surge prone aquaculture
+# based on digital elevation model (DEM) threshold 2m above sea level
+# km2 of storm surge prone aquaculture / km2 of aquaculture in the area
 AQ_EXP_COF <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
+    coastal_dem_filtered <- get_coastal_dem(locations)
     country_iso3 <- unique(locations$country_iso3)[1]
-    storm_surge <- "data/Hazards/StormSurge/ss_muis_rp0100m.tif"
-    aquaculture <- glue::glue("objects/ESA_Landcover/{country_iso3}_aquaculture.tif")
-    storm_surge_masked <- mask_rasters(aquaculture, storm_surge)
-    locations <- raster_area_within_polygons(storm_surge_masked, locations)
+    aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
+    coastal_dem_masked <- mask_rasters(aquaculture, coastal_dem_filtered)
+    locations <- raster_area_within_polygons(coastal_dem_masked, locations)
     locations$cnt <- locations$area_raster_km2
     locations$val <- locations$area_raster_km2 / locations$aqua_km2
     return(locations)
@@ -41,7 +24,7 @@ AQ_INT_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
-    aquaculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_aquaculture.tif"))
+    aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
     cyclones_cropped <- crop(cyclones, aquaculture)
     cyclones_filtered <- cyclones_cropped
     cyclones_filtered[cyclones_filtered < 150] <- NA
@@ -60,8 +43,8 @@ AQ_INT_CYC <- function(locations, ...) {
 AQ_EXP_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
-    cyclones <- "data/Hazards/Cyclones/Wind_T100.tif"
-    aquaculture <- glue::glue("objects/ESA_Landcover/{country_iso3}_aquaculture.tif")
+    cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
+    aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
     cyclones_cropped <- crop(cyclones, aquaculture)
     cyclones_filtered <- cyclones_cropped
     cyclones_filtered[cyclones_filtered < 150] <- NA
@@ -80,7 +63,7 @@ AQ_EXP_FLO <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     floods <- "data/Hazards/Floods/fl_hazard_100_yrp.tif"
-    aquaculture <- glue::glue("objects/ESA_Landcover/{country_iso3}_aquaculture.tif")
+    aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
     floods_masked <- mask_rasters(aquaculture, floods)
     locations <- raster_area_within_polygons(floods_masked, locations)
     locations$cnt <- locations$area_raster_km2
@@ -95,7 +78,7 @@ AQ_INT_FLO <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     floods <- rast("data/Hazards/Floods/fl_hazard_100_yrp.tif")
-    aquaculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_aquaculture.tif"))
+    aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
     floods_cropped <- crop(floods, aquaculture)
     ### zonal statistics using "exactextractr"
     locations$val <- exact_extract(floods_cropped, locations, "mean", progress = TRUE)
@@ -112,7 +95,7 @@ AQ_INT_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
-    aquaculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_aquaculture.tif"))
+    aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
     salinity_cropped <- crop(salinity, aquaculture)
     ### zonal statistics using "exactextractr"
     locations$val <- exact_extract(salinity_cropped, locations, "mean", progress = TRUE)
@@ -129,8 +112,8 @@ AQ_INT_SAL <- function(locations, ...) {
 AQ_EXP_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
-    salinity <- "data/Soil/Salinity/salmap2016.vrt"
-    aquaculture <- glue::glue("objects/ESA_Landcover/{country_iso3}_aquaculture.tif")
+    salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
+    aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
     salinity_cropped <- crop(salinity, aquaculture)
     salinity_filtered <- salinity_cropped
     salinity_filtered[salinity_filtered < 1] <- NA
@@ -143,7 +126,6 @@ AQ_EXP_SAL <- function(locations, ...) {
 
 aquaculture_exposure_indicators <- c(
     "AQ_EXP_COF", # Costal Floods, storm surges
-    "AQ_INT_COF", # Costal Floods, storm surges
     "AQ_EXP_CYC", # Cyclones
     "AQ_INT_CYC", # Cyclones
     "AQ_EXP_FLO", # Floods

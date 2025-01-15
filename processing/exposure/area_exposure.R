@@ -1,17 +1,20 @@
 # Area Exposure = affected_area / total_area
 # Area Intensity = mean meters of flood
 
-# data source: World Bank
-# doi:10.1038/ncomms11969
-# https://www.nature.com/articles/ncomms11969
-# https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c
-# unit: extreme sea levels in meters caused by storm surges and high tides
-AREA_INT_COF <- function(locations, ...) {
-    storm_surge <- rast("data/Hazards/StormSurge/ss_muis_rp0100m.tif")
-    storm_surge_cropped <- crop(storm_surge, extent(locations))
-    ### zonal statistics using "exactextractr"
-    locations$val <- exact_extract(storm_surge_cropped, locations, "mean", progress = TRUE)
-    locations$val[is.nan(locations$val)] <- 0
+# data source: Climate Central https://coastal.climatecentral.org/
+# https://doi.org/10.1016/j.rse.2017.12.026
+# https://www.sciencedirect.com/science/article/abs/pii/S0034425717306016?via%3Dihub
+# unit: km2 of storm surge prone agriculture
+# based on digital elevation model (DEM) threshold 2m above sea level
+# km2 of storm surge prone agriculture / km2 of agriculture in the area
+AREA_EXP_COF <- function(locations, ...) {
+    locations <- locations %>% st_transform(4326)
+    coastal_dem_filtered <- get_coastal_dem(locations)
+    country_iso3 <- unique(locations$country_iso3)[1]
+    coastal_dem_cropped <- crop(coastal_dem_filtered, ext(locations))
+    locations <- raster_area_within_polygons(coastal_dem_cropped, locations)
+    locations$cnt <- locations$area_raster_km2
+    locations$val <- locations$area_raster_km2 / locations$area
     return(locations)
 }
 
@@ -19,15 +22,13 @@ AREA_INT_COF <- function(locations, ...) {
 # doi:10.1038/ncomms11969
 # https://www.nature.com/articles/ncomms11969
 # https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c
-# unit: % of storm surge affected area on a 100 year return period
-# km2 of storm surge affected area / km2 of the area
-AREA_EXP_COF <- function(locations, ...) {
-    locations <- locations %>% st_transform(4326)
+# unit: extreme sea levels in meters caused by storm surges and high tides
+AREA_INT_SURGE <- function(locations, ...) {
     storm_surge <- rast("data/Hazards/StormSurge/ss_muis_rp0100m.tif")
-    storm_surge_cropped <- crop(storm_surge, extent(locations))
-    locations <- raster_area_within_polygons(storm_surge_cropped, locations)
-    locations$cnt <- locations$area_raster_km2
-    locations$val <- locations$area_raster_km2 / locations$area
+    storm_surge_cropped <- crop(storm_surge, ext(locations))
+    ### zonal statistics using "exactextractr"
+    locations$val <- exact_extract(storm_surge_cropped, locations, "mean", progress = TRUE)
+    locations$val[is.nan(locations$val)] <- 0
     return(locations)
 }
 
@@ -38,7 +39,7 @@ AREA_EXP_COF <- function(locations, ...) {
 AREA_INT_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
-    cyclones_cropped <- crop(cyclones, extent(locations))
+    cyclones_cropped <- crop(cyclones, ext(locations))
     cyclones_filtered <- cyclones_cropped
     cyclones_filtered[cyclones_filtered < 150] <- NA
     ### zonal statistics using "exactextractr"
@@ -56,7 +57,7 @@ AREA_INT_CYC <- function(locations, ...) {
 AREA_EXP_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
-    cyclones_cropped <- crop(cyclones, extent(locations))
+    cyclones_cropped <- crop(cyclones, ext(locations))
     cyclones_filtered <- cyclones_cropped
     cyclones_filtered[cyclones_filtered < 150] <- NA
     locations <- raster_area_within_polygons(cyclones_filtered, locations)
@@ -82,7 +83,7 @@ AREA_INT_DRO <- function(locations, ...) {
 AREA_EXP_FLO <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     floods <- rast("data/Hazards/Floods/fl_hazard_100_yrp.tif")
-    floods_cropped <- crop(floods, extent(locations))
+    floods_cropped <- crop(floods, ext(locations))
     locations <- raster_area_within_polygons(floods_cropped, locations)
     locations$cnt <- locations$area_raster_km2
     locations$val <- locations$area_raster_km2 / locations$area
@@ -95,7 +96,7 @@ AREA_EXP_FLO <- function(locations, ...) {
 AREA_INT_FLO <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     floods <- rast("data/Hazards/Floods/fl_hazard_100_yrp.tif")
-    floods_cropped <- crop(floods, extent(locations))
+    floods_cropped <- crop(floods, ext(locations))
     ### zonal statistics using "exactextractr"
     locations$val <- exact_extract(floods_cropped, locations, "mean", progress = TRUE)
     locations$val[is.nan(locations$val)] <- 0
@@ -110,7 +111,7 @@ AREA_INT_FLO <- function(locations, ...) {
 AREA_INT_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
-    salinity_cropped <- crop(salinity, extent(locations))
+    salinity_cropped <- crop(salinity, ext(locations))
     ### zonal statistics using "exactextractr"
     locations$val <- exact_extract(salinity_cropped, locations, "mean", progress = TRUE)
     locations$val[is.nan(locations$val)] <- 0
@@ -126,7 +127,7 @@ AREA_INT_SAL <- function(locations, ...) {
 AREA_EXP_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
-    salinity_cropped <- crop(salinity, extent(locations))
+    salinity_cropped <- crop(salinity, ext(locations))
     salinity_filtered <- salinity_cropped
     salinity_filtered[salinity_filtered < 1] <- NA
     locations <- raster_area_within_polygons(salinity_filtered, locations)
@@ -138,10 +139,10 @@ AREA_EXP_SAL <- function(locations, ...) {
 
 area_exposure_indicators <- c(
     "AREA_EXP_COF", # Costal Floods, storm surges
-    "AREA_INT_COF", # Costal Floods, storm surges
+    "AREA_INT_SURGE", # storm surges
     "AREA_EXP_CYC", # Cyclones
     "AREA_INT_CYC", # Cyclones
-    # "AREA_INT_DRO", # Droughts
+    "AREA_INT_DRO", # Droughts
     "AREA_EXP_FLO", # Floods
     "AREA_INT_FLO", # Floods
     "AREA_EXP_SAL", # Salinity

@@ -1,33 +1,16 @@
-# data source: World Bank
-# doi:10.1038/ncomms11969
-# https://www.nature.com/articles/ncomms11969
-# https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c
-# unit: extreme sea levels in meters caused by storm surges and high tides
-A_INT_COF <- function(locations, ...) {
-    locations <- locations %>% st_transform(4326)
-    country_iso3 <- unique(locations$country_iso3)[1]
-    storm_surge <- rast("data/Hazards/StormSurge/ss_muis_rp0100m.tif")
-    agriculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif"))
-    storm_surge_cropped <- crop(storm_surge, agriculture)
-    ### zonal statistics using "exactextractr"
-    locations$val <- exact_extract(storm_surge_cropped, locations, "mean", progress = TRUE)
-    locations$val[is.nan(locations$val)] <- 0
-    return(locations)
-}
-
-# data source: World Bank
-# doi:10.1038/ncomms11969
-# https://www.nature.com/articles/ncomms11969
-# https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c
-# unit: % of storm surge affected agriculture area on a 100 year return period
-# km2 of storm surge affected agriculture / km2 of agriculture in the area
+# data source: Climate Central https://coastal.climatecentral.org/
+# https://doi.org/10.1016/j.rse.2017.12.026
+# https://www.sciencedirect.com/science/article/abs/pii/S0034425717306016?via%3Dihub
+# unit: km2 of storm surge prone agriculture
+# based on digital elevation model (DEM) threshold 2m above sea level
+# km2 of storm surge prone agriculture / km2 of agriculture in the area
 A_EXP_COF <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
+    coastal_dem_filtered <- get_coastal_dem(locations)
     country_iso3 <- unique(locations$country_iso3)[1]
-    storm_surge <- "data/Hazards/StormSurge/ss_muis_rp0100m.tif"
-    agriculture <- glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif")
-    storm_surge_masked <- mask_rasters(agriculture, storm_surge)
-    locations <- raster_area_within_polygons(storm_surge_masked, locations)
+    agriculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif"))
+    coastal_dem_masked <- mask_rasters(agriculture, coastal_dem_filtered)
+    locations <- raster_area_within_polygons(coastal_dem_masked, locations)
     locations$cnt <- locations$area_raster_km2
     locations$val <- locations$area_raster_km2 / locations$agri_km2
     return(locations)
@@ -60,8 +43,8 @@ A_INT_CYC <- function(locations, ...) {
 A_EXP_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
-    cyclones <- "data/Hazards/Cyclones/Wind_T100.tif"
-    agriculture <- glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif")
+    cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
+    agriculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif"))
     cyclones_cropped <- crop(cyclones, agriculture)
     cyclones_filtered <- cyclones_cropped
     cyclones_filtered[cyclones_filtered < 150] <- NA
@@ -79,8 +62,8 @@ A_EXP_CYC <- function(locations, ...) {
 A_EXP_FLO <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
-    floods <- "data/Hazards/Floods/fl_hazard_100_yrp.tif"
-    agriculture <- glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif")
+    floods <- rast("data/Hazards/Floods/fl_hazard_100_yrp.tif")
+    agriculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif"))
     floods_masked <- mask_rasters(agriculture, floods)
     locations <- raster_area_within_polygons(floods_masked, locations)
     locations$cnt <- locations$area_raster_km2
@@ -129,8 +112,8 @@ A_INT_SAL <- function(locations, ...) {
 A_EXP_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
-    salinity <- "data/Soil/Salinity/salmap2016.vrt"
-    agriculture <- glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif")
+    salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
+    agriculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif"))
     salinity_cropped <- crop(salinity, agriculture)
     salinity_filtered <- salinity_cropped
     salinity_filtered[salinity_filtered < 1] <- NA
@@ -143,7 +126,6 @@ A_EXP_SAL <- function(locations, ...) {
 
 agriculture_exposure_indicators <- c(
     "A_EXP_COF", # Costal Floods, storm surges
-    "A_INT_COF", # Costal Floods, storm surges
     "A_EXP_CYC", # Cyclones
     "A_INT_CYC", # Cyclones
     "A_EXP_FLO", # Floods

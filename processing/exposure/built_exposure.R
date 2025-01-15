@@ -1,36 +1,19 @@
 # Built-up Exposure = built_up_affected_area / built_up_total_area
 # Built-up Intensity = mean meters of flood on built-up area
 
-# data source: World Bank
-# doi:10.1038/ncomms11969
-# https://www.nature.com/articles/ncomms11969
-# https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c
-# unit: extreme sea levels in meters caused by storm surges and high tides
-B_INT_COF <- function(locations, ...) {
-    locations <- locations %>% st_transform(4326)
-    country_iso3 <- unique(locations$country_iso3)[1]
-    storm_surge <- rast("data/Hazards/StormSurge/ss_muis_rp0100m.tif")
-    built <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_built.tif"))
-    storm_surge_cropped <- crop(storm_surge, built)
-    ### zonal statistics using "exactextractr"
-    locations$val <- exact_extract(storm_surge_cropped, locations, "mean", progress = TRUE)
-    locations$val[is.nan(locations$val)] <- 0
-    return(locations)
-}
-
-# data source: World Bank
-# doi:10.1038/ncomms11969
-# https://www.nature.com/articles/ncomms11969
-# https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c
-# unit: % of storm surge affected built area on a 100 year return period
-# km2 of storm surge affected built / km2 of built in the area
+# data source: Climate Central https://coastal.climatecentral.org/
+# https://doi.org/10.1016/j.rse.2017.12.026
+# https://www.sciencedirect.com/science/article/abs/pii/S0034425717306016?via%3Dihub
+# unit: km2 of storm surge prone built-up
+# based on digital elevation model (DEM) threshold 2m above sea level
+# km2 of storm surge prone built-up / km2 of built-up in the area
 B_EXP_COF <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
+    coastal_dem_filtered <- get_coastal_dem(locations)
     country_iso3 <- unique(locations$country_iso3)[1]
-    storm_surge <- "data/Hazards/StormSurge/ss_muis_rp0100m.tif"
-    built <- glue::glue("objects/ESA_Landcover/{country_iso3}_built.tif")
-    storm_surge_masked <- mask_rasters(built, storm_surge)
-    locations <- raster_area_within_polygons(storm_surge_masked, locations)
+    built <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_built.tif"))
+    coastal_dem_masked <- mask_rasters(built, coastal_dem_filtered)
+    locations <- raster_area_within_polygons(coastal_dem_masked, locations)
     locations$cnt <- locations$area_raster_km2
     locations$val <- locations$area_raster_km2 / locations$built_km2
     return(locations)
@@ -63,8 +46,8 @@ B_INT_CYC <- function(locations, ...) {
 B_EXP_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
-    cyclones <- "data/Hazards/Cyclones/Wind_T100.tif"
-    built <- glue::glue("objects/ESA_Landcover/{country_iso3}_built.tif")
+    cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
+    built <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_built.tif"))
     cyclones_cropped <- crop(cyclones, built)
     cyclones_filtered <- cyclones_cropped
     cyclones_filtered[cyclones_filtered < 150] <- NA
@@ -83,7 +66,7 @@ B_EXP_FLO <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     floods <- "data/Hazards/Floods/fl_hazard_100_yrp.tif"
-    built <- glue::glue("objects/ESA_Landcover/{country_iso3}_built.tif")
+    built <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_built.tif"))
     floods_masked <- mask_rasters(built, floods)
     locations <- raster_area_within_polygons(floods_masked, locations)
     locations$cnt <- locations$area_raster_km2
@@ -132,8 +115,9 @@ B_INT_SAL <- function(locations, ...) {
 B_EXP_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
-    salinity <- "data/Soil/Salinity/salmap2016.vrt"
-    built <- glue::glue("objects/ESA_Landcover/{country_iso3}_built.tif")
+    salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
+    built <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_built.tif"))
+    salinity_cropped <- crop(salinity, built)
     salinity_filtered <- salinity_cropped
     salinity_filtered[salinity_filtered < 1] <- NA
     salinity_masked <- mask_rasters(built, salinity_filtered)
@@ -145,7 +129,6 @@ B_EXP_SAL <- function(locations, ...) {
 
 built_exposure_indicators <- c(
     "B_EXP_COF", # Costal Floods, storm surges
-    "B_INT_COF", # Costal Floods, storm surges
     "B_EXP_CYC", # Cyclones
     "B_INT_CYC", # Cyclones
     "B_EXP_FLO", # Floods

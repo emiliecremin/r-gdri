@@ -1,33 +1,16 @@
-# data source: World Bank
-# doi:10.1038/ncomms11969
-# https://www.nature.com/articles/ncomms11969
-# https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c
-# unit: extreme sea levels in meters caused by storm surges and high tides
-E_INT_COF <- function(locations, ...) {
-    locations <- locations %>% st_transform(4326)
-    country_iso3 <- unique(locations$country_iso3)[1]
-    storm_surge <- rast("data/Hazards/StormSurge/ss_muis_rp0100m.tif")
-    ecosystems <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif"))
-    storm_surge_cropped <- crop(storm_surge, ecosystems)
-    ### zonal statistics using "exactextractr"
-    locations$val <- exact_extract(storm_surge_cropped, locations, "mean", progress = TRUE)
-    locations$val[is.nan(locations$val)] <- 0
-    return(locations)
-}
-
-# data source: World Bank
-# doi:10.1038/ncomms11969
-# https://www.nature.com/articles/ncomms11969
-# https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c
-# unit: % of storm surge affected ecosystems area on a 100 year return period
-# km2 of storm surge affected ecosystems / km2 of ecosystems in the area
+# data source: Climate Central https://coastal.climatecentral.org/
+# https://doi.org/10.1016/j.rse.2017.12.026
+# https://www.sciencedirect.com/science/article/abs/pii/S0034425717306016?via%3Dihub
+# unit: km2 of storm surge prone ecosystems
+# based on digital elevation model (DEM) threshold 2m above sea level
+# km2 of storm surge prone ecosystems / km2 of ecosystems in the area
 E_EXP_COF <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
+    coastal_dem_filtered <- get_coastal_dem(locations)
     country_iso3 <- unique(locations$country_iso3)[1]
-    storm_surge <- "data/Hazards/StormSurge/ss_muis_rp0100m.tif"
-    ecosystems <- glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif")
-    storm_surge_masked <- mask_rasters(ecosystems, storm_surge)
-    locations <- raster_area_within_polygons(storm_surge_masked, locations)
+    ecosystems <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif"))
+    coastal_dem_masked <- mask_rasters(ecosystems, coastal_dem_filtered)
+    locations <- raster_area_within_polygons(coastal_dem_masked, locations)
     locations$cnt <- locations$area_raster_km2
     locations$val <- locations$area_raster_km2 / locations$ecosys_km2
     return(locations)
@@ -60,8 +43,8 @@ E_INT_CYC <- function(locations, ...) {
 E_EXP_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
-    cyclones <- "data/Hazards/Cyclones/Wind_T100.tif"
-    ecosystems <- glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif")
+    cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
+    ecosystems <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif"))
     cyclones_cropped <- crop(cyclones, ecosystems)
     cyclones_filtered <- cyclones_cropped
     cyclones_filtered[cyclones_filtered < 150] <- NA
@@ -80,7 +63,7 @@ E_EXP_FLO <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     floods <- "data/Hazards/Floods/fl_hazard_100_yrp.tif"
-    ecosystems <- glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif")
+    ecosystems <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif"))
     floods_masked <- mask_rasters(ecosystems, floods)
     locations <- raster_area_within_polygons(floods_masked, locations)
     locations$cnt <- locations$area_raster_km2
@@ -129,8 +112,8 @@ E_INT_SAL <- function(locations, ...) {
 E_EXP_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
-    salinity <- "data/Soil/Salinity/salmap2016.vrt"
-    ecosystems <- glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif")
+    salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
+    ecosystems <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif"))
     salinity_cropped <- crop(salinity, ecosystems)
     salinity_filtered <- salinity_cropped
     salinity_filtered[salinity_filtered < 1] <- NA
@@ -143,7 +126,6 @@ E_EXP_SAL <- function(locations, ...) {
 
 ecosystems_exposure_indicators <- c(
     "E_EXP_COF", # Costal Floods, storm surges
-    "E_INT_COF", # Costal Floods, storm surges
     "E_EXP_CYC", # Cyclones
     "E_INT_CYC", # Cyclones
     "E_EXP_FLO", # Floods

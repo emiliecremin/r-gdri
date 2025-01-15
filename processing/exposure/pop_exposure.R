@@ -12,20 +12,19 @@ get_world_pop <- function(locations) {
     return(locations)
 }
 
-# data source: World Bank
-# doi:10.1038/ncomms11969
-# https://www.nature.com/articles/ncomms11969
-# https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c
-# unit: % of population storm surge affected on a 100 year return period
+# data source: Climate Central https://coastal.climatecentral.org/
+# https://doi.org/10.1016/j.rse.2017.12.026
+# https://www.sciencedirect.com/science/article/abs/pii/S0034425717306016?via%3Dihub
+# unit: population living in storm surge prone areas
+# based on digital elevation model (DEM) threshold 2m above sea level
 POP_EXP_COF <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- tolower(unique(locations$country_iso3)[1])
     locations <- get_world_pop(locations)
     world_pop <- rast(glue::glue("data/Population/WorldPop/{country_iso3}_ppp_2020_UNadj_constrained.tif"))
-    storm_surge <- rast("data/Hazards/StormSurge/ss_muis_rp0100m.tif")
-    storm_surge_cropped <- crop(storm_surge, locations)
-    storm_surge_masked <- mask_rasters(world_pop, storm_surge)
-    locations$cnt <- exact_extract(storm_surge_masked, locations, "sum", progress = TRUE)
+    coastal_dem_filtered <- get_coastal_dem(locations)
+    coastal_dem_masked <- mask_rasters(world_pop, coastal_dem_filtered)
+    locations$cnt <- exact_extract(coastal_dem_masked, locations, "sum", progress = TRUE)
     locations$val <- locations$cnt / locations$world_pop
     return(locations)
 }
