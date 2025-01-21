@@ -25,19 +25,21 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 
 ## All classes
 
-| Value | Color  | Description                | Forests | Ecosystems | Agrosystem | Water-Aquaculture |
-| ----- | ------ | -------------------------- | ------- | ---------- | ---------- | ---------- |
-| 10    | 006400 | Trees                      | ✅      | ✅         |            |                 |
-| 20    | ffbb22 | Shrubland                  |         | ✅         |            |                 |
-| 30    | ffff4c | Grassland                  |         | ✅         |            |                 |
-| 40    | f096ff | Cropland                   |         |            | ✅         |                 |
-| 50    | fa0000 | Built-up                   |         |            |            |                 |
-| 60    | b4b4b4 | Barren / sparse vegetation |         |          |      ✅      |                 |
-| 70    | f0f0f0 | Snow and ice               |         |     N/A       |         |              |
-| 80    | 0064c8 | Open water                 |         |             |          |             ✅ |
-| 90    | 0096a0 | Herbaceous wetland         |         | ✅         |            |               |
-| 95    | 00cf75 | Mangroves                  | ✅      | ✅         |            |                |
-| 100   | fae6a0 | Moss and lichen            |         | N/A         |            |               |
+| Value | Color  | Description                | Forests | Ecosystems | Agriculture |
+| ----- | ------ | -------------------------- | ------- | ---------- | ---------- |
+| 10    | 006400 | Trees                      | ✅      | ✅         |            |
+| 20    | ffbb22 | Shrubland                  |         | ✅         |            |
+| 30    | ffff4c | Grassland                  |         | ✅         |            |
+| 40    | f096ff | Cropland                   |         |            | ✅         |
+| 50    | fa0000 | Built-up                   |         |            |            |
+| 60    | b4b4b4 | Barren / sparse vegetation |         |          |      ✅      |
+| 70    | f0f0f0 | Snow and ice               |         |     N/A       |         |
+| 80    | 0064c8 | Open water*                |         |        ✅     |        |
+| 90    | 0096a0 | Herbaceous wetland         |         | ✅         |            |
+| 95    | 00cf75 | Mangroves                  | ✅      | ✅         |             |
+| 100   | fae6a0 | Moss and lichen            |         | N/A         |           |
+* *devided in 2 subset: water ecosystems (rivers, lakes) and aquaculture 
+
 
 # GDRI
 
@@ -54,6 +56,27 @@ direct link for Asia: https://worldcover2020.esa.int/data/archive/ESA_WorldCover
 - Social exposure: S_EXP
 - Social susceptibility: S\_
 - Social Lack of coping capacity: CA\_
+
+## Land use - Exposure
+
+| Value | Color  | Description                | Ecosystems | Agriculture | Aquaculture | Social |
+| ----- | ------ | -------------------------- | ---------- | ---------- | ----------   | ------ |
+| 10    | 006400 | Trees                      | ✅         |            |              |        |
+| 20    | ffbb22 | Shrubland                  | ✅         |            |              |        |
+| 30    | ffff4c | Grassland                  | ✅         |            |              |        |
+| 40    | f096ff | Cropland                   |            | ✅         |              |        |
+| 50    | fa0000 | Built-up                   |            |            |              |   ✅   |
+| 60    | b4b4b4 | Barren / sparse vegetation |            | ✅         |              |        |
+| 70    | f0f0f0 | Snow and ice               |     N/A    |            |              |        |
+| 80    | 0064c8 | Open water*                | ✅         |            |              |        |
+| 90    | 0096a0 | Herbaceous wetland         | ✅         |            |              |        |
+| 95    | 00cf75 | Mangroves                  | ✅         |            |              |        |
+| 100   | fae6a0 | Moss and lichen            | N/A        |            |              |        |
+| N/A   | N/A    | Supervised classification (GEE) |       |            |     ✅       |        |
+| N/A   | N/A    | Population (Census)         |           |            |              |   ✅   |
+| N/A   | N/A    | EM-DAT (deaths, affected, cost) |       |            |              |   ✅   |
+
+* *devided in 2 subset: water ecosystems (rivers, lakes) and aquaculture   
 
 
 # Status
@@ -150,7 +173,7 @@ Additionnal
 | ER_CON_1512   | Forest area protected, conservation of biodiversity (%)      | ✅      | ✅         | ✅    | http://www.wri.org https://www.protectedplanet.net |
 | ER_RES2   | Percentage of forest area restored (%) GFC  = forest gain       | ✅      | ✅        | ✅    | [GFC](https://www.globalforestwatch.org/map/), https://glad.umd.edu/, https://doi.org/10.3389/frsen.2022.856903 |
 | ER_POL2   | Policies supporting biodiversity conservation (National)       | ✅      | ✅        | ✅    | https://www.cbd.int/  |
-| ER_POL_1521   |  15.2.1 Progress towards sustainable forest management    | ✅      | ✅        | ✅   |http://www.wri.org https://www.protectedplanet.net https://www.cbd.int/  |
+| ER_CON_1521   |  15.2.1 Progress towards sustainable forest management    | ✅      | ✅        | ✅   |http://www.wri.org https://www.protectedplanet.net https://www.cbd.int/  |
 | ER_FUN2   | Donor aid for adaptation (local)                               | ✅    | ✅         | ✅   | http://aiddata.org/gis - to do                     |
 | ER_TRE1   | Participation in treaties - CBD, CITES, CMS, RAMSAR (National) | ✅      | ✅        | ✅    |  |
 | ER_ECO1   | Ecosystem Functionality Index (EFI)                            | ✅      | ✅         | ✅   |  to do  |
