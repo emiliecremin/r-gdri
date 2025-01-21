@@ -198,12 +198,6 @@ ES_SDG11_Pm25 <- function(locations, ...) {
     return(locations)
 }
 
-# SDG Red List Index - UNDESA database.2021 OECD STAT
-ES_SDG1551_RLI <- function(locations, ...) {
-    locations$val <- 0.716
-    return(locations)
-}
-
 # -------------------------------------------
 # Ecosystem Robustness
 # -------------------------------------------
@@ -217,7 +211,7 @@ ER_SDG14_cpma <- function(locations, ...) {
 
 # SDG 15.2.1 Progress towards sustainable forest management
 # Proportion of forest area located within legally established protected area https://landportal.org/book/dataset/un-sdg1521
-ER_SDG1521_FO <- function(locations, ...) {
+ER_CON_1521_Nat <- function(locations, ...) {
     locations$val <- 15.49
     return(locations)
 }
