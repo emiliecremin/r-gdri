@@ -51,6 +51,7 @@ get_conservation_areas <- function(iso3) {
 
 # cite: UNEP-WCMC and IUCN (2023), Protected Planet: The World Database on Protected Areas (WDPA) and World Database on Other Effective Area-based Conservation Measures (WD-OECM) [Online], June 2023, Cambridge, UK: UNEP-WCMC and IUCN. Available at: www.protectedplanet.net.
 # data: https://www.protectedplanet.net/country/VNM
+# Terrestrial protected areas (% of total land area)
 ER_CON_1512 <- function(locations, ...) {
   country_iso3 <- unique(locations$country_iso3)[1]
   conservation <- get_conservation_areas(country_iso3)
@@ -77,6 +78,8 @@ ER_CON_1512 <- function(locations, ...) {
 # Conservation areas: UNEP-WCMC and IUCN (2023)
 # cite: UNEP-WCMC and IUCN (2023), Protected Planet: The World Database on Protected Areas (WDPA) and World Database on Other Effective Area-based Conservation Measures (WD-OECM) [Online], June 2023, Cambridge, UK: UNEP-WCMC and IUCN. Available at: www.protectedplanet.net.
 # data: https://www.protectedplanet.net/country/VNM
+# % of forest area within protected area
+# Proportion of forest area located within legally established protected areas
 ER_CON_1521 <- function(locations, ...) {
   country_iso3 <- unique(locations$country_iso3)[1]
   forests <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_forests.tif"))
