@@ -4,7 +4,7 @@
 # unit: km2 of storm surge prone ecosystems
 # based on digital elevation model (DEM) threshold 2m above sea level
 # km2 of storm surge prone ecosystems / km2 of ecosystems in the area
-E_EXP_COF <- function(locations, ...) {
+E_AFF_COF <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     coastal_dem_filtered <- get_coastal_dem(locations)
     country_iso3 <- unique(locations$country_iso3)[1]
@@ -40,7 +40,7 @@ E_INT_CYC <- function(locations, ...) {
 # unit: cyclone wind km/h (for a return period of 100 years)
 # unit: % of cyclone affected ecosystems (wind > 150 km/h) on a 100 year return period
 # km2 of cyclone affected ecosystems / km2 of ecosystems in the area
-E_EXP_CYC <- function(locations, ...) {
+E_AFF_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
@@ -59,7 +59,7 @@ E_EXP_CYC <- function(locations, ...) {
 # https://wesr.unepgrid.ch/static.html?views=MX-JXZXA-MFZNN-LTXZ8&zoomToViews=true
 # unit: % of flooded ecosystems area on a 100 year return period
 # km2 of flooded ecosystems / km2 of ecosystems in the area
-E_EXP_FLO <- function(locations, ...) {
+E_AFF_FLO <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     floods <- "data/Hazards/Floods/fl_hazard_100_yrp.tif"
@@ -86,38 +86,60 @@ E_INT_FLO <- function(locations, ...) {
     return(locations)
 }
 
-# Global Soil Salinity Map
-#  https://doi.org/10.1016/j.rse.2019.111260
-#  https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
-#  https://code.earthengine.google.com/d43e5a92ae1deed32a0929f57b572756
-# unit: soil salinity score 0 to 4 [0: non-saline, 1: slightly, 2: moderately, 3: highly, 4: extremely]
+# Soil quality (Global - ~1 km) - GAEZ v5 - UN FAO
+# https://data.apps.fao.org/catalog//iso/476ffbd9-4af5-4429-bf99-2df6a34b5733
+# https://console.cloud.google.com/storage/browser/fao-gismgr-gaez-v5-data/DATA/GAEZ-V5/MAPSET/SQX
+# soil salinity score 1 to 10 [1: extremely high, 10: extremely low] - 0 is Ocean
+# 0: Ocean
+# soil salinity score 1 to 10 [1: extremely saline, 10: non-saline]
+# 11: Steep terrain slopes
+# 12: Permafrost, Glacier
+# 13: Miscellaneous Unit, No information
+# 14: Freshwater
+# r_rev 1-10: 1 = non-saline, 10 = extremely saline
 E_INT_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
-    salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
+    salinity <- rast("data/Soil/Salinity/HWSD v2.01/DATA_GAEZ-V5_MAPSET_SQX_GAEZ-V5.SQX.SQ5.HIM.tif")
     ecosystems <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif"))
     salinity_cropped <- crop(salinity, ecosystems)
+    salinity_filtered <- salinity_cropped
+    salinity_filtered[salinity_filtered == 0] <- NA
+    salinity_filtered[salinity_filtered > 10] <- NA
+    r_rev <- 11 - salinity_filtered
+    ## restrict to ecosystems land so mean is over ecosystems pixels only
+    r_rev_ecosys <- mask_rasters(r_rev, ecosystems)
     ### zonal statistics using "exactextractr"
-    locations$val <- exact_extract(salinity_cropped, locations, "mean", progress = TRUE)
+    locations$val <- exact_extract(r_rev_ecosys, locations, "mean", progress = TRUE)
     locations$val[is.nan(locations$val)] <- 0
     return(locations)
 }
 
-# Global Soil Salinity Map
-# https://doi.org/10.1016/j.rse.2019.111260
-# https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
-# https://code.earthengine.google.com/d43e5a92ae1deed32a0929f57b572756
-# soil salinity score 0 to 4 [0: non-saline, 1: slightly, 2: moderately, 3: highly, 4: extremely]
-# unit: % of ecosystems area affected by salinity slightly (1) to extremely (4)
-E_EXP_SAL <- function(locations, ...) {
+# Soil quality (Global - ~1 km) - GAEZ v5 - UN FAO
+# https://data.apps.fao.org/catalog//iso/476ffbd9-4af5-4429-bf99-2df6a34b5733
+# https://console.cloud.google.com/storage/browser/fao-gismgr-gaez-v5-data/DATA/GAEZ-V5/MAPSET/SQX
+# 0: Ocean
+# soil salinity score 1 to 10 [1: extremely saline, 10: non-saline]
+# 11: Steep terrain slopes
+# 12: Permafrost, Glacier
+# 13: Miscellaneous Unit, No information
+# 14: Freshwater
+# r_rev 1-10: 1 = non-saline, 10 = extremely saline
+# Threshold > 2 is affected by salinisation (moderate hazard or worse)
+# unit: % of ecosystems area affected by salinity
+E_AFF_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
-    salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
+    salinity <- rast("data/Soil/Salinity/HWSD v2.01/DATA_GAEZ-V5_MAPSET_SQX_GAEZ-V5.SQX.SQ5.HIM.tif")
     ecosystems <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif"))
     salinity_cropped <- crop(salinity, ecosystems)
     salinity_filtered <- salinity_cropped
-    salinity_filtered[salinity_filtered < 1] <- NA
-    salinity_masked <- mask_rasters(ecosystems, salinity_filtered)
+    salinity_filtered[salinity_filtered == 0] <- NA
+    salinity_filtered[salinity_filtered > 10] <- NA
+    r_rev <- 11 - salinity_filtered
+    SAL_AFF_THRESHOLD <- 2
+    r_rev[r_rev < SAL_AFF_THRESHOLD] <- NA
+    salinity_masked <- mask_rasters(ecosystems, r_rev)
     locations <- raster_area_within_polygons(salinity_masked, locations)
     locations$cnt <- locations$area_raster_km2
     locations$val <- locations$area_raster_km2 / locations$ecosys_km2
@@ -125,12 +147,12 @@ E_EXP_SAL <- function(locations, ...) {
 }
 
 ecosystems_exposure_indicators <- c(
-    "E_EXP_COF", # Costal Floods, storm surges
-    "E_EXP_CYC", # Cyclones
+    "E_AFF_COF", # Costal Floods, storm surges
+    "E_AFF_CYC", # Cyclones
     "E_INT_CYC", # Cyclones
-    "E_EXP_FLO", # Floods
+    "E_AFF_FLO", # Floods
     "E_INT_FLO", # Floods
-    "E_EXP_SAL", # Salinity
+    "E_AFF_SAL", # Salinity
     "E_INT_SAL" # Salinity
 )
 

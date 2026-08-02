@@ -86,38 +86,60 @@ A_INT_FLO <- function(locations, ...) {
     return(locations)
 }
 
-# Global Soil Salinity Map
-#  https://doi.org/10.1016/j.rse.2019.111260
-#  https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
-#  https://code.earthengine.google.com/d43e5a92ae1deed32a0929f57b572756
-# unit: soil salinity score 0 to 4 [0: non-saline, 1: slightly, 2: moderately, 3: highly, 4: extremely]
+# Soil quality (Global - ~1 km) - GAEZ v5 - UN FAO
+# https://data.apps.fao.org/catalog//iso/476ffbd9-4af5-4429-bf99-2df6a34b5733
+# https://console.cloud.google.com/storage/browser/fao-gismgr-gaez-v5-data/DATA/GAEZ-V5/MAPSET/SQX
+# soil salinity score 1 to 10 [1: extremely high, 10: extremely low] - 0 is Ocean
+# 0: Ocean
+# soil salinity score 1 to 10 [1: extremely saline, 10: non-saline]
+# 11: Steep terrain slopes
+# 12: Permafrost, Glacier
+# 13: Miscellaneous Unit, No information
+# 14: Freshwater
+# r_rev 1-10: 1 = non-saline, 10 = extremely saline
 A_INT_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
-    salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
+    salinity <- rast("data/Soil/Salinity/HWSD v2.01/DATA_GAEZ-V5_MAPSET_SQX_GAEZ-V5.SQX.SQ5.HIM.tif")
     agriculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif"))
     salinity_cropped <- crop(salinity, agriculture)
+    salinity_filtered <- salinity_cropped
+    salinity_filtered[salinity_filtered == 0] <- NA
+    salinity_filtered[salinity_filtered > 10] <- NA
+    r_rev <- 11 - salinity_filtered
+    ## restrict to agricultural land so mean is over ag pixels only
+    r_rev_agri <- mask_rasters(r_rev, agriculture)
     ### zonal statistics using "exactextractr"
-    locations$val <- exact_extract(salinity_cropped, locations, "mean", progress = TRUE)
+    locations$val <- exact_extract(r_rev_agri, locations, "mean", progress = TRUE)
     locations$val[is.nan(locations$val)] <- 0
     return(locations)
 }
 
-# Global Soil Salinity Map
-# https://doi.org/10.1016/j.rse.2019.111260
-# https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
-# https://code.earthengine.google.com/d43e5a92ae1deed32a0929f57b572756
-# soil salinity score 0 to 4 [0: non-saline, 1: slightly, 2: moderately, 3: highly, 4: extremely]
-# unit: % of agriculture area affected by salinity slightly (1) to extremely (4)
+# Soil quality (Global - ~1 km) - GAEZ v5 - UN FAO
+# https://data.apps.fao.org/catalog//iso/476ffbd9-4af5-4429-bf99-2df6a34b5733
+# https://console.cloud.google.com/storage/browser/fao-gismgr-gaez-v5-data/DATA/GAEZ-V5/MAPSET/SQX
+# 0: Ocean
+# soil salinity score 1 to 10 [1: extremely saline, 10: non-saline]
+# 11: Steep terrain slopes
+# 12: Permafrost, Glacier
+# 13: Miscellaneous Unit, No information
+# 14: Freshwater
+# r_rev 1-10: 1 = non-saline, 10 = extremely saline
+# Threshold > 2 is affected by salinisation (moderate hazard or worse)
+# unit: % of agriculture area affected by salinity
 A_EXP_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
-    salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
+    salinity <- rast("data/Soil/Salinity/HWSD v2.01/DATA_GAEZ-V5_MAPSET_SQX_GAEZ-V5.SQX.SQ5.HIM.tif")
     agriculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif"))
     salinity_cropped <- crop(salinity, agriculture)
     salinity_filtered <- salinity_cropped
-    salinity_filtered[salinity_filtered < 1] <- NA
-    salinity_masked <- mask_rasters(agriculture, salinity_filtered)
+    salinity_filtered[salinity_filtered == 0] <- NA
+    salinity_filtered[salinity_filtered > 10] <- NA
+    r_rev <- 11 - salinity_filtered
+    SAL_EXP_THRESHOLD <- 2
+    r_rev[r_rev < SAL_EXP_THRESHOLD] <- NA
+    salinity_masked <- mask_rasters(agriculture, r_rev)
     locations <- raster_area_within_polygons(salinity_masked, locations)
     locations$cnt <- locations$area_raster_km2
     locations$val <- locations$area_raster_km2 / locations$agri_km2

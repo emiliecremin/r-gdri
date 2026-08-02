@@ -63,26 +63,112 @@ POP_EXP_FLO <- function(locations, ...) {
     return(locations)
 }
 
-# Global Soil Salinity Map
-# https://doi.org/10.1016/j.rse.2019.111260
-# https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
-# https://code.earthengine.google.com/d43e5a92ae1deed32a0929f57b572756
-# soil salinity score 0 to 4 [0: non-saline, 1: slightly, 2: moderately, 3: highly, 4: extremely]
-# unit: % of population affected by salinity slightly (1) to extremely (4)
+# Soil quality (Global - ~1 km) - GAEZ v5 - UN FAO
+# https://data.apps.fao.org/catalog//iso/476ffbd9-4af5-4429-bf99-2df6a34b5733
+# https://console.cloud.google.com/storage/browser/fao-gismgr-gaez-v5-data/DATA/GAEZ-V5/MAPSET/SQX
+# 0: Ocean
+# soil salinity score 1 to 10 [1: extremely saline, 10: non-saline]
+# 11: Steep terrain slopes
+# 12: Permafrost, Glacier
+# 13: Miscellaneous Unit, No information
+# 14: Freshwater
+# r_rev 1-10: 1 = non-saline, 10 = extremely saline
+# Threshold > 2 is affected by salinisation (moderate hazard or worse)
+# unit: % of population affected by salinity
 POP_EXP_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- tolower(unique(locations$country_iso3)[1])
     locations <- get_world_pop(locations)
     world_pop <- rast(glue::glue("data/Population/WorldPop/{country_iso3}_ppp_2020_UNadj_constrained.tif"))
-    salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
+    salinity <- rast("data/Soil/Salinity/HWSD v2.01/DATA_GAEZ-V5_MAPSET_SQX_GAEZ-V5.SQX.SQ5.HIM.tif")
     salinity_cropped <- crop(salinity, world_pop)
     salinity_filtered <- salinity_cropped
-    salinity_filtered[salinity_filtered < 1] <- NA
-    salinity_masked <- mask_rasters(world_pop, salinity_filtered)
+    salinity_filtered[salinity_filtered == 0] <- NA
+    salinity_filtered[salinity_filtered > 10] <- NA
+    r_rev <- 11 - salinity_filtered
+    SAL_EXP_THRESHOLD <- 2
+    r_rev[r_rev < SAL_EXP_THRESHOLD] <- NA
+    salinity_masked <- mask_rasters(world_pop, r_rev)
     locations$cnt <- exact_extract(salinity_masked, locations, "sum", progress = TRUE)
     locations$val <- locations$cnt / locations$world_pop
     return(locations)
 }
+
+keep_cols <- c(
+    "geo_id",
+    "country_iso3",
+    "CNTRY_NAME",
+    "adm1_name",
+    "adm2_name",
+    "adm3_name",
+    "adm4_name",
+    "adm_level",
+    "Name",
+    "pop",
+    "world_pop",
+    "area",
+    "agri_km2",
+    "aqua_km2",
+    "ecosys_km2",
+    "built_km2"
+)
+
+locations <- st_read("objects/ADMIN/villages_bgd.gpkg")
+locations <- locations[, (names(locations) %in% keep_cols)]
+pop_exp_sal <- POP_EXP_SAL(locations)
+locations$POP_EXP_SAL_cnt <- pop_exp_sal$cnt
+locations$POP_EXP_SAL_val <- pop_exp_sal$val
+locations$A_INT_SAL_val <- A_INT_SAL(locations)$val
+a_exp_sal <- A_EXP_SAL(locations)
+locations$A_EXP_SAL_cnt <- a_exp_sal$cnt
+locations$A_EXP_SAL_val <- a_exp_sal$val
+locations$E_INT_SAL_val <- E_INT_SAL(locations)$val
+e_exp_sal <- E_EXP_SAL(locations)
+locations$E_EXP_SAL_cnt <- e_exp_sal$cnt
+locations$E_EXP_SAL_val <- e_exp_sal$val
+write.csv(locations %>% st_drop_geometry(), "bgd_locations.csv")
+
+locations <- st_read("objects/ADMIN/villages_vnm.gpkg")
+locations <- locations[, (names(locations) %in% keep_cols)]
+pop_exp_sal <- POP_EXP_SAL(locations)
+locations$POP_EXP_SAL_cnt <- pop_exp_sal$cnt
+locations$POP_EXP_SAL_val <- pop_exp_sal$val
+locations$A_INT_SAL_val <- A_INT_SAL(locations)$val
+a_exp_sal <- A_EXP_SAL(locations)
+locations$A_EXP_SAL_cnt <- a_exp_sal$cnt
+locations$A_EXP_SAL_val <- a_exp_sal$val
+locations$E_INT_SAL_val <- E_INT_SAL(locations)$val
+e_exp_sal <- E_EXP_SAL(locations)
+locations$E_EXP_SAL_cnt <- e_exp_sal$cnt
+locations$E_EXP_SAL_val <- e_exp_sal$val
+write.csv(locations %>% st_drop_geometry(), "vnm_locations.csv")
+
+locations <- st_read("objects/ADMIN/villages_ind.gpkg")
+locations <- locations[, (names(locations) %in% keep_cols)]
+locations$geo_id <- as.character(locations$geo_id)
+pop_exp_sal <- POP_EXP_SAL(locations)
+locations$POP_EXP_SAL_cnt <- pop_exp_sal$cnt
+locations$POP_EXP_SAL_val <- pop_exp_sal$val
+locations$A_INT_SAL_val <- A_INT_SAL(locations)$val
+a_exp_sal <- A_EXP_SAL(locations)
+locations$A_EXP_SAL_cnt <- a_exp_sal$cnt
+locations$A_EXP_SAL_val <- a_exp_sal$val
+locations$E_INT_SAL_val <- E_INT_SAL(locations)$val
+e_exp_sal <- E_EXP_SAL(locations)
+locations$E_EXP_SAL_cnt <- e_exp_sal$cnt
+locations$E_EXP_SAL_val <- e_exp_sal$val
+write.csv(locations %>% st_drop_geometry(), "ind_locations.csv")
+
+quick_map(locations, "POP_EXP_SAL_val")
+quick_map(locations, "POP_EXP_SAL_cnt")
+
+quick_map(locations, "A_INT_SAL_val")
+quick_map(locations, "A_EXP_SAL_val")
+quick_map(locations, "A_EXP_SAL_cnt")
+
+quick_map(locations, "E_INT_SAL_val")
+quick_map(locations, "E_EXP_SAL_val")
+quick_map(locations, "E_EXP_SAL_cnt")
 
 population_exposure_indicators <- c(
     "POP_EXP_COF", # Costal Floods, storm surges
