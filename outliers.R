@@ -15,7 +15,7 @@ library(devtools)
 devtools::install_github("davidgohel/gdtools")
 devtools::install_github("r-lib/svglite")
 install.packages("GGally")
-install.packages("hrbrthemes")
+remotes::install_git("https://codeberg.org/hrbrmstr/hrbrthemes.git")
 install.packages("reshape2")
 
 source("common/libraries.R")
@@ -31,7 +31,7 @@ hrbrthemes::import_roboto_condensed()
 
 gdri <- read.csv("output/GDRI.csv")
 gdri_norm <- gdri %>% dplyr::select(contains(c("geo_id", "_norm")))
-gdri_val <- gdri %>% dplyr::select(contains(c("geo_id", "_val")))
+gdri_val <- gdri %>% dplyr::select(contains(c("geo_id", "_val", "_cnt")))
 colnames(gdri_norm)
 colnames(gdri_val)
 
@@ -40,11 +40,12 @@ melt_data <- melt(gdri_val) %>%
     dplyr::mutate(category = case_when(
         str_detect(variable, "^S_") ~ "Social Susceptibility",
         str_detect(variable, "^C_") ~ "Coping and Adaptation",
-        str_detect(variable, "^A_") & !str_detect(variable, "_EXP_") & !str_detect(variable, "_INT_") ~ "Coping and Adaptation",
+        # str_detect(variable, "^A_") & !str_detect(variable, "_EXP_") & !str_detect(variable, "_INT_") ~ "Coping and Adaptation",
         str_detect(variable, "^ES_") ~ "Ecosystem Sensitivity",
         str_detect(variable, "^ER_") ~ "Ecosystem Robustness",
         str_detect(variable, "_EXP_") ~ "Exposure",
-        str_detect(variable, "_INT_") ~ "Exposure"
+        str_detect(variable, "_AFF_") ~ "Affected",
+        str_detect(variable, "_INT_") ~ "Intensity"
     ))
 
 # Create the box plot
@@ -72,10 +73,10 @@ generate_outliers <- function(melt_data, cat) {
 }
 generate_outliers(melt_data, "all")
 generate_outliers(melt_data %>% dplyr::filter(category == "Social Susceptibility"), "Social Susceptibility")
-generate_outliers(melt_data, "Coping and Adaptation")
-generate_outliers(melt_data, "Ecosystem Sensitivity")
-generate_outliers(melt_data, "Ecosystem Robustness")
-generate_outliers(melt_data, "Exposure")
+generate_outliers(melt_data %>% dplyr::filter(category == "Coping and Adaptation"), "Coping and Adaptation")
+generate_outliers(melt_data %>% dplyr::filter(category == "Ecosystem Sensitivity"), "Ecosystem Sensitivity")
+generate_outliers(melt_data %>% dplyr::filter(category == "Ecosystem Robustness"), "Ecosystem Robustness")
+# generate_outliers(melt_data %>% dplyr::filter(category %in% c("Exposure", "Affected", "Intensity")), "Exposure")
 
 # melt_data %>%
 #     dplyr::filter(category == "Social Susceptibility") %>%
@@ -94,6 +95,7 @@ generate_outliers(melt_data, "Exposure")
 
 
 p <- melt_data %>%
+    dplyr::filter(!category %in% c("Exposure", "Affected", "Intensity")) %>%
     ggplot(aes(x = factor(variable), y = value, fill = category)) +
     geom_violin() +
     scale_fill_viridis(discrete = TRUE, alpha = 0.6, option = "A") +

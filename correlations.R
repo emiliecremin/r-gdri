@@ -1,9 +1,13 @@
+install.packages("Hmisc")
+install.packages("ggcorrplot")
+library(ggcorrplot)
+library(Hmisc)
 mkdirs("output/correlations")
 
 gdri <- read.csv("output/GDRI.csv")
 colnames(gdri)
 gdri_norm <- gdri %>% dplyr::select(contains(c("geo_id", "_norm")))
-gdri_val <- gdri %>% dplyr::select(contains(c("geo_id", "_val")))
+gdri_val <- gdri %>% dplyr::select(contains(c("geo_id", "_val", "_cnt")))
 colnames(gdri_val)
 gdri_analysis <- gdri_val
 colnames(gdri_analysis)
@@ -11,16 +15,16 @@ colnames(gdri_analysis)
 soc <- gdri_analysis %>% dplyr::select(matches("^S_"))
 cor(soc)
 cop_adapt <- gdri_analysis %>% dplyr::select(
-    matches("^C_") | matches("^A_") &
-        !matches("_INT_") & !matches("_EXP_")
+  matches("^C_") | matches("^A_") &
+    !matches("_INT_") & !matches("_EXP_") & !matches("_AFF_")
 )
 cor(cop_adapt)
 colnames(cop_adapt)
-es <- soc <- gdri_analysis %>% dplyr::select(matches("^ES_"))
-er <- soc <- gdri_analysis %>% dplyr::select(matches("^ER_"))
-agri_exp <- gdri_analysis %>% dplyr::select(contains("A_INT_") | contains("A_EXP_"))
-aqua_exp <- gdri_analysis %>% dplyr::select(contains("AQ_INT_") | contains("AQ_EXP_"))
-eco_exp <- gdri_analysis %>% dplyr::select(contains("E_INT_") | contains("E_EXP_"))
+es <- gdri_analysis %>% dplyr::select(matches("^ES_"))
+er <- gdri_analysis %>% dplyr::select(matches("^ER_"))
+agri_exp <- gdri_analysis %>% dplyr::select(contains("A_INT_") | contains("A_EXP_") | contains("A_AFF_"))
+aqua_exp <- gdri_analysis %>% dplyr::select(contains("AQ_INT_") | contains("AQ_EXP_") | contains("AQ_AFF_"))
+eco_exp <- gdri_analysis %>% dplyr::select(contains("E_INT_") | contains("E_EXP_") | contains("E_AFF_"))
 pop_exp <- gdri_analysis %>% dplyr::select(matches("^POP_") | matches("^B_"))
 
 generate_correlations(soc, "Social Susceptibility")
@@ -68,39 +72,39 @@ library(ggcorrplot)
 
 # Function to get correlation coefficients and p-values
 get_correlations <- function(df) {
-    correlation_results <- rcorr(as.matrix(df)) # Compute correlations and p-values
-    list(correlation_matrix = correlation_results$r, p_values = correlation_results$P)
+  correlation_results <- rcorr(as.matrix(df), type = "pearson") # Compute correlations and p-values
+  list(correlation_matrix = correlation_results$r, p_values = correlation_results$P)
 }
 
 # Compute and visualize correlation matrix
 generate_correlations <- function(df, category = "") {
-    # Get correlation coefficients and p-values
-    results <- get_correlations(df)
-    correlation_matrix <- results$correlation_matrix
-    # p_matrix <- results$p_values
+  # Get correlation coefficients and p-values
+  results <- get_correlations(df)
+  correlation_matrix <- results$correlation_matrix
+  # p_matrix <- results$p_values
 
-    p <- ggcorrplot(correlation_matrix,
-        method = "circle",
-        type = "lower",
-        # p.mat = p_matrix,
-        lab = TRUE,
-        lab_size = 3, # Label size for the coefficients
-        colors = c("blue", "white", "red"), # Color gradient
-        ggtheme = ggplot2::theme_minimal()
+  p <- ggcorrplot(correlation_matrix,
+    method = "circle",
+    type = "lower",
+    # p.mat = p_matrix,
+    lab = TRUE,
+    lab_size = 3, # Label size for the coefficients
+    colors = c("blue", "white", "red"), # Color gradient
+    ggtheme = ggplot2::theme_minimal()
+  ) +
+    ggplot2::theme(
+      axis.text = ggplot2::element_text(size = 12), # Increase axis label size
+      legend.text = ggplot2::element_text(size = 12)
     ) +
-        ggplot2::theme(
-            axis.text = ggplot2::element_text(size = 12), # Increase axis label size
-            legend.text = ggplot2::element_text(size = 12)
-        ) +
-        ggplot2::scale_size(
-            range = c(10, 20) # Increase circle sizes
-        ) +
-        ggplot2::labs(
-            title = glue::glue("Correlation Matrix {category}"),
-            subtitle = "Visualizing Relationships Between Variables"
-        )
+    ggplot2::scale_size(
+      range = c(10, 20) # Increase circle sizes
+    ) +
+    ggplot2::labs(
+      title = glue::glue("Correlation Matrix {category}"),
+      subtitle = "Visualizing Relationships Between Variables"
+    )
 
-    ggsave(file = glue::glue("output/correlations/{category}.svg"), plot = p)
+  ggsave(file = glue::glue("output/correlations/{category}.svg"), plot = p)
 }
 
 
