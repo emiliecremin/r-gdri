@@ -5,6 +5,14 @@ safe_divide <- function(numerator, denominator) {
   return(ifelse(denominator == 0, NA, numerator / denominator))
 }
 
+quick_map <- function(data, col_value) {
+  ggplot(data) +
+    geom_sf(aes(fill = eval(as.name(col_value)))) +
+    labs(fill = col_value) +
+    scale_fill_viridis_c(na.value = "transparent") +
+    theme_void()
+}
+
 mask_rasters <- function(r1, r2, reproj = FALSE) {
   # Convert a RasterLayer to SpatRaster if needed
   if (inherits(r1, "SpatRaster")) {
