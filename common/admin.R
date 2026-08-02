@@ -198,9 +198,24 @@ get_bgd_villages <- function() {
       on = c("adm2_name" = "ADMIN_NAME")
     ) %>%
     st_as_sf()
-  bgd_2_4$country_iso3 <- "BGD"
-  st_write(bgd_2_4, "objects/ADMIN/villages_bgd.gpkg", append = FALSE)
-  return(bgd_2_4)
+
+  # 5. Fill missing adm1_name and adm3_name from full admin list (complete.csv)
+  complete <- read_excel("objects/ADMIN/bgd_adminboundaries_tabulardata.xlsx")
+  complete_one <- complete %>%
+    dplyr::distinct(ADM2_EN, ADM4_EN, .keep_all = TRUE) %>%
+    dplyr::select(ADM2_EN, ADM4_EN, ADM1_EN, ADM3_EN)
+  bgd_villages <- bgd_2_4 %>%
+    dplyr::left_join(complete_one, by = c("adm2_name" = "ADM2_EN", "adm4_name" = "ADM4_EN")) %>%
+    dplyr::mutate(
+      adm1_name = dplyr::coalesce(adm1_name, ADM1_EN),
+      adm3_name = dplyr::coalesce(adm3_name, ADM3_EN)
+    ) %>%
+    dplyr::select(-ADM1_EN, -ADM3_EN)
+
+  bgd_villages$country_iso3 <- "BGD"
+  st_write(bgd_villages, "objects/ADMIN/villages_bgd.gpkg", append = FALSE)
+  write.csv(bgd_villages %>% st_drop_geometry(), "objects/ADMIN/bgd_villages.csv", row.names = FALSE)
+  return(bgd_villages)
 }
 bgd_villages <- get_bgd_villages()
 # -----------------------------------------------------------------------------
