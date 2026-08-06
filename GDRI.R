@@ -156,7 +156,7 @@ n <- dplyr::select(st_drop_geometry(agri_exposure_norm), ends_with("_norm"))
 agri_exposure_norm$A_EXP_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(agri_exposure_norm, "output/exposure/agriculture_exposure.rds")
 st_write(agri_exposure_norm, "output/exposure/agriculture_exposure.gpkg", append = FALSE)
-
+write_xlsx(agri_exposure_norm %>% st_drop_geometry(), path = "output/exposure/agri_exposure.xlsx")
 
 # ---------------------------------------------------------------
 # AQUACULTURE EXPOSURE
@@ -175,6 +175,7 @@ n <- dplyr::select(st_drop_geometry(aquaculture_exposure_norm), ends_with("_norm
 aquaculture_exposure_norm$AQ_EXP_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(aquaculture_exposure_norm, "output/exposure/aquaculture_exposure.rds")
 st_write(aquaculture_exposure_norm, "output/exposure/aquaculture_exposure.gpkg", append = FALSE)
+write_xlsx(aquaculture_exposure_norm %>% st_drop_geometry(), path = "output/exposure/aquaculture_exposure.xlsx")
 
 # ---------------------------------------------------------------
 # AREA EXPOSURE
@@ -193,6 +194,7 @@ n <- dplyr::select(st_drop_geometry(area_exposure_norm), ends_with("_norm"))
 area_exposure_norm$AREA_EXP_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(area_exposure_norm, "output/exposure/area_exposure.rds")
 st_write(area_exposure_norm, "output/exposure/area_exposure.gpkg", append = FALSE)
+write_xlsx(area_exposure_norm %>% st_drop_geometry(), path = "output/exposure/area_exposure.xlsx")
 
 # ---------------------------------------------------------------
 # BUILT UP EXPOSURE
@@ -211,6 +213,7 @@ n <- dplyr::select(st_drop_geometry(built_exposure_norm), ends_with("_norm"))
 built_exposure_norm$B_EXP_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(built_exposure_norm, "output/exposure/built_exposure.rds")
 st_write(built_exposure_norm, "output/exposure/built_exposure.gpkg", append = FALSE)
+write_xlsx(built_exposure_norm %>% st_drop_geometry(), path = "output/exposure/built_exposure.xlsx")
 
 # ---------------------------------------------------------------
 # ECOSYSTEM EXPOSURE
@@ -230,6 +233,7 @@ n <- dplyr::select(st_drop_geometry(eco_exposure_norm), ends_with("_norm"))
 eco_exposure_norm$E_EXP_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(eco_exposure_norm, "output/exposure/ecosystem_exposure.rds")
 st_write(eco_exposure_norm, "output/exposure/ecosystem_exposure.gpkg", append = FALSE)
+write_xlsx(eco_exposure_norm %>% st_drop_geometry(), path = "output/exposure/eco_exposure.xlsx")
 
 # ---------------------------------------------------------------
 # POPULATION EXPOSURE
@@ -249,6 +253,7 @@ n <- dplyr::select(st_drop_geometry(pop_exposure_norm), ends_with("_norm"))
 pop_exposure_norm$POP_EXP_MH <- rowMeans(n, na.rm = TRUE)
 saveRDS(pop_exposure_norm, "output/exposure/pop_exposure.rds")
 st_write(pop_exposure_norm, "output/exposure/pop_exposure.gpkg", append = FALSE)
+write_xlsx(pop_exposure_norm %>% st_drop_geometry(), path = "output/exposure/pop_exposure.xlsx")
 
 # # ---------------------------------------------------------------
 # # SOCIAL EXPOSURE
