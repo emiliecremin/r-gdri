@@ -222,9 +222,9 @@ write_xlsx(built_exposure_norm %>% st_drop_geometry(), path = "output/exposure/b
 source("processing/exposure/ecosystem_exposure.R")
 mkdirs("output/exposure")
 
-eco_exposure_vnm <- ecosystem_exposure(vnm_villages)
-eco_exposure_bgd <- ecosystem_exposure(bgd_villages)
-eco_exposure_ind <- ecosystem_exposure(ind_villages)
+eco_exposure_vnm <- ecosystems_exposure(vnm_villages)
+eco_exposure_bgd <- ecosystems_exposure(bgd_villages)
+eco_exposure_ind <- ecosystems_exposure(ind_villages)
 eco_exposure <- rbind(eco_exposure_vnm, eco_exposure_bgd, eco_exposure_ind)
 
 eco_exposure_norm <- normalize(eco_exposure)
@@ -242,9 +242,9 @@ write_xlsx(eco_exposure_norm %>% st_drop_geometry(), path = "output/exposure/eco
 source("processing/exposure/pop_exposure.R")
 mkdirs("output/exposure")
 
-pop_exposure_vnm <- pop_exposure(vnm_villages)
-pop_exposure_bgd <- pop_exposure(bgd_villages)
-pop_exposure_ind <- pop_exposure(ind_villages)
+pop_exposure_vnm <- population_exposure(vnm_villages)
+pop_exposure_bgd <- population_exposure(bgd_villages)
+pop_exposure_ind <- population_exposure(ind_villages)
 pop_exposure <- rbind(pop_exposure_vnm, pop_exposure_bgd, pop_exposure_ind)
 
 pop_exposure_norm <- normalize(pop_exposure)
