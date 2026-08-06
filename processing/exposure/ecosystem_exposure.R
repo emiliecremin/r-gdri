@@ -19,7 +19,7 @@ E_AFF_COF <- function(locations, ...) {
 # Coalition for Disaster Resilient Infrastructure (CDRI)
 # https://doi.org/10.59375/biennialreport.ed1
 # https://giri.unepgrid.ch/map?list=explore&view=MX-UG0KA-OIQSJ-FIMNA
-# unit: cyclone wind km/h (wind > 150 km/h for a return period of 100 years)
+# unit: cyclone wind km/h (wind > 118 km/h for a return period of 100 years)
 E_INT_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
@@ -27,7 +27,7 @@ E_INT_CYC <- function(locations, ...) {
     ecosystems <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif"))
     cyclones_cropped <- crop(cyclones, ecosystems)
     cyclones_filtered <- cyclones_cropped
-    cyclones_filtered[cyclones_filtered < 150] <- NA
+    cyclones_filtered[cyclones_filtered < cyclone_wind_speed] <- NA
     ### zonal statistics using "exactextractr"
     locations$val <- exact_extract(cyclones_filtered, locations, "mean", progress = TRUE)
     locations$val[is.nan(locations$val)] <- 0
@@ -38,7 +38,7 @@ E_INT_CYC <- function(locations, ...) {
 # https://doi.org/10.59375/biennialreport.ed1
 # https://giri.unepgrid.ch/map?list=explore&view=MX-UG0KA-OIQSJ-FIMNA
 # unit: cyclone wind km/h (for a return period of 100 years)
-# unit: % of cyclone affected ecosystems (wind > 150 km/h) on a 100 year return period
+# unit: % of cyclone affected ecosystems (wind > 118 km/h) on a 100 year return period
 # km2 of cyclone affected ecosystems / km2 of ecosystems in the area
 E_AFF_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
@@ -47,7 +47,7 @@ E_AFF_CYC <- function(locations, ...) {
     ecosystems <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_ecosystems.tif"))
     cyclones_cropped <- crop(cyclones, ecosystems)
     cyclones_filtered <- cyclones_cropped
-    cyclones_filtered[cyclones_filtered < 150] <- NA
+    cyclones_filtered[cyclones_filtered < cyclone_wind_speed] <- NA
     cyclones_masked <- mask_rasters(ecosystems, cyclones_filtered)
     locations <- raster_area_within_polygons(cyclones_masked, locations)
     locations$cnt <- locations$area_raster_km2

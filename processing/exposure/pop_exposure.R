@@ -32,7 +32,7 @@ POP_EXP_COF <- function(locations, ...) {
 # Coalition for Disaster Resilient Infrastructure (CDRI)
 # https://doi.org/10.59375/biennialreport.ed1
 # https://giri.unepgrid.ch/map?list=explore&view=MX-UG0KA-OIQSJ-FIMNA
-# unit: % of population cyclone affected (wind > 150 km/h) on a 100 year return period
+# unit: % of population cyclone affected (wind > 118 km/h) on a 100 year return period
 POP_EXP_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- tolower(unique(locations$country_iso3)[1])
@@ -41,7 +41,7 @@ POP_EXP_CYC <- function(locations, ...) {
     cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
     cyclones_cropped <- crop(cyclones, locations)
     cyclones_filtered <- cyclones_cropped
-    cyclones_filtered[cyclones_filtered < 150] <- NA
+    cyclones_filtered[cyclones_filtered < cyclone_wind_speed] <- NA
     cyclones_masked <- mask_rasters(world_pop, cyclones_filtered)
     locations$cnt <- exact_extract(cyclones_masked, locations, "sum", progress = TRUE)
     locations$val <- locations$cnt / locations$world_pop
@@ -112,63 +112,6 @@ keep_cols <- c(
     "ecosys_km2",
     "built_km2"
 )
-
-locations <- st_read("objects/ADMIN/villages_bgd.gpkg")
-locations <- locations[, (names(locations) %in% keep_cols)]
-pop_exp_sal <- POP_EXP_SAL(locations)
-locations$POP_EXP_SAL_cnt <- pop_exp_sal$cnt
-locations$POP_EXP_SAL_val <- pop_exp_sal$val
-locations$A_INT_SAL_val <- A_INT_SAL(locations)$val
-a_exp_sal <- A_EXP_SAL(locations)
-locations$A_EXP_SAL_cnt <- a_exp_sal$cnt
-locations$A_EXP_SAL_val <- a_exp_sal$val
-locations$E_INT_SAL_val <- E_INT_SAL(locations)$val
-e_exp_sal <- E_EXP_SAL(locations)
-locations$E_EXP_SAL_cnt <- e_exp_sal$cnt
-locations$E_EXP_SAL_val <- e_exp_sal$val
-write.csv(locations %>% st_drop_geometry(), "bgd_locations.csv")
-
-locations <- st_read("objects/ADMIN/villages_vnm.gpkg")
-locations <- locations[, (names(locations) %in% keep_cols)]
-pop_exp_sal <- POP_EXP_SAL(locations)
-locations$POP_EXP_SAL_cnt <- pop_exp_sal$cnt
-locations$POP_EXP_SAL_val <- pop_exp_sal$val
-locations$A_INT_SAL_val <- A_INT_SAL(locations)$val
-a_exp_sal <- A_EXP_SAL(locations)
-locations$A_EXP_SAL_cnt <- a_exp_sal$cnt
-locations$A_EXP_SAL_val <- a_exp_sal$val
-locations$E_INT_SAL_val <- E_INT_SAL(locations)$val
-e_exp_sal <- E_EXP_SAL(locations)
-locations$E_EXP_SAL_cnt <- e_exp_sal$cnt
-locations$E_EXP_SAL_val <- e_exp_sal$val
-write.csv(locations %>% st_drop_geometry(), "vnm_locations.csv")
-
-locations <- st_read("objects/ADMIN/villages_ind.gpkg")
-locations <- locations[, (names(locations) %in% keep_cols)]
-locations$geo_id <- as.character(locations$geo_id)
-pop_exp_sal <- POP_EXP_SAL(locations)
-locations$POP_EXP_SAL_cnt <- pop_exp_sal$cnt
-locations$POP_EXP_SAL_val <- pop_exp_sal$val
-locations$A_INT_SAL_val <- A_INT_SAL(locations)$val
-a_exp_sal <- A_EXP_SAL(locations)
-locations$A_EXP_SAL_cnt <- a_exp_sal$cnt
-locations$A_EXP_SAL_val <- a_exp_sal$val
-locations$E_INT_SAL_val <- E_INT_SAL(locations)$val
-e_exp_sal <- E_EXP_SAL(locations)
-locations$E_EXP_SAL_cnt <- e_exp_sal$cnt
-locations$E_EXP_SAL_val <- e_exp_sal$val
-write.csv(locations %>% st_drop_geometry(), "ind_locations.csv")
-
-quick_map(locations, "POP_EXP_SAL_val")
-quick_map(locations, "POP_EXP_SAL_cnt")
-
-quick_map(locations, "A_INT_SAL_val")
-quick_map(locations, "A_EXP_SAL_val")
-quick_map(locations, "A_EXP_SAL_cnt")
-
-quick_map(locations, "E_INT_SAL_val")
-quick_map(locations, "E_EXP_SAL_val")
-quick_map(locations, "E_EXP_SAL_cnt")
 
 population_exposure_indicators <- c(
     "POP_EXP_COF", # Costal Floods, storm surges

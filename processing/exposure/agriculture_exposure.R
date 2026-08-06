@@ -4,7 +4,7 @@
 # unit: km2 of storm surge prone agriculture
 # based on digital elevation model (DEM) threshold 2m above sea level
 # km2 of storm surge prone agriculture / km2 of agriculture in the area
-A_EXP_COF <- function(locations, ...) {
+A_AFF_COF <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     coastal_dem_filtered <- get_coastal_dem(locations)
     country_iso3 <- unique(locations$country_iso3)[1]
@@ -19,7 +19,7 @@ A_EXP_COF <- function(locations, ...) {
 # Coalition for Disaster Resilient Infrastructure (CDRI)
 # https://doi.org/10.59375/biennialreport.ed1
 # https://giri.unepgrid.ch/map?list=explore&view=MX-UG0KA-OIQSJ-FIMNA
-# unit: cyclone wind km/h (wind > 150 km/h for a return period of 100 years)
+# unit: cyclone wind km/h (wind > 118 km/h for a return period of 100 years)
 A_INT_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
@@ -27,7 +27,7 @@ A_INT_CYC <- function(locations, ...) {
     agriculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif"))
     cyclones_cropped <- crop(cyclones, agriculture)
     cyclones_filtered <- cyclones_cropped
-    cyclones_filtered[cyclones_filtered < 150] <- NA
+    cyclones_filtered[cyclones_filtered < cyclone_wind_speed] <- NA
     ### zonal statistics using "exactextractr"
     locations$val <- exact_extract(cyclones_filtered, locations, "mean", progress = TRUE)
     locations$val[is.nan(locations$val)] <- 0
@@ -38,16 +38,16 @@ A_INT_CYC <- function(locations, ...) {
 # https://doi.org/10.59375/biennialreport.ed1
 # https://giri.unepgrid.ch/map?list=explore&view=MX-UG0KA-OIQSJ-FIMNA
 # unit: cyclone wind km/h (for a return period of 100 years)
-# unit: % of cyclone affected agriculture (wind > 150 km/h) area on a 100 year return period
+# unit: % of cyclone affected agriculture (wind > 118 km/h) area on a 100 year return period
 # km2 of cyclone affected agriculture / km2 of agriculture in the area
-A_EXP_CYC <- function(locations, ...) {
+A_AFF_CYC <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
     agriculture <- rast(glue::glue("objects/ESA_Landcover/{country_iso3}_agriculture.tif"))
     cyclones_cropped <- crop(cyclones, agriculture)
     cyclones_filtered <- cyclones_cropped
-    cyclones_filtered[cyclones_filtered < 150] <- NA
+    cyclones_filtered[cyclones_filtered < cyclone_wind_speed] <- NA
     cyclones_masked <- mask_rasters(agriculture, cyclones_filtered)
     locations <- raster_area_within_polygons(cyclones_masked, locations)
     locations$cnt <- locations$area_raster_km2
@@ -59,7 +59,7 @@ A_EXP_CYC <- function(locations, ...) {
 # https://wesr.unepgrid.ch/static.html?views=MX-JXZXA-MFZNN-LTXZ8&zoomToViews=true
 # unit: % of flooded agriculture area on a 100 year return period
 # km2 of flooded agriculture / km2 of agriculture in the area
-A_EXP_FLO <- function(locations, ...) {
+A_AFF_FLO <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     floods <- rast("data/Hazards/Floods/fl_hazard_100_yrp.tif")
@@ -127,7 +127,7 @@ A_INT_SAL <- function(locations, ...) {
 # r_rev 1-10: 1 = non-saline, 10 = extremely saline
 # Threshold > 2 is affected by salinisation (moderate hazard or worse)
 # unit: % of agriculture area affected by salinity
-A_EXP_SAL <- function(locations, ...) {
+A_AFF_SAL <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     salinity <- rast("data/Soil/Salinity/HWSD v2.01/DATA_GAEZ-V5_MAPSET_SQX_GAEZ-V5.SQX.SQ5.HIM.tif")
@@ -137,8 +137,8 @@ A_EXP_SAL <- function(locations, ...) {
     salinity_filtered[salinity_filtered == 0] <- NA
     salinity_filtered[salinity_filtered > 10] <- NA
     r_rev <- 11 - salinity_filtered
-    SAL_EXP_THRESHOLD <- 2
-    r_rev[r_rev < SAL_EXP_THRESHOLD] <- NA
+    SAL_AFF_THRESHOLD <- 2
+    r_rev[r_rev < SAL_AFF_THRESHOLD] <- NA
     salinity_masked <- mask_rasters(agriculture, r_rev)
     locations <- raster_area_within_polygons(salinity_masked, locations)
     locations$cnt <- locations$area_raster_km2
@@ -147,12 +147,12 @@ A_EXP_SAL <- function(locations, ...) {
 }
 
 agriculture_exposure_indicators <- c(
-    "A_EXP_COF", # Costal Floods, storm surges
-    "A_EXP_CYC", # Cyclones
+    "A_AFF_COF", # Costal Floods, storm surges
+    "A_AFF_CYC", # Cyclones
     "A_INT_CYC", # Cyclones
-    "A_EXP_FLO", # Floods
+    "A_AFF_FLO", # Floods
     "A_INT_FLO", # Floods
-    "A_EXP_SAL", # Salinity
+    "A_AFF_SAL", # Salinity
     "A_INT_SAL" # Salinity
 )
 
