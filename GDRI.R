@@ -35,6 +35,9 @@ source("processing/SDG.R")
 source("processing/travel_time.R")
 source("processing/world_bank.R")
 
+# CONSTANTS
+cyclone_wind_speed <- 118 # km/h
+
 # ---------------------------------------------------------------
 # SOCIAL SUSCEPTIBILITY
 # ---------------------------------------------------------------
