@@ -1,4 +1,6 @@
-# AidData. 2017.
+# AidData. published in 2017
+# This geocoded dataset includes all projects approved from 1995-2014 in the World Bank IBRD/IDA lending lines. 
+# It tracks more than $630 billion in commitments for 5,684 projects across 61,243 locations.
 # WorldBank_GeocodedResearchRelease_Level1_v1.4.2 geocoded dataset.
 # Williamsburg, VA and Washington, DC: AidData.
 # Accessed on [date]. http://aiddata.org/research-datasets.
@@ -40,6 +42,13 @@ A_GOV6 <- function(locations, ...) {
     return(locations)
 }
 
+# AidData. published in 2017
+# This geocoded dataset includes all projects approved from 1995-2014 in the World Bank IBRD/IDA lending lines. 
+# It tracks more than $630 billion in commitments for 5,684 projects across 61,243 locations.
+# WorldBank_GeocodedResearchRelease_Level1_v1.4.2 geocoded dataset.
+# Williamsburg, VA and Washington, DC: AidData.
+# https://www.aiddata.org/data/world-bank-geocoded-research-release-level-1-v1-4-2
+# https://raw.githubusercontent.com/AidData-WM/public_datasets/master/geocoded/WorldBank_GeocodedResearchRelease_Level1_v1.4.2.zip
 ER_FUN2 <- function(locations, ...) {
     # ad_sector_code
     # 310 = Agriculture, forestry, fishing
@@ -69,6 +78,14 @@ ER_FUN2 <- function(locations, ...) {
     return(locations)
 }
 
+# AidData. published in 2017
+# This geocoded dataset includes all projects approved from 1995-2014 in the World Bank IBRD/IDA lending lines. 
+# It tracks more than $630 billion in commitments for 5,684 projects across 61,243 locations.
+# WorldBank_GeocodedResearchRelease_Level1_v1.4.2 geocoded dataset.
+# Williamsburg, VA and Washington, DC: AidData.
+# Accessed on [date]. http://aiddata.org/research-datasets.
+# https://www.aiddata.org/data/world-bank-geocoded-research-release-level-1-v1-4-2
+# https://raw.githubusercontent.com/AidData-WM/public_datasets/master/geocoded/WorldBank_GeocodedResearchRelease_Level1_v1.4.2.zip
 A_FUN3 <- function(locations, ...) {
     # ad_sector_code
     # 240 Banking and financial services
