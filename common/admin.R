@@ -96,6 +96,11 @@ get_vnm_villages <- function() {
     st_drop_geometry() %>%
     dplyr::select(geo_id, GEOLEV2)
 
+  # Bach Long Vi island (Hai Phong) has no IPUMS unit; the nearest one is Van Don
+  # (Quang Ninh). Use Cat Hai, the nearest Hai Phong district.
+  nearest$GEOLEV2[nearest$geo_id %in% vnm_adm3$geo_id[vnm_adm3$NAME_2 == "Bach Long Vi"]] <-
+    admin_vnm$GEOLEV2[admin_vnm$ADMIN_NAME == "Cat Hai"]
+
   # Bind the results of 1. spatial join, 2. name matching and 3. nearest feature
   contained <- vnm_adm3_2 %>%
     st_drop_geometry() %>%
@@ -124,6 +129,13 @@ get_vnm_villages <- function() {
   vnm_villages$adm2_name <- vnm_villages$NAME_2
   relabel <- as.character(vnm_villages$GEOLEV2) %in% names(adm2_label)
   vnm_villages$adm2_name[relabel] <- adm2_label[as.character(vnm_villages$GEOLEV2[relabel])]
+  # GADM 2015 labels checked against official lists (2026-10-02): wrong province or district name
+  fix <- function(adm1, adm2) vnm_villages$NAME_1 == adm1 & vnm_villages$NAME_2 %in% adm2
+  vnm_villages$adm1_name[fix("Hà Nội", c("Lương Sơn", "Kim Bôi"))] <- "Hòa Bình"
+  vnm_villages$adm1_name[fix("Vĩnh Phúc", "Mê Linh")] <- "Hà Nội"
+  vnm_villages$adm2_name[fix("Vĩnh Phúc", "Tam Đường")] <- "Tam Dương"
+  vnm_villages$adm2_name[fix("Sóc Trăng", "Long My")] <- "Sóc Trăng"
+  vnm_villages$adm2_name[fix("Sóc Trăng", "Thanh Trì")] <- "Thạnh Trị"
   vnm_villages$adm3_name <- vnm_villages$NAME_3
   vnm_villages$adm4_name <- NA
   vnm_villages$Name <- vnm_villages$NAME_3
