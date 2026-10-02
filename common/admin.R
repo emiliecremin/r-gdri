@@ -39,12 +39,27 @@ get_vnm_villages <- function() {
     "{vnm_adm3$ID_1}-{vnm_adm3$ID_2}-{vnm_adm3$ID_3}"
   )
 
-  # 1. Spatial join to find villages within the IPUMS ADM2 boundaries
-  vnm_adm3_2 <- st_join(
-    admin_vnm,
-    st_centroid(vnm_adm3),
-    join = st_contains
-  ) %>% filter(!NAME_2 == "Tuy Phước")
+  # 1. Assign each commune to the IPUMS ADM2 with the largest area overlap
+  # (centroid-in-polygon misassigns communes on district boundaries because the
+  # GADM 2015 and IPUMS 2009 borders differ slightly).
+  # S2 is switched off only here: planar intersection is much faster, and the
+  # choice depends only on the relative overlap of candidate districts.
+  vnm_adm3_2 <- local({
+    s2_prev <- sf_use_s2(FALSE)
+    on.exit(sf_use_s2(s2_prev))
+    st_intersection(
+      st_make_valid(vnm_adm3) %>% dplyr::select(geo_id, NAME_2),
+      admin_vnm %>% dplyr::select(GEOLEV2)
+    ) %>%
+      mutate(overlap = as.numeric(st_area(.))) %>%
+      st_drop_geometry() %>%
+      group_by(geo_id) %>%
+      slice_max(overlap, n = 1, with_ties = FALSE) %>%
+      ungroup() %>%
+      filter(!NAME_2 == "Tuy Phước")
+  })
+  # Phụng Hiệp commune lies 49.5/50.5% in Phụng Hiệp/Ngã Bảy: keep the district it is named after
+  vnm_adm3_2$GEOLEV2[vnm_adm3_2$geo_id == "31-333-4931"] <- "704093001"
   # Tuy Phước special case this is not matched to the right place
   not_contained <- vnm_adm3 %>% filter(!geo_id %in% vnm_adm3_2$geo_id)
 
@@ -100,7 +115,15 @@ get_vnm_villages <- function() {
     st_as_sf()
   vnm_villages$country_iso3 <- "VNM"
   vnm_villages$adm1_name <- vnm_villages$NAME_1
+  # GADM 2015 NAME_2 predates district splits: relabel communes whose IPUMS 2009
+  # unit is the newer district (accents kept)
+  adm2_label <- c(
+    "704026008" = "Sông Lô", "704031012" = "Dương Kinh",
+    "704093006" = "Ngã Bảy", "704092005" = "Thới Lai"
+  )
   vnm_villages$adm2_name <- vnm_villages$NAME_2
+  relabel <- as.character(vnm_villages$GEOLEV2) %in% names(adm2_label)
+  vnm_villages$adm2_name[relabel] <- adm2_label[as.character(vnm_villages$GEOLEV2[relabel])]
   vnm_villages$adm3_name <- vnm_villages$NAME_3
   vnm_villages$adm4_name <- NA
   vnm_villages$Name <- vnm_villages$NAME_3
