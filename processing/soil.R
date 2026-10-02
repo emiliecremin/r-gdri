@@ -2,6 +2,7 @@
 ### zonal statistics using "exactextractr"
 
 # ES_DEG6 Soil_organic_carbone
+# Global Soil Organic Carbon Map v1.5 (GSOC), 2019
 # https://data.apps.fao.org/catalog/dataset/7730e747-eb73-49c9-bfe6-84ebae718743
 # GSOCmap: The GSOCmap is a spatial raster file with soil organic carbon stock values in Mg/ha for a depth of 0-30 cm.
 ES_DEG6 <- function(locations, ...) {
@@ -13,6 +14,9 @@ ES_DEG6 <- function(locations, ...) {
 
 # ES_DEG9 Cation_exchange_capacity
 # datasource: soilgrids-isric
+# SoilGrids250m 2.0 - Cation exchange capacity at ph7, 2020
+# Data: 2016
+# https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/713396fc-1687-11ea-a7c0-a0481ca9e724
 # Google Earth Engine (GEE) to export it with the following code
 # https://code.earthengine.google.com/21df6671fc3d2c2ea7bad15d3b878268?noload=true
 # var cec = ee.Image("projects/soilgrids-isric/cec_mean")
