@@ -1,12 +1,12 @@
 # bgd_villages <- st_read("objects/ADMIN/villages_bgd.gpkg")
 # pop <- terra::rast("data/Population/BGD_GPW_v411_Population_Count.tif")
-# bgd_villages$world_pop_sum <- exact_extract(
+# bgd_villages$gridded_pop <- exact_extract(
 #     pop, bgd_villages, "sum",
 #     progress = TRUE
 # )
-# bgd_villages$density <- bgd_villages$world_pop_sum / bgd_villages$area
+# bgd_villages$gridded_pop_density <- bgd_villages$gridded_pop / bgd_villages$area
 # st_write(bgd_villages, "objects/ADMIN/villages_bgd_wp.gpkg", append = FALSE)
-# plot(bgd_villages["density"])
+# plot(bgd_villages["gridded_pop_density"])
 
 # NASA SEDAC at the Center for International Earth Science Information Network (CIESIN)
 # https://developers.google.com/earth-engine/datasets/catalog/CIESIN_GPWv411_GPW_Population_Count
@@ -16,11 +16,11 @@ pop_density <- function(locations) {
     world_pop <- terra::rast(
         glue::glue("data/Population/{country_iso3}_GPW_v411_Population_Count.tif")
     )
-    locations$world_pop_sum <- exact_extract(
+    locations$gridded_pop <- exact_extract(
         world_pop, locations, "sum",
         progress = TRUE
     )
-    locations$density <- locations$world_pop_sum / locations$area
+    locations$gridded_pop_density <- locations$gridded_pop / locations$area
     return(locations)
 }
 
@@ -36,8 +36,8 @@ target_col_names <- c(
     "adm_level",
     "pop",
     "area",
-    "world_pop_sum",
-    "density"
+    "gridded_pop",
+    "gridded_pop_density"
 )
 vnm_villages <- pop_density(vnm_villages) %>%
     dplyr::select(all_of(target_col_names))
