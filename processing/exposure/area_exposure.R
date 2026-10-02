@@ -23,7 +23,7 @@ AREA_AFF_COF <- function(locations, ...) {
 # https://www.nature.com/articles/ncomms11969
 # https://energydata.info/dataset/global-coastal-flood-hazard/resource/46904e08-7daa-4c58-8c62-f0c27407ba5c
 # unit: extreme sea levels in meters caused by storm surges and high tides
-AREA_INT_SURGE <- function(locations, ...) {
+AREA_INT_COF <- function(locations, ...) {
     storm_surge <- rast("data/Hazards/StormSurge/ss_muis_rp0100m.tif")
     storm_surge_cropped <- crop(storm_surge, ext(locations))
     ### zonal statistics using "exactextractr"
@@ -159,7 +159,7 @@ AREA_AFF_SAL <- function(locations, ...) {
 
 area_exposure_indicators <- c(
     "AREA_AFF_COF", # Costal Floods, storm surges
-    "AREA_INT_SURGE", # storm surges
+    "AREA_INT_COF", # Costal Floods, storm surges
     "AREA_AFF_CYC", # Cyclones
     "AREA_INT_CYC", # Cyclones
     "AREA_INT_DRO", # Droughts

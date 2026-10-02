@@ -18,6 +18,8 @@ AQ_AFF_COF <- function(locations, ...) {
 
 # Coalition for Disaster Resilient Infrastructure (CDRI)
 # https://doi.org/10.59375/biennialreport.ed1
+# Background paper: Multi-hazard Disaster Risk Model of Infrastructure and Buildings at the Global Level (2023). Cardona, O.D., Bernal, G.A., Villegas, C.P., Molina, J.F., Herrera, S.A., Marulanda, M.C., Rincón, D.F., Grajales, S., Marulanda, P.M., Gonzalez, D., Maskrey, A. (2023). 
+# https://giri.unepgrid.ch/sites/default/files/2023-11/2.4-INGENIAR-CDRI-Background-Report-Risk-model.pdf
 # https://giri.unepgrid.ch/map?list=explore&view=MX-UG0KA-OIQSJ-FIMNA
 # unit: cyclone wind km/h (wind > 118 km/h for a return period of 100 years)
 AQ_INT_CYC <- function(locations, ...) {
@@ -36,6 +38,8 @@ AQ_INT_CYC <- function(locations, ...) {
 
 # Coalition for Disaster Resilient Infrastructure (CDRI)
 # https://doi.org/10.59375/biennialreport.ed1
+# Background paper: Multi-hazard Disaster Risk Model of Infrastructure and Buildings at the Global Level (2023). Cardona, O.D., Bernal, G.A., Villegas, C.P., Molina, J.F., Herrera, S.A., Marulanda, M.C., Rincón, D.F., Grajales, S., Marulanda, P.M., Gonzalez, D., Maskrey, A. (2023). 
+# https://giri.unepgrid.ch/sites/default/files/2023-11/2.4-INGENIAR-CDRI-Background-Report-Risk-model.pdf
 # https://giri.unepgrid.ch/map?list=explore&view=MX-UG0KA-OIQSJ-FIMNA
 # unit: cyclone wind km/h (for a return period of 100 years)
 # unit: % of cyclone affected aquaculture (wind > 118 km/h) area on a 100 year return period
@@ -86,52 +90,52 @@ AQ_INT_FLO <- function(locations, ...) {
     return(locations)
 }
 
-# Global Soil Salinity Map
-#  https://doi.org/10.1016/j.rse.2019.111260
-#  https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
-#  https://code.earthengine.google.com/d43e5a92ae1deed32a0929f57b572756
-# unit: soil salinity score 0 to 4 [0: non-saline, 1: slightly, 2: moderately, 3: highly, 4: extremely]
-AQ_INT_SAL <- function(locations, ...) {
-    locations <- locations %>% st_transform(4326)
-    country_iso3 <- unique(locations$country_iso3)[1]
-    salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
-    aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
-    salinity_cropped <- crop(salinity, aquaculture)
-    ### zonal statistics using "exactextractr"
-    locations$val <- exact_extract(salinity_cropped, locations, "mean", progress = TRUE)
-    locations$val[is.nan(locations$val)] <- 0
-    return(locations)
-}
+# # Global Soil Salinity Map
+# #  https://doi.org/10.1016/j.rse.2019.111260
+# #  https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
+# #  https://code.earthengine.google.com/d43e5a92ae1deed32a0929f57b572756
+# # unit: soil salinity score 0 to 4 [0: non-saline, 1: slightly, 2: moderately, 3: highly, 4: extremely]
+# AQ_INT_SAL <- function(locations, ...) {
+#     locations <- locations %>% st_transform(4326)
+#     country_iso3 <- unique(locations$country_iso3)[1]
+#     salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
+#     aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
+#     salinity_cropped <- crop(salinity, aquaculture)
+#     ### zonal statistics using "exactextractr"
+#     locations$val <- exact_extract(salinity_cropped, locations, "mean", progress = TRUE)
+#     locations$val[is.nan(locations$val)] <- 0
+#     return(locations)
+# }
 
-# Global Soil Salinity Map
-# https://doi.org/10.1016/j.rse.2019.111260
-# https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
-# https://code.earthengine.google.com/d43e5a92ae1deed32a0929f57b572756
-# soil salinity score 0 to 4 [0: non-saline, 1: slightly, 2: moderately, 3: highly, 4: extremely]
-# unit: % of aquaculture area affected by salinity slightly (1) to extremely (4)
-AQ_AFF_SAL <- function(locations, ...) {
-    locations <- locations %>% st_transform(4326)
-    country_iso3 <- unique(locations$country_iso3)[1]
-    salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
-    aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
-    salinity_cropped <- crop(salinity, aquaculture)
-    salinity_filtered <- salinity_cropped
-    salinity_filtered[salinity_filtered < 1] <- NA
-    salinity_masked <- mask_rasters(aquaculture, salinity_filtered)
-    locations <- raster_area_within_polygons(salinity_masked, locations)
-    locations$cnt <- locations$area_raster_km2
-    locations$val <- locations$area_raster_km2 / locations$aqua_km2
-    return(locations)
-}
+# # Global Soil Salinity Map
+# # https://doi.org/10.1016/j.rse.2019.111260
+# # https://data.isric.org/geonetwork/srv/eng/catalog.search#/metadata/c59d0162-a258-4210-af80-777d7929c512
+# # https://code.earthengine.google.com/d43e5a92ae1deed32a0929f57b572756
+# # soil salinity score 0 to 4 [0: non-saline, 1: slightly, 2: moderately, 3: highly, 4: extremely]
+# # unit: % of aquaculture area affected by salinity slightly (1) to extremely (4)
+# AQ_AFF_SAL <- function(locations, ...) {
+#     locations <- locations %>% st_transform(4326)
+#     country_iso3 <- unique(locations$country_iso3)[1]
+#     salinity <- rast("data/Soil/Salinity/salmap2016.vrt")
+#     aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
+#     salinity_cropped <- crop(salinity, aquaculture)
+#     salinity_filtered <- salinity_cropped
+#     salinity_filtered[salinity_filtered < 1] <- NA
+#     salinity_masked <- mask_rasters(aquaculture, salinity_filtered)
+#     locations <- raster_area_within_polygons(salinity_masked, locations)
+#     locations$cnt <- locations$area_raster_km2
+#     locations$val <- locations$area_raster_km2 / locations$aqua_km2
+#     return(locations)
+# }
 
 aquaculture_exposure_indicators <- c(
     "AQ_AFF_COF", # Costal Floods, storm surges
     "AQ_AFF_CYC", # Cyclones
     "AQ_INT_CYC", # Cyclones
     "AQ_AFF_FLO", # Floods
-    "AQ_INT_FLO", # Floods
-    "AQ_AFF_SAL", # Salinity
-    "AQ_INT_SAL" # Salinity
+    "AQ_INT_FLO" # Floods
+    # "AQ_AFF_SAL", # Salinity
+    # "AQ_INT_SAL" # Salinity
 )
 
 aquaculture_exposure <- function(locations) {
