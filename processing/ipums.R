@@ -144,15 +144,17 @@ S_INF2 <- function(locations, social_data, ...) {
 
 # S_INF3
 # Percentage of population without access to electricity (%)
+# Districts where no sampled household lacks electricity have no ELECTRIC == 2
+# row to keep, so filtering the grouped shares would leave them missing. Counting
+# the households per district gives them an explicit 0 instead.
 S_INF3 <- function(locations, social_data, ...) {
   no_electricity <- social_data %>%
     st_drop_geometry() %>%
     dplyr::select(GEOLEV2, ELECTRIC) %>%
     filter(ELECTRIC != 9 & ELECTRIC != 0) %>%
-    group_by(GEOLEV2, ELECTRIC) %>%
-    summarise(cnt = n()) %>%
-    mutate(val = (cnt / sum(cnt) * 100)) %>%
-    filter(ELECTRIC == 2)
+    group_by(GEOLEV2) %>%
+    summarise(cnt = sum(ELECTRIC == 2), val = cnt / n() * 100) %>%
+    mutate(ELECTRIC = 2)
   result <- collapse::join(
     locations,
     no_electricity,
