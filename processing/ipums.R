@@ -6,6 +6,8 @@
 # --------------------------------------------------
 
 # S_SOC3
+# count per district, so a district with no record in the
+# category gets 0 instead of dropping out of the join
 # Percentage female-headed households (%)
 # What about Gender Inequality as weight?
 # http://hdr.undp.org/en/content/gender-inequality-index-gii
@@ -14,10 +16,9 @@ S_SOC3 <- function(locations, social_data, ...) {
     st_drop_geometry() %>%
     dplyr::select(GEOLEV2, RELATE, SEX) %>%
     filter(RELATE == 1) %>%
-    group_by(GEOLEV2, SEX) %>%
-    summarise(cnt = n()) %>%
-    mutate(val = (cnt / sum(cnt) * 100)) %>%
-    filter(SEX == 2)
+    group_by(GEOLEV2) %>%
+    summarise(cnt = sum(SEX == 2, na.rm = TRUE), val = cnt / n() * 100) %>%
+    mutate(SEX = 2)
   result <- collapse::join(
     locations,
     female_head_household,
@@ -35,10 +36,9 @@ S_SOC5 <- function(locations, social_data, ...) {
     st_drop_geometry() %>%
     dplyr::select(GEOLEV2, DISABLED) %>%
     filter(DISABLED == 1 | DISABLED == 2) %>%
-    group_by(GEOLEV2, DISABLED) %>%
-    summarise(cnt = n()) %>%
-    mutate(val = (cnt / sum(cnt) * 100)) %>%
-    filter(DISABLED == 1)
+    group_by(GEOLEV2) %>%
+    summarise(cnt = sum(DISABLED == 1), val = cnt / n() * 100) %>%
+    mutate(DISABLED = 1)
   result <- collapse::join(
     locations,
     disabled,
@@ -56,10 +56,9 @@ S_SOC8 <- function(locations, social_data, ...) {
     st_drop_geometry() %>%
     dplyr::select(GEOLEV2, LIT) %>%
     filter(LIT == 1 | LIT == 2) %>%
-    group_by(GEOLEV2, LIT) %>%
-    summarise(cnt = n()) %>%
-    mutate(val = (cnt / sum(cnt) * 100)) %>%
-    filter(LIT == 1)
+    group_by(GEOLEV2) %>%
+    summarise(cnt = sum(LIT == 1), val = cnt / n() * 100) %>%
+    mutate(LIT = 1)
   result <- collapse::join(
     locations,
     illiterate,
@@ -78,10 +77,9 @@ S_ECO2 <- function(locations, social_data, ...) {
     st_drop_geometry() %>%
     dplyr::select(GEOLEV2, AGE) %>%
     mutate(DEP = (AGE < 15 | AGE > 64)) %>%
-    group_by(GEOLEV2, DEP) %>%
-    summarise(cnt = n()) %>%
-    mutate(val = (cnt / sum(cnt) * 100)) %>%
-    filter(DEP == TRUE)
+    group_by(GEOLEV2) %>%
+    summarise(cnt = sum(DEP, na.rm = TRUE), val = cnt / n() * 100) %>%
+    mutate(DEP = TRUE)
   result <- collapse::join(
     locations,
     dependency_rate,
@@ -94,15 +92,16 @@ S_ECO2 <- function(locations, social_data, ...) {
 
 # S_INF1
 # Percentage of population without access to (improved) sanitation (%)
+# Counting per district keeps districts where every valid record has
+# a toilet as 0 instead of dropping them.
 S_INF1 <- function(locations, social_data, ...) {
   no_toilets <- social_data %>%
     st_drop_geometry() %>%
     dplyr::select(GEOLEV2, TOILET) %>%
     filter(TOILET != 99 & TOILET != 00) %>%
-    group_by(GEOLEV2, TOILET) %>%
-    summarise(cnt = n()) %>%
-    mutate(val = (cnt / sum(cnt) * 100)) %>%
-    filter(TOILET == 10)
+    group_by(GEOLEV2) %>%
+    summarise(cnt = sum(TOILET == 10), val = cnt / n() * 100) %>%
+    mutate(TOILET = 10)
   result <- collapse::join(
     locations,
     no_toilets,
@@ -127,10 +126,9 @@ S_INF2 <- function(locations, social_data, ...) {
       dplyr::select(GEOLEV2, WATSUP) %>%
       filter(WATSUP != 99 & WATSUP != 00) %>%
       mutate(WATSUP = replace(WATSUP, WATSUP == 18, 10)) %>%
-      group_by(GEOLEV2, WATSUP) %>%
-      summarise(cnt = n()) %>%
-      mutate(val = (cnt / sum(cnt) * 100)) %>%
-      filter(WATSUP == 20)
+      group_by(GEOLEV2) %>%
+      summarise(cnt = sum(WATSUP == 20), val = cnt / n() * 100) %>%
+      mutate(WATSUP = 20)
     result <- collapse::join(
       locations,
       water_not_piped,
@@ -191,10 +189,11 @@ C_EWS1 <- function(locations, social_data, ...) {
       st_drop_geometry() %>%
       dplyr::select(GEOLEV2, RADIO, TV) %>%
       filter(RADIO != 9 & RADIO != 0 & TV != 00 & TV != 99) %>%
-      group_by(GEOLEV2, RADIO, TV) %>%
-      summarise(cnt = n()) %>%
-      mutate(val = (cnt / sum(cnt) * 100)) %>%
-      filter(RADIO == 1 & TV == 10)
+      group_by(GEOLEV2) %>%
+      # share of all households with neither a radio nor a TV (the grouped share this
+      # replaces was computed within RADIO, i.e. among households without a radio)
+      summarise(cnt = sum(RADIO == 1 & TV == 10), val = cnt / n() * 100) %>%
+      mutate(RADIO = 1, TV = 10)
     result <- collapse::join(
       locations,
       no_tv_radio,
