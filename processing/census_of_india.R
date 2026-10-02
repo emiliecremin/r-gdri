@@ -223,8 +223,10 @@ S_INF3 <- function(locations, ...) {
 
 # C_EWS1
 # Percentage of households without access to information (%)
-# Proxy: Percentage of households without radio or TV (%)
-# Availability of assets: None of the assets specified in col. 10 to 19: TV - Computer/Laptop - Telephone/mobile phone - Scooter/Car
+# India (HH-14 gives radio and TV only as separate shares, so "neither radio nor TV" cannot be derived):
+# Percentage of households with none of the assets in col. 10 to 19: radio, TV, computer/laptop,
+# telephone/mobile phone, bicycle, scooter/motorcycle, car. Not comparable with the radio-and-TV
+# definition used for Vietnam (ipums.R) and Bangladesh (BBS table).
 C_EWS1 <- function(locations, ...) {
   data <- locations %>% st_drop_geometry()
   data$C_EWS1 <- data$`Availability.of.assets..None.of.the.assets.specified.in.col..10.to.19`
