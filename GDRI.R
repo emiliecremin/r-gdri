@@ -288,6 +288,20 @@ eco_exposure_norm <- readRDS("output/exposure/ecosystem_exposure.rds")
 pop_exposure_norm <- readRDS("output/exposure/pop_exposure.rds")
 # soc_exposure_norm <- readRDS("output/exposure/social_exposure.rds")
 
+# The tables are combined by row position, so every table must hold the same units in the same order
+parts <- list(
+    soc_sus_norm, cop_adapt_norm, eco_sensitivity_norm, eco_robustness_norm, agri_exposure_norm,
+    aquaculture_exposure_norm, area_exposure_norm, built_exposure_norm, eco_exposure_norm, pop_exposure_norm
+)
+ref_ids <- as.character(parts[[1]]$geo_id)
+for (p in parts) {
+    stopifnot(
+        nrow(p) == length(ref_ids),
+        !anyDuplicated(ref_ids),
+        identical(as.character(p$geo_id), ref_ids)
+    )
+}
+
 gdri <- cbind(
     soc_sus_norm,
     cop_adapt_norm,
