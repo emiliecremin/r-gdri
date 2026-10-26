@@ -13,8 +13,8 @@
 
 RWI_ZOOM <- 14
 RWI_MAX_FALLBACK_KM <- 20
-# Units with fewer WorldPop inhabitants than this get no value of their own
-# (S_ECO1_rwi / S_ECO4_rwi then fill them with the country median)
+# Units with fewer WorldPop inhabitants than this have no usable population weights:
+# S_ECO1 takes the unweighted mean of the RWI pixels of the unit instead (rwi_unit_stats)
 RWI_MIN_POP <- 1
 
 rwi_file <- function(country_iso3) {
@@ -51,6 +51,18 @@ rwi_weighted_stats <- function(values) {
     data.frame(rwi_mean = m, rwi_sd = sqrt(sum(w * (v - m)^2) / sum(w)))
 }
 
+# Mean of RWI over the pixels of one unit weighted by coverage only (no population weight):
+# used for inhabited units whose WorldPop count is below RWI_MIN_POP, where the
+# population weights are unusable
+rwi_unweighted_stats <- function(values) {
+    w <- values$coverage_fraction
+    ok <- !is.na(values$rwi) & !is.na(w) & w > 0
+    if (!any(ok)) {
+        return(data.frame(rwi_mean = NA_real_))
+    }
+    data.frame(rwi_mean = sum(w[ok] * values$rwi[ok]) / sum(w[ok]))
+}
+
 # WorldPop and RWI tiles on the same grid, cropped to the locations + pad (degrees)
 rwi_rasters <- function(locations, pad = 0.05) {
     country_iso3 <- unique(locations$country_iso3)
@@ -77,7 +89,8 @@ rwi_rasters <- function(locations, pad = 0.05) {
 # Populated locations without populated pixels on an RWI tile (outside the RWI
 # coverage) take the nearest tile centre within RWI_MAX_FALLBACK_KM, flagged by
 # rwi_fallback = TRUE; otherwise they stay NA. Locations with fewer than
-# RWI_MIN_POP inhabitants stay NA.
+# RWI_MIN_POP inhabitants take the plain (unweighted) mean of the RWI pixels inside
+# the unit (rwi_unweighted = TRUE), then the nearest tile like the others.
 rwi_unit_stats <- function(locations) {
     country_iso3 <- unique(locations$country_iso3)
     locations <- st_transform(locations, 4326)
@@ -99,7 +112,21 @@ rwi_unit_stats <- function(locations) {
     out$rwi_mean[out$pop_worldpop < RWI_MIN_POP] <- NA_real_
     out$rwi_sd[out$pop_worldpop < RWI_MIN_POP] <- NA_real_
 
-    missing <- which(is.na(out$rwi_mean) & out$pop_worldpop >= RWI_MIN_POP)
+    # Units below RWI_MIN_POP inhabitants in WorldPop (e.g. char islands, remote villages
+    # that WorldPop's settlement mask misses) take the plain mean of the RWI pixels inside the
+    # unit; units that are really unpopulated are blanked later, from the census (ecosystem-only units)
+    out$rwi_unweighted <- FALSE
+    low <- which(out$pop_worldpop < RWI_MIN_POP)
+    if (length(low) > 0) {
+        uw <- exact_extract(
+            c(rwi_rast, pop), locations[low, ],
+            fun = rwi_unweighted_stats, summarize_df = TRUE, progress = FALSE
+        )
+        out$rwi_mean[low] <- uw$rwi_mean
+        out$rwi_unweighted[low[!is.na(uw$rwi_mean)]] <- TRUE
+    }
+
+    missing <- which(is.na(out$rwi_mean))
     if (length(missing) > 0) {
         tiles <- st_as_sf(rwi, coords = c("longitude", "latitude"), crs = 4326)
         centroids <- suppressWarnings(st_centroid(locations[missing, ]))
@@ -124,17 +151,28 @@ unit_population <- function(locations) {
     exact_extract(pop, st_transform(locations, 4326), "sum", progress = FALSE)
 }
 
-# Gaps left after the fallbacks (unpopulated units, and populated units with no
-# RWI data within the fallback distance) take the median of the valid values.
-# One country per call, so this is the country median of the locations passed in.
+# Gaps left after the fallbacks (units with no RWI data within the fallback distance)
+# take the mean of the valid values of the units of the same district (adm1_name +
+# adm2_name), then of the same province (adm1_name), then the country median of the
+# locations passed in. One country per call.
 # The paper workbooks use the paper-list units: identical for VNM and BGD, but for
 # IND only 7,648 of the 21,867 units in villages_ind.gpkg, so run it on those
-# units to reproduce the workbook values (IND medians differ otherwise).
-impute_country_median <- function(val, label) {
+# units to reproduce the workbook values.
+impute_district_mean <- function(val, adm1, adm2, label) {
     missing <- is.na(val)
     if (any(missing) && !all(missing)) {
-        val[missing] <- median(val[!missing])
-        message(sum(missing), " units without a ", label, " value filled with the country median")
+        district <- paste(adm1, adm2, sep = "|")
+        by_district <- ave(val, district, FUN = function(x) mean(x, na.rm = TRUE))
+        by_province <- ave(val, adm1, FUN = function(x) mean(x, na.rm = TRUE))
+        fill <- ifelse(!is.nan(by_district), by_district,
+                       ifelse(!is.nan(by_province), by_province, median(val[!missing])))
+        val[missing] <- fill[missing]
+        message(
+            sum(missing), " units without a ", label, " value filled with the district mean (",
+            sum(missing & !is.nan(by_district)), "), the province mean (",
+            sum(missing & is.nan(by_district) & !is.nan(by_province)), ") or the country median (",
+            sum(missing & is.nan(by_district) & is.nan(by_province)), ")"
+        )
     }
     if (anyNA(val)) {
         warning(sum(is.na(val)), " locations have no ", label, " value")
@@ -145,11 +183,11 @@ impute_country_median <- function(val, label) {
 # S_ECO1 Poverty / wealth, replaces the GSAP2 poverty headcount.
 # val = - population-weighted mean RWI, so higher = poorer = more susceptible,
 # the same direction as the headcount it replaces. Normalised downstream.
-# Remaining gaps take the country median.
+# Remaining gaps take the mean of the district (then province, then country median).
 S_ECO1_rwi <- function(locations, ...) {
     stats <- rwi_unit_stats(locations)
     locations$val <- -stats$rwi_mean[match(as.character(locations$geo_id), stats$geo_id)]
-    locations$val <- impute_country_median(locations$val, "RWI")
+    locations$val <- impute_district_mean(locations$val, locations$adm1_name, locations$adm2_name, "RWI")
     return(locations)
 }
 
@@ -191,16 +229,16 @@ rwi_window_stats <- function(locations, radius_km = 10, min_tiles = 5) {
 # income inequality. Units whose window holds too few populated tiles are
 # recomputed with a RWI_WINDOW_KM_FALLBACK window; populated units still without
 # a value take that of the nearest valid unit within RWI_MAX_FALLBACK_KM; the
-# rest (including unpopulated units) take the country median.
+# rest take the mean of the district (then province, then country median). The window
+# weights are the WorldPop counts of the window pixels, so units with few inhabitants of
+# their own (WorldPop < RWI_MIN_POP) get a value too.
 RWI_WINDOW_KM <- 10
 RWI_WINDOW_KM_FALLBACK <- 20
 
 S_ECO4_rwi <- function(locations, ...) {
     stats <- rwi_window_stats(locations, RWI_WINDOW_KM)
     locations$val <- stats$rwi_sd_window
-    unpopulated <- unit_population(locations) < RWI_MIN_POP
-    locations$val[unpopulated] <- NA_real_
-    missing <- which(is.na(locations$val) & !unpopulated)
+    missing <- which(is.na(locations$val))
     if (length(missing) > 0) {
         wide <- rwi_window_stats(locations[missing, ], RWI_WINDOW_KM_FALLBACK)
         locations$val[missing] <- wide$rwi_sd_window
@@ -210,7 +248,7 @@ S_ECO4_rwi <- function(locations, ...) {
             " km window, ", sum(is.na(wide$rwi_sd_window)), " left NA"
         )
     }
-    still_missing <- which(is.na(locations$val) & !unpopulated)
+    still_missing <- which(is.na(locations$val))
     valid <- which(!is.na(locations$val))
     if (length(still_missing) > 0 && length(valid) > 0) {
         centroids <- suppressWarnings(st_centroid(st_transform(locations, 4326)))
@@ -226,7 +264,6 @@ S_ECO4_rwi <- function(locations, ...) {
             sum(!use), " left NA"
         )
     }
-    locations$val[unpopulated] <- NA_real_
-    locations$val <- impute_country_median(locations$val, "RWI dispersion")
+    locations$val <- impute_district_mean(locations$val, locations$adm1_name, locations$adm2_name, "RWI dispersion")
     return(locations)
 }

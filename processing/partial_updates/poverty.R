@@ -1,7 +1,7 @@
 # Partial update: recompute S_ECO1 (population-weighted RWI) and S_ECO4 (RWI dispersion) only.
 # Fixes the positional-assignment bug in processing/poverty.R (values are now
 # looked up by geo_id). Run from the r-gdri project root:
-#   Rscript processing/partial_update/poverty.R
+#   Rscript processing/partial_updates/poverty.R
 # Output: output/partial_update/S_ECO1_rwi_S_ECO4.csv
 
 source("common/libraries.R")
