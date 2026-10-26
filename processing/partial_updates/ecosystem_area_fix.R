@@ -37,7 +37,7 @@
 #          Howrah, Kolkata) -- excludes the five inland West Bengal
 #          districts that are outside the paper's GBM-I study area
 #   MRD:   villages_vnm.gpkg filtered to the 13 MRD provinces
-#   RRD:   villages_vnm.gpkg filtered to the 12 RRD provinces
+#   RRD:   villages_vnm.gpkg filtered to the 11 RRD provinces
 #
 # Run from the r-gdri repo root.
 
@@ -45,13 +45,13 @@ source("common/libraries.R")
 source("common/helpers.R")
 source("processing/exposure/coastal_DEM.R") # get_coastal_dem()
 
-cyclone_wind_speed <- 118 # km/h, matches §2.5.4 and partial_update/cyclones.R
+cyclone_wind_speed <- 118 # km/h, matches §2.5.4 and partial_updates/cyclones.R
 SAL_AFF_THRESHOLD <- 2 # matches agriculture_exposure.R / ecosystem_exposure.R / aquaculture_exposure.R
 
 out_dir <- "output/ECOSYSTEM_AREA_FIX"
 mkdirs(out_dir)
 
-gdri_csv_dir <- "/Users/loicbaron/Documents/gdri_correlations/data"
+gdri_csv_dir <- "gdri_correlations/data"
 delta_csv_file <- c(
     "GBM-B" = "GDRI_2025_GBM-B.csv",
     "GBM-I" = "GDRI_2025_GBM-I.csv",
@@ -65,8 +65,8 @@ mrd_provinces <- c(
     "Trà Vinh", "Vĩnh Long"
 )
 rrd_provinces <- c(
-    "Bắc Giang", "Bắc Ninh", "Hà Nam", "Hà Nội", "Hải Dương", "Hải Phòng",
-    "Hưng Yên", "Nam Định", "Ninh Bình", "Quảng Ninh", "Thái Bình", "Vĩnh Phúc"
+    "Bắc Ninh", "Hà Nam", "Hà Nội", "Hải Dương", "Hải Phòng", "Hưng Yên",
+    "Nam Định", "Ninh Bình", "Quảng Ninh", "Thái Bình", "Vĩnh Phúc"
 )
 gbmi_districts <- c(
     "24 Paraganas South", "24 Paraganas North", "Medinipur East",
