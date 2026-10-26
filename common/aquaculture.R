@@ -1,6 +1,6 @@
 # Supervised classification based on Sentinel2 images
 # Using Google Earth Engine
-# https://code.earthengine.google.com/ce85927e0b105d255fab386ae2dc9737?noload=true
+# https://code.earthengine.google.com/3aa41e453f6c9d1501140116593620eb?noload=true
 
 # The aquaculture class is detected based on the reflectance of the image
 # Areas classified as such have a probability to be used for aquaculture

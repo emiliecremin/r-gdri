@@ -9,7 +9,7 @@ ER_FOR_1511 <- function(locations, ...) {
 # Source: Global Forest Change - GFC
 # https://developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2023_v1_11
 # https://doi.org/10.1126/science.1244693
-# Forest loss % from 2000 to 2023Ż
+# Forest loss % from 2000 to 2023
 ES_DES3 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
     gfc_thresholded <- rast(glue::glue("objects/Forests/gfc_extract_thresholded_{country_iso3}.tif"))
@@ -24,7 +24,8 @@ ES_DES3 <- function(locations, ...) {
 # Source: Global Forest Change - GFC
 # https://developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2023_v1_11
 # https://doi.org/10.1126/science.1244693
-# Forest gain % from 2000 to 2023Ż
+# Forest gain 2000-2023: value = share of the unit area that gained tree cover (30 m pixels, non-forest to
+# woody vegetation > 5 m); cannot tell natural regeneration from plantations and tree crops
 ER_RES2 <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
     gfc_thresholded <- rast(glue::glue("objects/Forests/gfc_extract_thresholded_{country_iso3}.tif"))
