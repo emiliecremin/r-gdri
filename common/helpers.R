@@ -336,3 +336,30 @@ get_osm <- function(location, key, value, folder) {
   }
   return(osm_features)
 }
+
+# Mean of a hazard raster over the ASSET area within each polygon (review B14).
+# `asset` is a fine raster (e.g. 10 m land cover) with 1 where the asset is and NA elsewhere.
+# It is averaged onto the hazard grid, which gives the fraction of every hazard cell covered
+# by the asset, and that fraction is the weight of the cell in the zonal mean. Hazard cells
+# without a value (e.g. wind below the threshold) are skipped; polygons without asset or
+# without hazard value take the polygon mean (see below), or 0 if there is no hazard at all.
+asset_weighted_mean <- function(hazard, asset, polygons) {
+  polygons <- sf::st_transform(polygons, terra::crs(hazard))
+  e <- terra::ext(terra::vect(polygons))
+  pad <- 2 * max(terra::res(hazard))
+  e <- terra::ext(e[1] - pad, e[2] + pad, e[3] - pad, e[4] + pad)
+  hz <- terra::crop(hazard, e)
+  asset01 <- terra::ifel(is.na(terra::crop(asset, e)), 0, 1)
+  asset_fraction <- terra::resample(asset01, hz, method = "average")
+  val <- exactextractr::exact_extract(hz, polygons, "weighted_mean", weights = asset_fraction, progress = FALSE)
+  # polygons without asset (or whose asset has no hazard value) take the plain polygon mean, so
+  # the intensity stays defined and the min-max scaling is not distorted by artificial zeros;
+  # their exposure is still 0 because the affected fraction is 0. Zero only if the polygon has
+  # no hazard value at all.
+  missing <- is.na(val)
+  if (any(missing)) {
+    val[missing] <- exactextractr::exact_extract(hz, polygons[missing, ], "mean", progress = FALSE)
+  }
+  val[is.na(val)] <- 0
+  val
+}
