@@ -27,12 +27,10 @@ AQ_INT_CYC <- function(locations, ...) {
     country_iso3 <- unique(locations$country_iso3)[1]
     cyclones <- rast("data/Hazards/Cyclones/Wind_T100.tif")
     aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
-    cyclones_cropped <- crop(cyclones, aquaculture)
-    cyclones_filtered <- cyclones_cropped
+    cyclones_filtered <- cyclones
     cyclones_filtered[cyclones_filtered < cyclone_wind_speed] <- NA
-    ### zonal statistics using "exactextractr"
-    locations$val <- exact_extract(cyclones_filtered, locations, "mean", progress = TRUE)
-    locations$val[is.nan(locations$val)] <- 0
+    # mean wind over the asset area (asset-weighted, review B14)
+    locations$val <- asset_weighted_mean(cyclones_filtered, aquaculture, locations)
     return(locations)
 }
 
@@ -59,8 +57,8 @@ AQ_AFF_CYC <- function(locations, ...) {
     return(locations)
 }
 
-# data source: UNEP
-# https://wesr.unepgrid.ch/static.html?views=MX-JXZXA-MFZNN-LTXZ8&zoomToViews=true
+# data source: GAR15 river flood model (Rudari et al., 2015), 100-year return period, v1, 1 km, depth in cm, flood defences not included
+# https://datacatalog.worldbank.org/search/dataset/0067118/flood-hazard-100-year-return-period
 # unit: % of flooded aquaculture area on a 100 year return period
 # km2 of flooded aquaculture / km2 of aquaculture in the area
 AQ_AFF_FLO <- function(locations, ...) {
@@ -75,18 +73,16 @@ AQ_AFF_FLO <- function(locations, ...) {
     return(locations)
 }
 
-# data source: UNEP
-# https://wesr.unepgrid.ch/static.html?views=MX-JXZXA-MFZNN-LTXZ8&zoomToViews=true
+# data source: GAR15 river flood model (Rudari et al., 2015), 100-year return period, v1, 1 km, depth in cm, flood defences not included
+# https://datacatalog.worldbank.org/search/dataset/0067118/flood-hazard-100-year-return-period
 # unit: cm of flood on a 100 year return period
 AQ_INT_FLO <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
     country_iso3 <- unique(locations$country_iso3)[1]
     floods <- rast("data/Hazards/Floods/fl_hazard_100_yrp.tif")
     aquaculture <- rast(glue::glue("objects/aquaculture_sentinel2/{country_iso3}_aquaculture.tif"))
-    floods_cropped <- crop(floods, aquaculture)
-    ### zonal statistics using "exactextractr"
-    locations$val <- exact_extract(floods_cropped, locations, "mean", progress = TRUE)
-    locations$val[is.nan(locations$val)] <- 0
+    # mean flood depth over the asset area (asset-weighted, review B14)
+    locations$val <- asset_weighted_mean(floods, aquaculture, locations)
     return(locations)
 }
 

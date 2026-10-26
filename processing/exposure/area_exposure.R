@@ -1,5 +1,5 @@
 # Area Exposure = affected_area / total_area
-# Area Intensity = mean meters of flood
+# Area Intensity = mean cm of flood
 
 # data source: Climate Central https://coastal.climatecentral.org/
 # https://doi.org/10.1016/j.rse.2017.12.026
@@ -76,8 +76,8 @@ AREA_INT_DRO <- function(locations, ...) {
     return(locations)
 }
 
-# data source: UNEP
-# https://wesr.unepgrid.ch/static.html?views=MX-JXZXA-MFZNN-LTXZ8&zoomToViews=true
+# data source: GAR15 river flood model (Rudari et al., 2015), 100-year return period, v1, 1 km, depth in cm, flood defences not included
+# https://datacatalog.worldbank.org/search/dataset/0067118/flood-hazard-100-year-return-period
 # unit: % of flooded area on a 100 year return period
 # km2 of flooded area / km2 in the area
 AREA_AFF_FLO <- function(locations, ...) {
@@ -90,8 +90,8 @@ AREA_AFF_FLO <- function(locations, ...) {
     return(locations)
 }
 
-# data source: UNEP
-# https://wesr.unepgrid.ch/static.html?views=MX-JXZXA-MFZNN-LTXZ8&zoomToViews=true
+# data source: GAR15 river flood model (Rudari et al., 2015), 100-year return period, v1, 1 km, depth in cm, flood defences not included
+# https://datacatalog.worldbank.org/search/dataset/0067118/flood-hazard-100-year-return-period
 # unit: cm of flood on a 100 year return period
 AREA_INT_FLO <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)

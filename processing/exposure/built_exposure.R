@@ -1,5 +1,5 @@
 # Built-up Exposure = built_up_affected_area / built_up_total_area
-# Built-up Intensity = mean meters of flood on built-up area
+# Built-up Intensity = mean cm of flood on built-up area
 
 # data source: Climate Central https://coastal.climatecentral.org/
 # https://doi.org/10.1016/j.rse.2017.12.026
@@ -58,8 +58,8 @@ B_AFF_CYC <- function(locations, ...) {
     return(locations)
 }
 
-# data source: UNEP
-# https://wesr.unepgrid.ch/static.html?views=MX-JXZXA-MFZNN-LTXZ8&zoomToViews=true
+# data source: GAR15 river flood model (Rudari et al., 2015), 100-year return period, v1, 1 km, depth in cm, flood defences not included
+# https://datacatalog.worldbank.org/search/dataset/0067118/flood-hazard-100-year-return-period
 # unit: % of flooded built area on a 100 year return period
 # km2 of flooded built / km2 of built in the area
 B_AFF_FLO <- function(locations, ...) {
@@ -74,8 +74,8 @@ B_AFF_FLO <- function(locations, ...) {
     return(locations)
 }
 
-# data source: UNEP
-# https://wesr.unepgrid.ch/static.html?views=MX-JXZXA-MFZNN-LTXZ8&zoomToViews=true
+# data source: GAR15 river flood model (Rudari et al., 2015), 100-year return period, v1, 1 km, depth in cm, flood defences not included
+# https://datacatalog.worldbank.org/search/dataset/0067118/flood-hazard-100-year-return-period
 # unit: cm of flood on a 100 year return period
 B_INT_FLO <- function(locations, ...) {
     locations <- locations %>% st_transform(4326)
